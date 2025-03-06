@@ -74,5 +74,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # text mesh pro
-/Assets/TextMesh Pro/Resources/Fonts & Materials/*.asset
-/Assets/TextMesh Pro/Resources/Fonts & Materials/*.asset.meta
+/Assets/Exclusions/*
+!/Assets/Exclusions/.gitkeep
