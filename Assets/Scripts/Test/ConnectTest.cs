@@ -13,7 +13,7 @@ public class ConnectTest : MonoBehaviour
     private List<RoomInfo> cashRoomList = new List<RoomInfo>();
 
     [SerializeField]
-    private List<RoomInformation> roomInfo = new List<RoomInformation>();
+    private List<RoomContents> roomInfo = new List<RoomContents>();
 
     [SerializeField]
     private Transform listParent = null;
@@ -48,7 +48,7 @@ public class ConnectTest : MonoBehaviour
 
     private void Start()
     {
-        foreach (RoomInformation room in roomInfo)
+        foreach (RoomContents room in roomInfo)
         {
             room.transform.parent = this.disableParent;
         }
@@ -72,7 +72,7 @@ public class ConnectTest : MonoBehaviour
 
     private void UpdateRoomList()
     {
-        foreach (RoomInformation room in this.roomInfo)
+        foreach (RoomContents room in this.roomInfo)
         {
             room.transform.parent = this.disableParent;
         }

@@ -3,23 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
-public class RoomInformation : MonoBehaviour
+public class RoomContents : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI roomName = null;
 
     [SerializeField]
     private TextMeshProUGUI member = null;
-
-    [SerializeField]
-    private Button button = null;
-
-    private void Awake()
-    {
-        button.clicked += JoinRoom;
-    }
 
     public void SetRoomData(RoomInfo info)
     {
@@ -29,7 +21,6 @@ public class RoomInformation : MonoBehaviour
 
     public void JoinRoom()
     {
-        Debug.Log("hoge");
-        //NetworkManager.Instance().JoinRoom(roomName.text);
+        NetworkManager.Instance().JoinRoom(roomName.text);
     }
 }
