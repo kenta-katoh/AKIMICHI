@@ -6,6 +6,15 @@ using Photon.Realtime;
 
 public class ConnectTest : MonoBehaviourPunCallbacks
 {
+    [SerializeField]
+    private List<GameObject> roomInfo = new List<GameObject>();
+
+    [SerializeField]
+    private Transform listParent = null;
+
+    [SerializeField]
+    private Transform disableParent = null;
+
     private void Awake()
     {
         // PhotonServerSettingsの設定内容を使って、マスターサーバーへ接続する
@@ -13,6 +22,38 @@ public class ConnectTest : MonoBehaviourPunCallbacks
 
         // Photonのサーバーから切断する
         //PhotonNetwork.Disconnect();
+    }
+
+    private void Start()
+    {
+        foreach (GameObject room in roomInfo)
+        {
+            room.transform.parent = disableParent;
+        }
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        base.OnRoomListUpdate(roomList);
+        foreach (GameObject room in roomInfo)
+        {
+            room.transform.parent = disableParent;
+        }
+
+        int index = 0;
+        foreach(RoomInfo room in roomList)
+        {
+            if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            {
+                continue;
+            }
+
+            if (index < roomInfo.Count)
+            {
+                roomInfo[index].transform.parent = listParent;
+            }
+            index++;
+        }
     }
 
     /// <summary>
@@ -24,7 +65,7 @@ public class ConnectTest : MonoBehaviourPunCallbacks
         option.MaxPlayers = 4;
         option.IsVisible = true;
         option.IsOpen = true;
-        PhotonNetwork.CreateRoom("hogehoge", option);
+        PhotonNetwork.CreateRoom(null, option);
     }
 
     /// <summary>
@@ -43,10 +84,20 @@ public class ConnectTest : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("ロビーに参加しました");
+    }
+
     // マスターサーバーへの接続が成功した時に呼ばれるコールバック
     public override void OnConnectedToMaster()
     {
         Debug.Log("マスターサーバーに接続しました");
+        if (PhotonNetwork.IsConnected)
+        {
+            TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
+            PhotonNetwork.JoinLobby(customLobby);
+        }
     }
 
     // Photonのサーバーから切断された時に呼ばれるコールバック
