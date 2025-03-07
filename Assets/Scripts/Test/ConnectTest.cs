@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
+using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class ConnectTest : MonoBehaviourPunCallbacks
+public class ConnectTest : MonoBehaviour
 {
+    private List<RoomInfo> cashRoomList = new List<RoomInfo>();
+
     [SerializeField]
-    private List<GameObject> roomInfo = new List<GameObject>();
+    private List<RoomInformation> roomInfo = new List<RoomInformation>();
 
     [SerializeField]
     private Transform listParent = null;
@@ -15,42 +21,69 @@ public class ConnectTest : MonoBehaviourPunCallbacks
     [SerializeField]
     private Transform disableParent = null;
 
+    [SerializeField]
+    private TMP_InputField inputField = null;
+
+    private enum State
+    {
+        None,
+        CreateRoom,
+    }
+    private State state = State.None;
+
     private void Awake()
     {
-        // PhotonServerSettingsの設定内容を使って、マスターサーバーへ接続する
-        PhotonNetwork.ConnectUsingSettings();
-
-        // Photonのサーバーから切断する
-        //PhotonNetwork.Disconnect();
+        NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
+        NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
+        {
+            TestSceneManager.Instance().ChangeScene("MatchingScene");
+        });
+        NetworkManager.Instance().SetCallbackOnConnect(() => 
+        { 
+            NetworkManager.Instance().JoinLobby("akimichi"); 
+        }); 
+        NetworkManager.Instance().Connect();
+        this.state = State.None;
     }
 
     private void Start()
     {
-        foreach (GameObject room in roomInfo)
+        foreach (RoomInformation room in roomInfo)
         {
-            room.transform.parent = disableParent;
+            room.transform.parent = this.disableParent;
         }
+        this.cashRoomList.Clear();
+        this.inputField.readOnly = false;
     }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        base.OnRoomListUpdate(roomList);
-        foreach (GameObject room in roomInfo)
-        {
-            room.transform.parent = disableParent;
-        }
-
-        int index = 0;
+        this.cashRoomList.Clear();
         foreach(RoomInfo room in roomList)
         {
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
             {
                 continue;
             }
+            this.cashRoomList.Add(room);
+        }
+        UpdateRoomList();
+    }
 
-            if (index < roomInfo.Count)
+    private void UpdateRoomList()
+    {
+        foreach (RoomInformation room in this.roomInfo)
+        {
+            room.transform.parent = this.disableParent;
+        }
+
+        int index = 0;
+        foreach (RoomInfo room in this.cashRoomList)
+        {
+            if (index < this.roomInfo.Count)
             {
-                roomInfo[index].transform.parent = listParent;
+                this.roomInfo[index].transform.parent = this.listParent;
+                this.roomInfo[index].SetRoomData(room);
             }
             index++;
         }
@@ -61,78 +94,30 @@ public class ConnectTest : MonoBehaviourPunCallbacks
     /// </summary>
     public void CreateRoom()
     {
-        RoomOptions option = new RoomOptions();
-        option.MaxPlayers = 4;
-        option.IsVisible = true;
-        option.IsOpen = true;
-        PhotonNetwork.CreateRoom(null, option);
-    }
-
-    /// <summary>
-    /// ルーム参加
-    /// </summary>
-    public void JoinRoom()
-    {
-        PhotonNetwork.JoinRoom("hogehoge");
-    }
-
-    /// <summary>
-    /// ルーム退出
-    /// </summary>
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("ロビーに参加しました");
-    }
-
-    // マスターサーバーへの接続が成功した時に呼ばれるコールバック
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("マスターサーバーに接続しました");
-        if (PhotonNetwork.IsConnected)
+        if (this.state == State.None && CreateRoomCheck())
         {
-            TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
-            PhotonNetwork.JoinLobby(customLobby);
+            this.state = State.CreateRoom;
+            this.inputField.readOnly = true;
+
+            NetworkManager.Instance().CreateRoom(this.inputField.text);
         }
     }
 
-    // Photonのサーバーから切断された時に呼ばれるコールバック
-    public override void OnDisconnected(DisconnectCause cause)
+    private bool CreateRoomCheck()
     {
-        Debug.Log($"サーバーとの接続が切断されました: {cause.ToString()}");
-    }
-
-    // ルームの作成が成功した時に呼ばれるコールバック
-    public override void OnCreatedRoom()
-    {
-        Debug.Log("ルームの作成に成功しました");
-    }
-
-    // ルームの作成が失敗した時に呼ばれるコールバック
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        Debug.Log($"ルームの作成に失敗しました: {message}");
-    }
-
-    // ルームへの参加が成功した時に呼ばれるコールバック
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("ルームへ参加しました");
-    }
-
-    // ルーム名を指定したルームへの参加が失敗した時に呼ばれるコールバック
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        Debug.Log($"ルームへの参加に失敗しました: {message}");
-    }
-
-    // ルームから退出した時に呼ばれるコールバック
-    public override void OnLeftRoom()
-    {
-        Debug.Log("ルームから退出しました");
+        bool isCreate = false;
+        if (this.inputField.text != string.Empty)
+        {
+            isCreate = true;
+            foreach (RoomInfo room in this.cashRoomList)
+            {
+                if (room.Name == this.inputField.text)
+                {
+                    isCreate = false;
+                    break;
+                }
+            }
+        }
+        return isCreate;
     }
 }
