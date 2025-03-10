@@ -263,6 +263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 2853453263385160706}
   mySelf: {fileID: 8721770600928078361}
+  backImage: {fileID: 6463462046873679021}
 --- !u!1 &8721770600928078361
 GameObject:
   m_ObjectHideFlags: 0
