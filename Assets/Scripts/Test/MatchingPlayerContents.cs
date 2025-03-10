@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,13 +9,18 @@ public class MatchingPlayerContents : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI playerName = null;
 
-    public void SetPlayerData(string name)
+    [SerializeField]
+    private GameObject mySelf = null;
+
+    public void SetPlayerData(Player player)
     {
-        this.playerName.text = name;
+        this.mySelf.SetActive(NetworkManager.Instance().IsMyself(player.UserId));
+        this.playerName.text = player.NickName;
     }
 
     public void ClearData()
     {
+        this.mySelf.SetActive(false);
         this.playerName.text = string.Empty;
     }
 }

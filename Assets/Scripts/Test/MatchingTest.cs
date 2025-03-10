@@ -55,7 +55,7 @@ public class MatchingTest : MonoBehaviour
         {
             if(index < this.playerList.Count)
             {
-                this.playerList[index].SetPlayerData(item.Value.NickName);
+                this.playerList[index].SetPlayerData(item.Value);
                 index++;
             }
         }

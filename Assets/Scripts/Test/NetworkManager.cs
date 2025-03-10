@@ -121,6 +121,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         option.IsOpen = true;
         option.PlayerTtl = 0;
         option.EmptyRoomTtl = 0;
+        option.PublishUserId = true;
 
         PhotonNetwork.CreateRoom(name, option);
     }
@@ -150,6 +151,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+    }
+
+    /// <summary>
+    /// 該当のIDが自分自身か
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public bool IsMyself(string userId)
+    {
+        return PhotonNetwork.LocalPlayer.UserId == userId;
     }
 
     ///////////////////////////////////////////////////////////
