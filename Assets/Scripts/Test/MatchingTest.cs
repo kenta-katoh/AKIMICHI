@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MatchingTest : MonoBehaviour
@@ -51,7 +52,8 @@ public class MatchingTest : MonoBehaviour
         }
 
         int index = 0;
-        foreach(var item in PhotonNetwork.CurrentRoom.Players)
+        var dic = PhotonNetwork.CurrentRoom.Players.OrderBy(x => x.Key).ToList();
+        foreach (var item in dic)
         {
             if(index < this.playerList.Count)
             {
