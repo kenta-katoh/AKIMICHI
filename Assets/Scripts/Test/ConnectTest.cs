@@ -75,6 +75,7 @@ public class ConnectTest : MonoBehaviour
         foreach (RoomContents room in this.roomInfo)
         {
             room.transform.parent = this.disableParent;
+            room.ClearData();
         }
 
         int index = 0;

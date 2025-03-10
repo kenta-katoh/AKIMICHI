@@ -19,8 +19,17 @@ public class RoomContents : MonoBehaviour
         member.text = info.PlayerCount + "/" + info.MaxPlayers;
     }
 
+    public void ClearData()
+    {
+        roomName.text = string.Empty;
+        member.text = string.Empty;
+    }
+
     public void JoinRoom()
     {
-        NetworkManager.Instance().JoinRoom(roomName.text);
+        if(roomName.text != string.Empty)
+        {
+            NetworkManager.Instance().JoinRoom(roomName.text);
+        }
     }
 }

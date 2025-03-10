@@ -7,16 +7,18 @@ using UnityEngine;
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     private static NetworkManager instance = null;
-    private static Action onConnectedToMaster = null;  // サーバー接続時
-    private static Action onDisconnected = null;       // サーバー接続解除
-    private static Action onJoinedLobby = null;        // ロビー接続時
-    private static Action onLeaveLobby = null;         // ロビー接続解除
-    private static Action onCreateRoom = null;         // ルーム作成時
-    private static Action onCreateRoomFailed = null;   // ルーム作成失敗
-    private static Action onJoinedRoom = null;         // ルーム入室時
-    private static Action onJoinedRoomFailed = null;   // ルーム入室失敗
-    private static Action onLeaveRoom = null;          // ルーム退出時
+    private static Action onConnectedToMaster = null;   // サーバー接続時
+    private static Action onDisconnected = null;        // サーバー接続解除
+    private static Action onJoinedLobby = null;         // ロビー接続時
+    private static Action onLeaveLobby = null;          // ロビー接続解除
+    private static Action onCreateRoom = null;          // ルーム作成時
+    private static Action onCreateRoomFailed = null;    // ルーム作成失敗
+    private static Action onJoinedRoom = null;          // ルーム入室時
+    private static Action onJoinedRoomFailed = null;    // ルーム入室失敗
+    private static Action onLeaveRoom = null;           // ルーム退出時
     private static Action<List<RoomInfo>> onRoomListUpdate = null; // ルーム情報更新時
+    private static Action<Player> onPlayerEnteredRoom = null;   // ルームにプレイヤーIn時
+    private static Action<Player> onPlayerLeftRoom = null;      // ルームからプレイヤーout時
 
     private void Awake()
     {
@@ -55,6 +57,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         onJoinedRoomFailed = null;
         onLeaveRoom = null;
         onRoomListUpdate = null;
+        onPlayerEnteredRoom = null;
+        onPlayerLeftRoom = null;
     }
 
     /// <summary>
@@ -161,6 +165,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void SetCallbackOnJoinRoomFailed(Action act) { onJoinedRoomFailed = act; }
     public void SetCallbackOnLeaveRoom(Action act) { onLeaveRoom = act; }
     public void SetCallbackOnRoomListUpdate(Action<List<RoomInfo>> act) { onRoomListUpdate = act; }
+    public void SetCallbackOnPlayerEnteredRoom(Action<Player> act) { onPlayerEnteredRoom = act; }
+    public void SetCallbackOnPlayerLeftRoom(Action<Player> act) { onPlayerLeftRoom = act; }
 
     /// <summary>
     /// マスターサーバーへの接続が成功した時に呼ばれるコールバック
@@ -258,16 +264,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         base.OnRoomListUpdate(roomList);
+        Debug.Log("ルーム情報が更新されました");
         onRoomListUpdate?.Invoke(roomList);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
+        Debug.Log("プレイヤーが入室しました");
+        onPlayerEnteredRoom?.Invoke(newPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+        Debug.Log("プレイヤーが退室しました");
+        onPlayerLeftRoom?.Invoke(otherPlayer);
     }
 }
