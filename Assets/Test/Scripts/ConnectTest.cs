@@ -44,6 +44,7 @@ public class ConnectTest : MonoBehaviour
 
     private void Start()
     {
+        NetworkManager.Instance().SetSysncScene(false);
         foreach (RoomContents room in roomInfo)
         {
             room.transform.parent = this.disableParent;
