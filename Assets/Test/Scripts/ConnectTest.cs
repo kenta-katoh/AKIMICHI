@@ -5,8 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using Akimichi.Lobby;
 
 public class ConnectTest : MonoBehaviour
 {
@@ -20,9 +19,6 @@ public class ConnectTest : MonoBehaviour
 
     [SerializeField]
     private Transform disableParent = null;
-
-    [SerializeField]
-    private TMP_InputField inputField = null;
 
     private enum State
     {
@@ -53,7 +49,6 @@ public class ConnectTest : MonoBehaviour
             room.transform.parent = this.disableParent;
         }
         this.cashRoomList.Clear();
-        this.inputField.readOnly = false;
     }
 
     public void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -95,30 +90,33 @@ public class ConnectTest : MonoBehaviour
     /// </summary>
     public void CreateRoom()
     {
-        if (this.state == State.None && CreateRoomCheck())
+        if (this.state == State.None)
         {
             this.state = State.CreateRoom;
-            this.inputField.readOnly = true;
-
-            NetworkManager.Instance().CreateRoom(this.inputField.text);
-        }
-    }
-
-    private bool CreateRoomCheck()
-    {
-        bool isCreate = false;
-        if (this.inputField.text != string.Empty)
-        {
-            isCreate = true;
-            foreach (RoomInfo room in this.cashRoomList)
+            string roomName = string.Empty;
+            foreach(string name in LobbySceneConst.RoomNameList)
             {
-                if (room.Name == this.inputField.text)
+                bool isUse = false;
+                foreach (RoomInfo room in this.cashRoomList)
                 {
-                    isCreate = false;
+                    if(name == room.Name)
+                    {
+                        isUse = true; 
+                        break;
+                    }
+                }
+
+                if(!isUse)
+                {
+                    roomName = name;
                     break;
                 }
             }
+
+            if(!string.IsNullOrEmpty(roomName))
+            {
+                NetworkManager.Instance().CreateRoom(roomName);
+            }
         }
-        return isCreate;
     }
 }
