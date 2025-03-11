@@ -23,6 +23,7 @@ public class MatchingTest : MonoBehaviour
 
     private void Start()
     {
+        NetworkManager.Instance().SetSysncScene(true);
         UpdateRoomData();
     }
 
@@ -32,6 +33,17 @@ public class MatchingTest : MonoBehaviour
     public void LeaveRoom()
     {
         NetworkManager.Instance().LeaveRoom();
+    }
+
+    /// <summary>
+    /// 同期遷移
+    /// </summary>
+    public void LoadScene()
+    {
+        if(NetworkManager.Instance().IsMasterClient())
+        {
+            NetworkManager.Instance().SysncLoadScene("TestGameScene");
+        }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)

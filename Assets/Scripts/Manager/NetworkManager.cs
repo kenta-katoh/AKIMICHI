@@ -163,6 +163,33 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.LocalPlayer.UserId == userId;
     }
 
+    /// <summary>
+    /// シーン同期設定
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetSysncScene(bool flag)
+    {
+        PhotonNetwork.AutomaticallySyncScene = flag;
+    }
+
+    /// <summary>
+    /// 同期遷移
+    /// </summary>
+    /// <param name="sceneName"></param>
+    public void SysncLoadScene(string sceneName)
+    {
+        PhotonNetwork.LoadLevel(sceneName);
+    }
+
+    /// <summary>
+    /// ホストかどうか
+    /// </summary>
+    /// <returns></returns>
+    public bool IsMasterClient()
+    {
+        return PhotonNetwork.IsMasterClient;
+    }
+
     ///////////////////////////////////////////////////////////
     /// コールバック
     ///////////////////////////////////////////////////////////
