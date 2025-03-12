@@ -26,10 +26,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = "akimichi" + UnityEngine.Random.Range(1000, 9999); ;
     }
 
-    private NetworkManager()
-    {
-    }
-
     public static NetworkManager Instance()
     {
         if(instance == null) instance = new NetworkManager();
