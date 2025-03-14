@@ -1,16 +1,37 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Akimichi.Game
 {
-    public class PlayerView : ViewBase
+    public class PlayerView : MonoBehaviour
     {
-        protected override void OnAwake()
-        {
-            base.OnAwake();
+        public float value = 0.1f;
 
-            this.logic = new PlayerLogic(this);
+        private void Update()
+        {
+            Vector3 pos = gameObject.transform.localPosition;
+            if (Input.GetKey(KeyCode.W))
+            {
+                pos.y += value;
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                pos.x -= value;
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                pos.y -= value;
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                pos.x += value;
+            }
+            gameObject.transform.localPosition = pos;
         }
     }
 }

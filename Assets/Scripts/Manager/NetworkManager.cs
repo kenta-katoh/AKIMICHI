@@ -186,6 +186,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.IsMasterClient;
     }
 
+    public void CreateObject(string pass)
+    {
+        PhotonNetwork.InstantiateRoomObject(pass, Vector3.zero, Quaternion.identity);
+    }
+
     ///////////////////////////////////////////////////////////
     /// コールバック
     ///////////////////////////////////////////////////////////
