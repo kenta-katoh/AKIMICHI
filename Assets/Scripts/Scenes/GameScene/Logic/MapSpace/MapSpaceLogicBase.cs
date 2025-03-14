@@ -8,10 +8,20 @@ namespace Akimichi.Game
     {
         private GameConst.MapSpaceType spaceType = GameConst.MapSpaceType.None;
         public GameConst.MapSpaceType MapSpaceType { get { return spaceType; } }
+        public int Index { get; private set; } = 0;
 
         public MapSpaceLogicBase(GameConst.MapSpaceType type, MapSpaceViewBase view) : base(view)
         { 
             this.spaceType = type;
+        }
+
+        /// <summary>
+        /// マスインデックス
+        /// </summary>
+        /// <param name="index"></param>
+        public void SetIndex(int index)
+        {
+            this.Index = index;
         }
     }
 }

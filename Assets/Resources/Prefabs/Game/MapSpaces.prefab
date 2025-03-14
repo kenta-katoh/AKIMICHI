@@ -102,6 +102,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlusMapSpace
       objectReference: {fileID: 0}
+    - target: {fileID: 7812158995249591519, guid: af4b6ee2f8e60cd41a27f901c9434917,
+        type: 3}
+      propertyPath: IsStartingPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812158995249591519, guid: af4b6ee2f8e60cd41a27f901c9434917,
+        type: 3}
+      propertyPath: isStartingPosition
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -175,6 +185,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlusMapSpace (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812158995249591519, guid: af4b6ee2f8e60cd41a27f901c9434917,
+        type: 3}
+      propertyPath: IsStartingPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812158995249591519, guid: af4b6ee2f8e60cd41a27f901c9434917,
+        type: 3}
+      propertyPath: isStartingPosition
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -323,6 +343,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3949372428521235791, guid: 47ed598b9c6b4ae41ab35493b9bd9f35,
+        type: 3}
+      propertyPath: IsStartingPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3949372428521235791, guid: 47ed598b9c6b4ae41ab35493b9bd9f35,
+        type: 3}
+      propertyPath: isStartingPosition
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -495,6 +525,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MinusMapSpace (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6702060963739839278, guid: 828945879cf9c3240b1c5e6976104110,
+        type: 3}
+      propertyPath: IsStartingPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6702060963739839278, guid: 828945879cf9c3240b1c5e6976104110,
+        type: 3}
+      propertyPath: isStartingPosition
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7937677637315934634, guid: 828945879cf9c3240b1c5e6976104110,
         type: 3}
