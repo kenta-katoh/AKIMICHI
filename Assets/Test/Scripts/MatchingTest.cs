@@ -3,12 +3,16 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class MatchingTest : MonoBehaviour
 {
     [SerializeField]
     private List<MatchingPlayerContents> playerList = new List<MatchingPlayerContents>();
+
+    [SerializeField]
+    private TMP_InputField inputField = null;
 
     private void Awake()
     {
@@ -73,5 +77,10 @@ public class MatchingTest : MonoBehaviour
                 index++;
             }
         }
+    }
+
+    public void ChangeName(string name)
+    {
+        NetworkManager.Instance().SetName(inputField.text);
     }
 }

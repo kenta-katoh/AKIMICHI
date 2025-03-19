@@ -25,6 +25,11 @@ namespace Akimichi.Game
             return instance;
         }
 
+        private void Start()
+        {
+            NetworkManager.Instance().GetPlayerIndex();
+        }
+
         private void Update()
         {
             if(Input.GetKeyUp(KeyCode.P))

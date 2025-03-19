@@ -15,6 +15,11 @@ namespace Akimichi.Game
 
         private void Awake()
         {
+            
+        }
+
+        private void Start()
+        {
             // どこか管理されている箇所で行いたい
             CashMapSpaces();
             CashPlayerStartMapSpaces();

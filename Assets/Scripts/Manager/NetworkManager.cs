@@ -23,7 +23,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        PhotonNetwork.NickName = "akimichi" + UnityEngine.Random.Range(1000, 9999); ;
     }
 
     public static NetworkManager Instance()
@@ -184,6 +183,25 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public bool IsMasterClient()
     {
         return PhotonNetwork.IsMasterClient;
+    }
+
+    public int GetPlayerIndex()
+    {
+        int result = 0;
+        foreach(var item in PhotonNetwork.PlayerList)
+        {
+            Debug.LogError("name : " + item.NickName);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 名前設定
+    /// </summary>
+    /// <param name="name"></param>
+    public void SetName(string name)
+    {
+        PhotonNetwork.NickName = name;
     }
 
     public void CreateObject(string pass)
