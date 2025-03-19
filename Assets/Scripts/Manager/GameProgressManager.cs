@@ -8,39 +8,41 @@ namespace Akimichi.Game
 {
     public class GameProgressManager : MonoBehaviour
     {
-        private static GameProgressManager instance = null;
+        [SerializeField]
+        private GameObject mapSpacesRoot = null;
 
         [SerializeField]
         private CinemachineVirtualCamera virtualCamera = null;
 
         [SerializeField]
-        private List<PlayerView> players = new List<PlayerView>();
+        private GameObject playerRoot = null;
 
         [SerializeField]
         private Animator bootCameraAnime = null;
 
-        public static GameProgressManager Instance()
+        private void Awake()
         {
-            if (instance == null) instance = new GameProgressManager();
-            return instance;
+            MapManagerData mapManagerData = new MapManagerData();
+            mapManagerData.MapSpacesRoot = this.mapSpacesRoot;
+            MapManager.Instance().DataTransfer(mapManagerData);
+
+            PlayerManagerData playerManagerData = new PlayerManagerData();
+            playerManagerData.PlayerRoot = this.playerRoot;
+            PlayerManager.Instance().DataTransfer(playerManagerData);
         }
 
         private void Start()
         {
-            NetworkManager.Instance().GetPlayerIndex();
+            MapManager.Instance().Initialize();
+            PlayerManager.Instance().Initialize();
+
+            MapManager.Instance().CreateData();
+            PlayerManager.Instance().CreateData();
         }
 
-        private void Update()
+        public void BootCamera()
         {
-            if(Input.GetKeyUp(KeyCode.P))
-            {
-                BootCamera();
-            }
-        }
-
-        private void BootCamera()
-        {
-            this.virtualCamera.Follow = this.players[0].transform;
+            this.virtualCamera.Follow = PlayerManager.Instance().GetLocalPlayer().PlayerView.transform;
             this.bootCameraAnime.SetBool("BootCamera", true);
         }
     }

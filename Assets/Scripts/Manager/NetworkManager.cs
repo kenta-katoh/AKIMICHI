@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Akimichi.Game;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -111,7 +112,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void CreateRoom(string name)
     {
         RoomOptions option = new RoomOptions();
-        option.MaxPlayers = 4;
+        option.MaxPlayers = GameConst.MaximumPlayers();
         option.IsVisible = true;
         option.IsOpen = true;
         option.PlayerTtl = 0;
@@ -185,12 +186,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.IsMasterClient;
     }
 
-    public int GetPlayerIndex()
+    /// <summary>
+    /// プレイヤー取得
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public Player GetPlayer(GameConst.PlayerIndex index)
     {
-        int result = 0;
-        foreach(var item in PhotonNetwork.PlayerList)
+        Player result = null;
+        if((int)index < PhotonNetwork.PlayerList.Length)
         {
-            Debug.LogError("name : " + item.NickName);
+            result = PhotonNetwork.PlayerList[(int)index];
         }
         return result;
     }

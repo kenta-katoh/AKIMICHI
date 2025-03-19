@@ -4,31 +4,23 @@ using UnityEngine;
 
 namespace Akimichi.Game
 {
-    public class MapManager : MonoBehaviour
+    public class MapManager : ManagerBase<MapManager>
     {
-        private static MapManager instance = null;
-
-        [SerializeField]
         private GameObject mapSpacesRoot = null;
         private List<MapSpaceViewBase> mapSpaceList = new List<MapSpaceViewBase>();
         private List<MapSpaceViewBase> playerStartMapSpaceList = new List<MapSpaceViewBase>();
 
-        private void Awake()
+        public override void DataTransfer(ManagerData data)
         {
-            
+            base.DataTransfer(data);
+            this.mapSpacesRoot = ((MapManagerData)data).MapSpacesRoot;
         }
 
-        private void Start()
+        public override void Initialize()
         {
-            // どこか管理されている箇所で行いたい
+            base.Initialize();
             CashMapSpaces();
             CashPlayerStartMapSpaces();
-        }
-
-        public static MapManager Instance()
-        {
-            if (instance == null) instance = new MapManager();
-            return instance;
         }
 
         // マス目情報取得
