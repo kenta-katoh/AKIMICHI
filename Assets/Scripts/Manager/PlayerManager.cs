@@ -34,6 +34,11 @@ namespace Akimichi.Game
         public override void Initialize()
         {
             base.Initialize();
+            GameObject obj = NetworkManager.Instance().CreateObject("Player");
+            obj.transform.SetParent(this.playerRoot.transform);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localScale = Vector3.one;
+
             this.playerViews.Clear();
             int childCount = this.playerRoot.transform.childCount;
             for (int i = 0; i < childCount; ++i)
