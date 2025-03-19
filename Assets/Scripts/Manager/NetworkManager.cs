@@ -191,14 +191,29 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public Player GetPlayer(GameConst.PlayerIndex index)
+    public GameConst.PlayerIndex GetPlayerIndex(string userID)
     {
-        Player result = null;
-        if((int)index < PhotonNetwork.PlayerList.Length)
+        GameConst.PlayerIndex result = GameConst.PlayerIndex.First;
+        int index = 0;
+        foreach(Player item in PhotonNetwork.PlayerList)
         {
-            result = PhotonNetwork.PlayerList[(int)index];
+            if(item.UserId == userID)
+            {
+                result = (GameConst.PlayerIndex)index;
+                break;
+            }
+            index++;
         }
         return result;
+    }
+
+    /// <summary>
+    /// ユーザーID取得
+    /// </summary>
+    /// <returns></returns>
+    public string GetUserID()
+    {
+        return PhotonNetwork.LocalPlayer.UserId;
     }
 
     /// <summary>
@@ -210,9 +225,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = name;
     }
 
-    public GameObject CreateObject(string pass)
+    public bool IsAllocateViewID(PhotonView view)
     {
-        return PhotonNetwork.Instantiate(pass, Vector3.zero, Quaternion.identity);
+        return PhotonNetwork.AllocateViewID(view);
     }
 
     ///////////////////////////////////////////////////////////

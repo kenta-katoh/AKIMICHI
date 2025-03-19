@@ -51,5 +51,15 @@ namespace Akimichi.Game
                 }
             }
         }
+
+        /// <summary>
+        /// スタート位置取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public MapSpaceViewBase GetStartMapSpace(int index)
+        {
+            return this.playerStartMapSpaceList[index];
+        }
     }
 }
