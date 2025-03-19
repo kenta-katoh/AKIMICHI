@@ -212,7 +212,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public GameObject CreateObject(string pass)
     {
-        return PhotonNetwork.InstantiateRoomObject(pass, Vector3.zero, Quaternion.identity);
+        return PhotonNetwork.Instantiate(pass, Vector3.zero, Quaternion.identity);
     }
 
     ///////////////////////////////////////////////////////////
