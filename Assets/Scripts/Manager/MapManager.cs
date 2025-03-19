@@ -1,55 +1,57 @@
-using Akimichi.Game;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapManager : MonoBehaviour
+namespace Akimichi.Game
 {
-    private static MapManager instance = null;
-
-    [SerializeField]
-    private GameObject mapSpacesRoot = null;
-    private static List<MapSpaceViewBase> mapSpaceList = new List<MapSpaceViewBase>();
-    private static List<MapSpaceViewBase> playerStartMapSpaceList = new List<MapSpaceViewBase>();
-
-    private void Awake()
+    public class MapManager : MonoBehaviour
     {
-        // どこか管理されている箇所で行いたい
-        CashMapSpaces();
-        CashPlayerStartMapSpaces();
-    }
+        private static MapManager instance = null;
 
-    public static MapManager Instance()
-    {
-        if (instance == null) instance = new MapManager();
-        return instance;
-    }
+        [SerializeField]
+        private GameObject mapSpacesRoot = null;
+        private List<MapSpaceViewBase> mapSpaceList = new List<MapSpaceViewBase>();
+        private List<MapSpaceViewBase> playerStartMapSpaceList = new List<MapSpaceViewBase>();
 
-    // マス目情報取得
-    private void CashMapSpaces()
-    {
-        mapSpaceList.Clear();
-        int childCount = this.mapSpacesRoot.transform.childCount;
-        for (int i = 0; i < childCount; ++i)
+        private void Awake()
         {
-            MapSpaceViewBase map = this.mapSpacesRoot.transform.GetChild(i).GetComponent<MapSpaceViewBase>();
-            if (map != null)
+            // どこか管理されている箇所で行いたい
+            CashMapSpaces();
+            CashPlayerStartMapSpaces();
+        }
+
+        public static MapManager Instance()
+        {
+            if (instance == null) instance = new MapManager();
+            return instance;
+        }
+
+        // マス目情報取得
+        private void CashMapSpaces()
+        {
+            this.mapSpaceList.Clear();
+            int childCount = this.mapSpacesRoot.transform.childCount;
+            for (int i = 0; i < childCount; ++i)
             {
-                map.SetIndex(i);
-                mapSpaceList.Add(map);
+                MapSpaceViewBase map = this.mapSpacesRoot.transform.GetChild(i).GetComponent<MapSpaceViewBase>();
+                if (map != null)
+                {
+                    map.SetIndex(i);
+                    this.mapSpaceList.Add(map);
+                }
             }
         }
-    }
 
-    // スタート位置取得
-    private void CashPlayerStartMapSpaces()
-    {
-        playerStartMapSpaceList.Clear();
-        foreach (MapSpaceViewBase mapSpace in mapSpaceList)
+        // スタート位置取得
+        private void CashPlayerStartMapSpaces()
         {
-            if(mapSpace.IsStartingPosition)
+            this.playerStartMapSpaceList.Clear();
+            foreach (MapSpaceViewBase mapSpace in this.mapSpaceList)
             {
-                playerStartMapSpaceList.Add(mapSpace);
+                if (mapSpace.IsStartingPosition)
+                {
+                    this.playerStartMapSpaceList.Add(mapSpace);
+                }
             }
         }
     }
