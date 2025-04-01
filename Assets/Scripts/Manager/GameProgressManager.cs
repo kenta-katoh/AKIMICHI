@@ -79,8 +79,11 @@ namespace Akimichi.Game
             if (NetworkManager.Instance().IsAllocateViewID(photonView))
             {
                 // 同じRoom内の他のユーザーへ通知
-                NetworkManager.Instance().AddSendData(photonView.ViewID);
-                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject);
+                var data = new object[]
+                {
+                    photonView.ViewID,
+                };
+                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject, data);
             }
             else
             {
