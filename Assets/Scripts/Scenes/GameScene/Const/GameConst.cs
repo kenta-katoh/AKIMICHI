@@ -17,8 +17,8 @@ namespace Akimichi.Game
         {
             First = 0,
             Second = 1,
-            Third = 2,
-            Fourth = 3,
+            //Third = 2,
+            //Fourth = 3,
         }
 
         public enum MapSpaceType
@@ -33,6 +33,8 @@ namespace Akimichi.Game
         {
             None,
             Initialize,
+            CreatedPlayerObject,
+            InitializedFinish,
             BootCamera,
             Countdown,
         }

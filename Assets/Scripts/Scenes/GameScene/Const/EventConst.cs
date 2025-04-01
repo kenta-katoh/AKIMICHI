@@ -9,7 +9,9 @@ namespace Akimichi.Game
         public enum Event
         {
             None = 0,
-            CreatePlayerObject = 1,
+            FinishState = 1,
+            TransitionState = 2,
+            CreatePlayerObject = 3,
         }
 
         public static Event ConvertEvent(byte data)

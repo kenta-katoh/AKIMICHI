@@ -2,7 +2,7 @@ using Cinemachine;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +25,8 @@ namespace Akimichi.Game
         [SerializeField]
         private GameObject playerPrefab = null;
 
+        private object[] datas = new object[10];
+
         private void Awake()
         {
             MapManagerData mapManagerData = new MapManagerData();
@@ -38,17 +40,95 @@ namespace Akimichi.Game
 
         private void Start()
         {
+            GameStateManager.Instance().Initialize();
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
 
-            CreatePlayerModel();
-            PlayerManager.Instance().PlayerView.transform.localPosition = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition;
+            GameStateManager.Instance().CompleteState(GameConst.GameProgressState.Initialize);
+            GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
+            TransitionState(GameConst.GameProgressState.Initialize);
+
+            //ClearSendData();
+            //this.datas[0] = (byte)GameConst.GameProgressState.InitializedFinish;
+            //this.datas[1] = (byte)PlayerManager.Instance().PlayerIndex;
+            //NetworkManager.Instance().SendEvent(EventConst.Event.TransitionState, this.datas);
+        }
+
+        private void ClearSendData()
+        {
+            for(int i = 0; i < datas.Length; ++i)
+            {
+                datas[i] = null;
+            }
         }
 
         public void BootCamera()
         {
             this.virtualCamera.Follow = PlayerManager.Instance().PlayerView.transform;
             this.bootCameraAnime.SetBool("BootCamera", true);
+        }
+
+        public void OnEvent(EventData photonEvent)
+        {
+            var eventCode = photonEvent.Code;
+            EventConst.Event _event = EventConst.ConvertEvent(eventCode);
+            var data = (object[])photonEvent.CustomData;
+
+            switch (_event)
+            {
+                case EventConst.Event.FinishState:
+                    GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)data[0], 
+                                                                (GameConst.PlayerIndex)data[1]);
+
+                    TransitionState((GameConst.GameProgressState)data[0]);
+                    break;
+
+                case EventConst.Event.CreatePlayerObject:
+                    CreatePlayerObject(data);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// ステータスに関する振る舞い思考
+        /// </summary>
+        private void StatusBehavior()
+        {
+            switch(GameStateManager.Instance().CurrentState())
+            {
+                case GameConst.GameProgressState.Initialize:
+                    TransitionState(GameConst.GameProgressState.Initialize);
+                    break;
+                case GameConst.GameProgressState.CreatedPlayerObject:
+                    // 自身の生成
+                    CreatePlayerModel();
+                    PlayerManager.Instance().PlayerView.transform.localPosition = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition;
+                    GameStateManager.Instance().CompleteState(GameConst.GameProgressState.CreatedPlayerObject);
+                    TransitionState(GameConst.GameProgressState.CreatedPlayerObject);
+                    break;
+                case GameConst.GameProgressState.InitializedFinish:
+                    BootCamera();
+                    break;
+            }
+        }
+
+        private void TransitionState(GameConst.GameProgressState state)
+        {
+            if (GameStateManager.Instance().IsCompleteState(state))
+            {
+                GameStateManager.Instance().TransitionState();
+                StatusBehavior();
+            }
+        }
+
+        private void OnEnable()
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
         }
 
         private void CreatePlayerModel()
@@ -79,11 +159,10 @@ namespace Akimichi.Game
             if (NetworkManager.Instance().IsAllocateViewID(photonView))
             {
                 // 同じRoom内の他のユーザーへ通知
-                var data = new object[]
-                {
-                    photonView.ViewID,
-                };
-                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject, data);
+                ClearSendData();
+                this.datas[0] = photonView.ViewID;
+                this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject, this.datas);
             }
             else
             {
@@ -92,31 +171,7 @@ namespace Akimichi.Game
             }
         }
 
-        public void OnEvent(EventData photonEvent)
-        {
-            var eventCode = photonEvent.Code;
-            EventConst.Event _event = EventConst.ConvertEvent(eventCode);
-            var data = (object[])photonEvent.CustomData;
-
-            switch (_event)
-            {
-                case EventConst.Event.CreatePlayerObject:
-                    CreatePlayerObject((int)data[0]);
-                    break;
-            }
-        }
-
-        private void OnEnable()
-        {
-            PhotonNetwork.AddCallbackTarget(this);
-        }
-
-        private void OnDisable()
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
-        }
-
-        private void CreatePlayerObject(int id)
+        private void CreatePlayerObject(object[] data)
         {
             // 受信したtransformを設定
             var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
@@ -141,7 +196,12 @@ namespace Akimichi.Game
             photonView.ObservedComponents.Add(photonTransformView);
 
             // 受信したViewIDを用いて同期する
-            photonView.ViewID = id;
+            photonView.ViewID = (int)data[0];
+
+            GameStateManager.Instance().CompleteState(  GameConst.GameProgressState.CreatedPlayerObject,
+                                                        (GameConst.PlayerIndex)data[1]);
+
+            TransitionState(GameConst.GameProgressState.CreatedPlayerObject);
         }
     }
 }
