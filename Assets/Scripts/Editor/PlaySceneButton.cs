@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlaySceneButton : EditorWindow
 {
+#if UNITY_EDITOR
     [MenuItem("Akimichi/PlayGame")]
     /// <summary>
     /// Scene実行処理
@@ -38,4 +39,5 @@ public class PlaySceneButton : EditorWindow
             }
         }
     }
+#endif
 }
