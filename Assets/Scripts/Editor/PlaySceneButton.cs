@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class PlaySceneButton
+public class PlaySceneButton : EditorWindow
 {
     [MenuItem("Akimichi/PlayGame")]
     /// <summary>
@@ -10,17 +10,29 @@ public class PlaySceneButton
     /// </summary>
     static void PlayScene()
     {
-        string scenePath = EditorBuildSettings.scenes[0].path;
-        SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
+        var window = GetWindow<PlaySceneButton>("UIElements");
+        window.titleContent = new GUIContent("PlayScene");
+        window.Show();
+    }
 
-        if (sceneAsset == null)
+    private void OnGUI()
+    {
+        GUILayoutOption[] buttonOption = new GUILayoutOption[]
         {
-            Debug.Log($"{scenePath} シーンアセットが存在しません");
-            return;
+            GUILayout.Height(40)
+        };
+
+        GUILayout.Space(EditorGUIUtility.singleLineHeight);
+        foreach (var scene in EditorBuildSettings.scenes)
+        {
+            string path = scene.path;
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(path);
+            if (GUILayout.Button(sceneName, buttonOption))
+            {
+                SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+                EditorSceneManager.playModeStartScene = sceneAsset;
+                EditorApplication.isPlaying = true;
+            }
         }
-
-        EditorSceneManager.playModeStartScene = sceneAsset;
-
-        EditorApplication.isPlaying = true;
     }
 }

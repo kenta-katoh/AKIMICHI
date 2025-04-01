@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Akimichi.Game
 {
-    public class GameProgressManager : MonoBehaviour, IOnEventCallback
+    public class GameProgressManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         private const byte CustomInstantiateEventCode = 1;
 
