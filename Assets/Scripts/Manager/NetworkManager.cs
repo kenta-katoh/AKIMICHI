@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Akimichi.Game;
+using ExitGames.Client.Photon;
+using static UnityEditor.Progress;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -21,9 +23,28 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static Action<Player> onPlayerEnteredRoom = null;   // ルームにプレイヤーIn時
     private static Action<Player> onPlayerLeftRoom = null;      // ルームからプレイヤーout時
 
+    private const int DataLength = 10;
+    private static object[] datas = new object[DataLength];
+    private static int dataIndex = 0;
+    private static RaiseEventOptions eventOptions = new RaiseEventOptions();
+    private static SendOptions sendOptions = new SendOptions();
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        datas = Array.Empty<object>();
+
+        eventOptions = new RaiseEventOptions
+        {
+            Receivers = ReceiverGroup.Others,
+            CachingOption = EventCaching.AddToRoomCache
+        };
+
+        sendOptions = new SendOptions
+        {
+            Reliability = true
+        };
     }
 
     public static NetworkManager Instance()
@@ -228,6 +249,28 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public bool IsAllocateViewID(PhotonView view)
     {
         return PhotonNetwork.AllocateViewID(view);
+    }
+
+    /// <summary>
+    /// 送信データ追加
+    /// </summary>
+    /// <param name="data"></param>
+    public void AddSendData(object data)
+    {
+        if(dataIndex < DataLength)
+        {
+            datas[dataIndex] = data;
+            dataIndex++;
+        }
+    }
+
+    /// <summary>
+    /// イベント送信
+    /// </summary>
+    public void SendEvent(EventConst.Event _event)
+    {
+        PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), datas, eventOptions, sendOptions);
+        datas = Array.Empty<object>();
     }
 
     ///////////////////////////////////////////////////////////

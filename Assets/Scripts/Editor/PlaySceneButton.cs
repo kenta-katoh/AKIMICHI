@@ -19,7 +19,7 @@ public class PlaySceneButton : EditorWindow
     {
         GUILayoutOption[] buttonOption = new GUILayoutOption[]
         {
-            GUILayout.Height(40)
+            GUILayout.Height(30)
         };
 
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
@@ -29,9 +29,12 @@ public class PlaySceneButton : EditorWindow
             string sceneName = System.IO.Path.GetFileNameWithoutExtension(path);
             if (GUILayout.Button(sceneName, buttonOption))
             {
-                SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
-                EditorSceneManager.playModeStartScene = sceneAsset;
-                EditorApplication.isPlaying = true;
+                if(!EditorApplication.isPlaying)
+                {
+                    SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+                    EditorSceneManager.playModeStartScene = sceneAsset;
+                    EditorApplication.isPlaying = true;
+                }
             }
         }
     }

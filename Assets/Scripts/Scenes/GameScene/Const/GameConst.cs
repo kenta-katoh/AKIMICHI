@@ -28,5 +28,13 @@ namespace Akimichi.Game
             Minus,
             Event,
         }
+
+        public enum GameProgressState
+        {
+            None,
+            Initialize,
+            BootCamera,
+            Countdown,
+        }
     }
 }

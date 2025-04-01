@@ -10,8 +10,6 @@ namespace Akimichi.Game
 {
     public class GameProgressManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
-        private const byte CustomInstantiateEventCode = 1;
-
         [SerializeField]
         private GameObject mapSpacesRoot = null;
 
@@ -80,26 +78,9 @@ namespace Akimichi.Game
             // 同期にはViewIDが必要なため取得する
             if (NetworkManager.Instance().IsAllocateViewID(photonView))
             {
-                // PrefabのtransformとViewIDを通知する準備をする
-                var data = new object[]
-                {
-                    photonView.ViewID
-                };
-
-                // 同じRoomの自分以外に通知
-                var raiseEventOptions = new RaiseEventOptions
-                {
-                    Receivers = ReceiverGroup.Others,
-                    CachingOption = EventCaching.AddToRoomCache
-                };
-
-                var sendOptions = new SendOptions
-                {
-                    Reliability = true
-                };
-
                 // 同じRoom内の他のユーザーへ通知
-                PhotonNetwork.RaiseEvent(CustomInstantiateEventCode, data, raiseEventOptions, sendOptions);
+                NetworkManager.Instance().AddSendData(photonView.ViewID);
+                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject);
             }
             else
             {
@@ -111,14 +92,29 @@ namespace Akimichi.Game
         public void OnEvent(EventData photonEvent)
         {
             var eventCode = photonEvent.Code;
-
-            if (eventCode != CustomInstantiateEventCode)
-            {
-                return;
-            }
-
+            EventConst.Event _event = EventConst.ConvertEvent(eventCode);
             var data = (object[])photonEvent.CustomData;
 
+            switch (_event)
+            {
+                case EventConst.Event.CreatePlayerObject:
+                    CreatePlayerObject((int)data[0]);
+                    break;
+            }
+        }
+
+        private void OnEnable()
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
+        }
+
+        private void CreatePlayerObject(int id)
+        {
             // 受信したtransformを設定
             var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
             obj.transform.SetParent(this.playerRoot.transform);
@@ -142,17 +138,7 @@ namespace Akimichi.Game
             photonView.ObservedComponents.Add(photonTransformView);
 
             // 受信したViewIDを用いて同期する
-            photonView.ViewID = (int)data[0];
-        }
-
-        private void OnEnable()
-        {
-            PhotonNetwork.AddCallbackTarget(this);
-        }
-
-        private void OnDisable()
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
+            photonView.ViewID = id;
         }
     }
 }
