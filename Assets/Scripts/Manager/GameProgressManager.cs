@@ -77,8 +77,8 @@ namespace Akimichi.Game
             switch (_event)
             {
                 case EventConst.Event.FinishState:
-                    GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)((int)data[0]), 
-                                                                (GameConst.PlayerIndex)((int)data[1]));
+                    GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)data[0], 
+                                                                (GameConst.PlayerIndex)data[1]);
 
                     TransitionState((GameConst.GameProgressState)data[0]);
                     break;
