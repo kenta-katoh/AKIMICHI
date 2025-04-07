@@ -28,6 +28,10 @@ namespace Akimichi.Game
 
         private void Awake()
         {
+            GameStateManagerData stateManagerData = new GameStateManagerData();
+            stateManagerData.ProgressManager = this;
+            GameStateManager.Instance().DataTransfer(stateManagerData);
+
             MapManagerData mapManagerData = new MapManagerData();
             mapManagerData.MapSpacesRoot = this.mapSpacesRoot;
             MapManager.Instance().DataTransfer(mapManagerData);
@@ -43,9 +47,7 @@ namespace Akimichi.Game
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
 
-            GameStateManager.Instance().CompleteState(GameConst.GameProgressState.Initialize);
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
-            TransitionState(GameConst.GameProgressState.Initialize);
         }
 
         private void ClearSendData()
@@ -67,10 +69,7 @@ namespace Akimichi.Game
                 case EventConst.Event.FinishState:
                     GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)data[0], 
                                                                 (GameConst.PlayerIndex)data[1]);
-
-                    TransitionState((GameConst.GameProgressState)data[0]);
                     break;
-
                 case EventConst.Event.CreatePlayerObject:
                     CreatePlayerObject(data);
                     break;
@@ -80,34 +79,24 @@ namespace Akimichi.Game
         /// <summary>
         /// ステータスに関する振る舞い思考
         /// </summary>
-        private void StatusBehavior()
+        public void StatusBehavior()
         {
             switch(GameStateManager.Instance().CurrentState())
             {
-                case GameConst.GameProgressState.Initialize:
-                    TransitionState(GameConst.GameProgressState.Initialize);
-                    break;
                 case GameConst.GameProgressState.CreatedPlayerObject:
                     // 自身の生成
                     CreatePlayerModel();
                     PlayerManager.Instance().PlayerView.transform.localPosition = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition;
-                    GameStateManager.Instance().CompleteState(GameConst.GameProgressState.CreatedPlayerObject);
-                    TransitionState(GameConst.GameProgressState.CreatedPlayerObject);
+                    
+                    GameStateManager.Instance().SendState(GameConst.GameProgressState.CreatedPlayerObject);
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
                     // カメラ起動
                     this.virtualCamera.Follow = PlayerManager.Instance().PlayerView.transform;
-                    this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", null);
+                    this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
+                        GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
+                    });
                     break;
-            }
-        }
-
-        private void TransitionState(GameConst.GameProgressState state)
-        {
-            if (GameStateManager.Instance().IsCompleteState(state))
-            {
-                GameStateManager.Instance().TransitionState();
-                StatusBehavior();
             }
         }
 
@@ -163,35 +152,35 @@ namespace Akimichi.Game
 
         private void CreatePlayerObject(object[] data)
         {
-            // 受信したtransformを設定
-            var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
-            obj.transform.SetParent(this.playerRoot.transform);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localScale = Vector3.one;
+            if ((GameConst.PlayerIndex)data[1] != PlayerManager.Instance().PlayerIndex)
+            {
+                // 受信したtransformを設定
+                var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
+                obj.transform.SetParent(this.playerRoot.transform);
+                obj.transform.localPosition = Vector3.zero;
+                obj.transform.localScale = Vector3.one;
 
-            // Photon
-            var photonView = obj.AddComponent<PhotonView>();
-            var photonTransformView = obj.AddComponent<PhotonTransformView>();
+                // Photon
+                var photonView = obj.AddComponent<PhotonView>();
+                var photonTransformView = obj.AddComponent<PhotonTransformView>();
 
-            // 初期化を行う
-            photonView.ObservedComponents = new List<Component>();
+                // 初期化を行う
+                photonView.ObservedComponents = new List<Component>();
 
-            // Synchronizeするものを設定
-            photonTransformView.m_SynchronizePosition = true;
-            photonTransformView.m_SynchronizeRotation = false;
-            photonTransformView.m_SynchronizeScale = true;
-            photonTransformView.m_UseLocal = true;
+                // Synchronizeするものを設定
+                photonTransformView.m_SynchronizePosition = true;
+                photonTransformView.m_SynchronizeRotation = false;
+                photonTransformView.m_SynchronizeScale = true;
+                photonTransformView.m_UseLocal = true;
 
-            // PhotonViewに紐付ける
-            photonView.ObservedComponents.Add(photonTransformView);
+                // PhotonViewに紐付ける
+                photonView.ObservedComponents.Add(photonTransformView);
 
-            // 受信したViewIDを用いて同期する
-            photonView.ViewID = (int)data[0];
-
+                // 受信したViewIDを用いて同期する
+                photonView.ViewID = (int)data[0];
+            }
             GameStateManager.Instance().CompleteState(  GameConst.GameProgressState.CreatedPlayerObject,
                                                         (GameConst.PlayerIndex)data[1]);
-
-            TransitionState(GameConst.GameProgressState.CreatedPlayerObject);
         }
     }
 }

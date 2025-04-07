@@ -7,6 +7,13 @@ namespace Akimichi.Game
     {
         private Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>> stateDic = new Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>>();
         private GameConst.GameProgressState currentState = GameConst.GameProgressState.None;
+        private GameProgressManager progressManager = null;
+
+        public override void DataTransfer(ManagerData data)
+        {
+            base.DataTransfer(data);
+            this.progressManager = ((GameStateManagerData)data).ProgressManager;
+        }
 
         public override void Initialize()
         {
@@ -37,15 +44,6 @@ namespace Akimichi.Game
         /// ステータス完了
         /// </summary>
         /// <param name="state"></param>
-        public void CompleteState(GameConst.GameProgressState state)
-        {
-            CompleteState(state, PlayerManager.Instance().PlayerIndex);
-        }
-
-        /// <summary>
-        /// ステータス完了
-        /// </summary>
-        /// <param name="state"></param>
         /// <param name="index"></param>
         public void CompleteState(GameConst.GameProgressState state, GameConst.PlayerIndex index)
         {
@@ -55,6 +53,16 @@ namespace Akimichi.Game
                 {
                     this.stateDic[state].Add(index);
                 }
+            }
+
+            // 全員のステータスが完了しているかチェック
+            if (IsCompleteState(state))
+            {
+                // 次のステータスに遷移
+                TransitionState();
+
+                // ステータス思考
+                this.progressManager.StatusBehavior();
             }
         }
 

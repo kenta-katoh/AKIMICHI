@@ -31,7 +31,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         eventOptions = new RaiseEventOptions
         {
-            Receivers = ReceiverGroup.Others,
+            Receivers = ReceiverGroup.All,
             CachingOption = EventCaching.AddToRoomCache
         };
 
