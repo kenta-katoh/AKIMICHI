@@ -19,7 +19,7 @@ namespace Akimichi.Game
         private GameObject playerRoot = null;
 
         [SerializeField]
-        private Animator bootCameraAnime = null;
+        private AnimeController bootCameraAnime = null;
 
         [SerializeField]
         private GameObject playerPrefab = null;
@@ -54,12 +54,6 @@ namespace Akimichi.Game
             {
                 datas[i] = null;
             }
-        }
-
-        public void BootCamera()
-        {
-            this.virtualCamera.Follow = PlayerManager.Instance().PlayerView.transform;
-            this.bootCameraAnime.SetBool("BootCamera", true);
         }
 
         public void OnEvent(EventData photonEvent)
@@ -101,7 +95,9 @@ namespace Akimichi.Game
                     TransitionState(GameConst.GameProgressState.CreatedPlayerObject);
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
-                    BootCamera();
+                    // カメラ起動
+                    this.virtualCamera.Follow = PlayerManager.Instance().PlayerView.transform;
+                    this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", null);
                     break;
             }
         }
