@@ -1,24 +1,28 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Akimichi.Game
 {
     public static class GameConst
     {
-        public static int MaximumPlayers()
+        public static int MaximumPlayers(bool isUseDabug = false)
         {
-            return Enum.GetNames(typeof(PlayerIndex)).Length;
+            int result = Enum.GetNames(typeof(PlayerIndex)).Length;
+            if (isUseDabug)
+            {
+                if (NetworkManager.Instance().GetRoomPlayerValue() < Enum.GetNames(typeof(PlayerIndex)).Length)
+                {
+                    result = NetworkManager.Instance().GetRoomPlayerValue();
+                }
+            }
+            return result;
         }
 
         public enum PlayerIndex
         {
             First = 0,
             Second = 1,
-            //Third = 2,
-            //Fourth = 3,
+            Third = 2,
+            Fourth = 3,
         }
 
         public enum MapSpaceType

@@ -68,7 +68,7 @@ namespace Akimichi.Game
             bool result = false;
             if(this.stateDic.ContainsKey(state))
             {
-                if(this.stateDic[state].Count == Enum.GetValues(typeof(GameConst.PlayerIndex)).Length)
+                if(this.stateDic[state].Count == GameConst.MaximumPlayers(true))
                 {
                     result = true;
                 }

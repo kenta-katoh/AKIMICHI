@@ -253,6 +253,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), data, eventOptions, sendOptions);
     }
 
+    /// <summary>
+    /// ルーム人数取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetRoomPlayerValue()
+    {
+        return PhotonNetwork.CurrentRoom.PlayerCount;
+    }
+
     ///////////////////////////////////////////////////////////
     /// コールバック
     ///////////////////////////////////////////////////////////

@@ -2,7 +2,6 @@ using Cinemachine;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,11 +46,6 @@ namespace Akimichi.Game
             GameStateManager.Instance().CompleteState(GameConst.GameProgressState.Initialize);
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
             TransitionState(GameConst.GameProgressState.Initialize);
-
-            //ClearSendData();
-            //this.datas[0] = (byte)GameConst.GameProgressState.InitializedFinish;
-            //this.datas[1] = (byte)PlayerManager.Instance().PlayerIndex;
-            //NetworkManager.Instance().SendEvent(EventConst.Event.TransitionState, this.datas);
         }
 
         private void ClearSendData()
