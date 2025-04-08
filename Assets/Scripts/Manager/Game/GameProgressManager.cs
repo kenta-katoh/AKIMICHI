@@ -158,7 +158,7 @@ namespace Akimichi.Game
 
             // Synchronizeするものを設定
             photonTransformView.m_SynchronizePosition = true;
-            photonTransformView.m_SynchronizeRotation = false;
+            photonTransformView.m_SynchronizeRotation = true;
             photonTransformView.m_SynchronizeScale = true;
             photonTransformView.m_UseLocal = true;
 
@@ -200,7 +200,7 @@ namespace Akimichi.Game
 
                 // Synchronizeするものを設定
                 photonTransformView.m_SynchronizePosition = true;
-                photonTransformView.m_SynchronizeRotation = false;
+                photonTransformView.m_SynchronizeRotation = true;
                 photonTransformView.m_SynchronizeScale = true;
                 photonTransformView.m_UseLocal = true;
 

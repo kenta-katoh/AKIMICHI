@@ -10,6 +10,9 @@ namespace Akimichi.Game
         public PlayerConst.State State { get; private set; } = PlayerConst.State.None;
         private MapSpaceViewBase nextSpace = null;
 
+        // player math
+        private float rotRange = 0.0f;
+
         // 一旦サイコロ処理はこちらに
         private int dice = 0;
         private System.Random rand = new System.Random();
@@ -34,7 +37,23 @@ namespace Akimichi.Game
             base.ManagedUpdate();
             if(this.State == PlayerConst.State.OnMove)
             {
-
+                this.PlayerView.AddRotation(this.rotRange);
+                if(Mathf.Sign(this.rotRange) > 0.0f)
+                {
+                    if (this.PlayerView.IsCheckRotationExceed())
+                    {
+                        this.PlayerView.SetTargetRotation(-PlayerConst.MaximumRot);
+                        this.rotRange = -PlayerConst.RotRange;
+                    }
+                }
+                else
+                {
+                    if (this.PlayerView.IsCheckRotationBelow())
+                    {
+                        this.PlayerView.SetTargetRotation(PlayerConst.MaximumRot);
+                        this.rotRange = PlayerConst.RotRange;
+                    }
+                }
             }
         }
 
@@ -55,7 +74,6 @@ namespace Akimichi.Game
 
             // 一旦サイコロ処理はここで
             this.dice = rand.Next(1, 7);
-            Debug.LogError(this.dice);
             MovePlayer();
         }
 
@@ -65,6 +83,8 @@ namespace Akimichi.Game
         public void MovePlayer()
         {
             this.State = PlayerConst.State.OnMove;
+            this.PlayerView.SetTargetRotation(PlayerConst.MaximumRot);
+            this.rotRange = PlayerConst.RotRange;
         }
     }
 }

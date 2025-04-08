@@ -7,31 +7,48 @@ namespace Akimichi.Game
 {
     public class PlayerView : MonoBehaviour
     {
-        public float value = 0.1f;
+        private float targetRotation = 0.0f;
+        private float rotation = 0.0f;
 
-        private void Update()
+        /// <summary>
+        /// 回転設定
+        /// </summary>
+        /// <param name="rot"></param>
+        public void SetTargetRotation(float rot)
         {
-            Vector3 pos = gameObject.transform.localPosition;
-            if (Input.GetKey(KeyCode.W))
-            {
-                pos.y += value;
-            }
+            this.targetRotation = rot;
+        }
 
-            if (Input.GetKey(KeyCode.A))
-            {
-                pos.x -= value;
-            }
+        /// <summary>
+        /// すり足回転
+        /// </summary>
+        /// <param name="value"></param>
+        public void AddRotation(float value)
+        {
+            this.rotation += value;
+            int sign = (int)Mathf.Sign(this.rotation);
+            float rot = Mathf.Abs(this.rotation) % 360.0f;
+            rot *= sign;
+            this.rotation = rot;
+            gameObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, this.rotation);
+        }
 
-            if (Input.GetKey(KeyCode.S))
-            {
-                pos.y -= value;
-            }
+        /// <summary>
+        /// 回転角チェック
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCheckRotationExceed()
+        {
+            return this.targetRotation < this.rotation;
+        }
 
-            if (Input.GetKey(KeyCode.D))
-            {
-                pos.x += value;
-            }
-            gameObject.transform.localPosition = pos;
+        /// <summary>
+        /// 回転角チェック
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCheckRotationBelow()
+        {
+            return this.targetRotation > this.rotation;
         }
     }
 }

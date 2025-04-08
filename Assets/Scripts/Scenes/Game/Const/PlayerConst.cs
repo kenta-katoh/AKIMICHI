@@ -13,5 +13,8 @@ namespace Akimichi.Game
             DuringDice,      // サイコロ中
             OnMove,          // 移動中
         }
+
+        public static readonly float MaximumRot = 15.0f;
+        public static readonly float RotRange = 0.25f;
     }
 }
