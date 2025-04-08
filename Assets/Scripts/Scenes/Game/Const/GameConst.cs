@@ -40,7 +40,7 @@ namespace Akimichi.Game
             CreatedPlayerObject,
             InitializedFinish,
             BootCamera,
-            Countdown,
+            InGame,
         }
     }
 }
