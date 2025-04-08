@@ -29,6 +29,6 @@ public class TestSceneManager : MonoBehaviour
     public void ChangeScene(string name)
     {
         NetworkManager.Instance().DeleteCallBack();
-        //SceneManager.LoadScene(name);
+        SceneManager.LoadScene(name);
     }
 }
