@@ -3,12 +3,16 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class MatchingTest : MonoBehaviour
 {
     [SerializeField]
     private List<MatchingPlayerContents> playerList = new List<MatchingPlayerContents>();
+
+    [SerializeField]
+    private TMP_InputField inputField = null;
 
     private void Awake()
     {
@@ -23,6 +27,7 @@ public class MatchingTest : MonoBehaviour
 
     private void Start()
     {
+        NetworkManager.Instance().SetSysncScene(true);
         UpdateRoomData();
     }
 
@@ -32,6 +37,17 @@ public class MatchingTest : MonoBehaviour
     public void LeaveRoom()
     {
         NetworkManager.Instance().LeaveRoom();
+    }
+
+    /// <summary>
+    /// 同期遷移
+    /// </summary>
+    public void LoadScene()
+    {
+        if(NetworkManager.Instance().IsMasterClient())
+        {
+            NetworkManager.Instance().SysncLoadScene("TestGameScene");
+        }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -61,5 +77,10 @@ public class MatchingTest : MonoBehaviour
                 index++;
             }
         }
+    }
+
+    public void ChangeName(string name)
+    {
+        NetworkManager.Instance().SetName(inputField.text);
     }
 }

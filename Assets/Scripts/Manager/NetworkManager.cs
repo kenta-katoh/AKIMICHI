@@ -3,6 +3,8 @@ using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Akimichi.Game;
+using ExitGames.Client.Photon;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -20,14 +22,23 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private static Action<Player> onPlayerEnteredRoom = null;   // ルームにプレイヤーIn時
     private static Action<Player> onPlayerLeftRoom = null;      // ルームからプレイヤーout時
 
+    private static RaiseEventOptions eventOptions = new RaiseEventOptions();
+    private static SendOptions sendOptions = new SendOptions();
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        PhotonNetwork.NickName = "akimichi" + UnityEngine.Random.Range(1000, 9999); ;
-    }
 
-    private NetworkManager()
-    {
+        eventOptions = new RaiseEventOptions
+        {
+            Receivers = ReceiverGroup.All,
+            CachingOption = EventCaching.AddToRoomCache
+        };
+
+        sendOptions = new SendOptions
+        {
+            Reliability = true
+        };
     }
 
     public static NetworkManager Instance()
@@ -116,7 +127,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void CreateRoom(string name)
     {
         RoomOptions option = new RoomOptions();
-        option.MaxPlayers = 4;
+        option.MaxPlayers = GameConst.MaximumPlayers();
         option.IsVisible = true;
         option.IsOpen = true;
         option.PlayerTtl = 0;
@@ -161,6 +172,94 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public bool IsMyself(string userId)
     {
         return PhotonNetwork.LocalPlayer.UserId == userId;
+    }
+
+    /// <summary>
+    /// シーン同期設定
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetSysncScene(bool flag)
+    {
+        PhotonNetwork.AutomaticallySyncScene = flag;
+    }
+
+    /// <summary>
+    /// 同期遷移
+    /// </summary>
+    /// <param name="sceneName"></param>
+    public void SysncLoadScene(string sceneName)
+    {
+        PhotonNetwork.LoadLevel(sceneName);
+    }
+
+    /// <summary>
+    /// ホストかどうか
+    /// </summary>
+    /// <returns></returns>
+    public bool IsMasterClient()
+    {
+        return PhotonNetwork.IsMasterClient;
+    }
+
+    /// <summary>
+    /// プレイヤー取得
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public GameConst.PlayerIndex GetPlayerIndex(string userID)
+    {
+        GameConst.PlayerIndex result = GameConst.PlayerIndex.First;
+        int index = 0;
+        foreach(Player item in PhotonNetwork.PlayerList)
+        {
+            if(item.UserId == userID)
+            {
+                result = (GameConst.PlayerIndex)index;
+                break;
+            }
+            index++;
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// ユーザーID取得
+    /// </summary>
+    /// <returns></returns>
+    public string GetUserID()
+    {
+        return PhotonNetwork.LocalPlayer.UserId;
+    }
+
+    /// <summary>
+    /// 名前設定
+    /// </summary>
+    /// <param name="name"></param>
+    public void SetName(string name)
+    {
+        PhotonNetwork.NickName = name;
+    }
+
+    public bool IsAllocateViewID(PhotonView view)
+    {
+        return PhotonNetwork.AllocateViewID(view);
+    }
+
+    /// <summary>
+    /// イベント送信
+    /// </summary>
+    public void SendEvent(EventConst.Event _event, object[] data)
+    {
+        PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), data, eventOptions, sendOptions);
+    }
+
+    /// <summary>
+    /// ルーム人数取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetRoomPlayerValue()
+    {
+        return PhotonNetwork.CurrentRoom.PlayerCount;
     }
 
     ///////////////////////////////////////////////////////////

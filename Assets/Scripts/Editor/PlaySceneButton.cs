@@ -2,25 +2,42 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class PlaySceneButton
+public class PlaySceneButton : EditorWindow
 {
+#if UNITY_EDITOR
     [MenuItem("Akimichi/PlayGame")]
     /// <summary>
     /// Scene実行処理
     /// </summary>
     static void PlayScene()
     {
-        string scenePath = EditorBuildSettings.scenes[0].path;
-        SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
-
-        if (sceneAsset == null)
-        {
-            Debug.Log($"{scenePath} シーンアセットが存在しません");
-            return;
-        }
-
-        EditorSceneManager.playModeStartScene = sceneAsset;
-
-        EditorApplication.isPlaying = true;
+        var window = GetWindow<PlaySceneButton>("UIElements");
+        window.titleContent = new GUIContent("PlayScene");
+        window.Show();
     }
+
+    private void OnGUI()
+    {
+        GUILayoutOption[] buttonOption = new GUILayoutOption[]
+        {
+            GUILayout.Height(30)
+        };
+
+        GUILayout.Space(EditorGUIUtility.singleLineHeight);
+        foreach (var scene in EditorBuildSettings.scenes)
+        {
+            string path = scene.path;
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(path);
+            if (GUILayout.Button(sceneName, buttonOption))
+            {
+                if(!EditorApplication.isPlaying)
+                {
+                    SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+                    EditorSceneManager.playModeStartScene = sceneAsset;
+                    EditorApplication.isPlaying = true;
+                }
+            }
+        }
+    }
+#endif
 }
