@@ -13,12 +13,20 @@ namespace Akimichi.Game
 
         public void MoveLeft()
         {
-
+            Input();
         }
 
         public void MoveRight()
-        { 
-        
+        {
+            Input();
+        }
+
+        private void Input()
+        {
+            if (PlayerManager.Instance().State == PlayerConst.State.WaitingInput)
+            {
+                PlayerManager.Instance().RollDice();
+            }
         }
     }
 }

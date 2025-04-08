@@ -10,8 +10,8 @@ namespace Akimichi.Game
         {
             None = 0,
             FinishState = 1,
-            TransitionState = 2,
-            CreatePlayerObject = 3,
+            CreatePlayerObject = 2,
+            StartingPositionDistribution = 3,
         }
 
         public static Event ConvertEvent(byte data)

@@ -32,5 +32,6 @@ namespace Akimichi
         public virtual void DataTransfer(ManagerData data) { }
         public virtual void Initialize() { }
         public virtual void CreateData() { }
+        public virtual void ManagedUpdate() { }
     }
 }

@@ -38,6 +38,7 @@ namespace Akimichi.Game
             None,
             Initialize,
             CreatedPlayerObject,
+            StartPositionSetting,
             InitializedFinish,
             BootCamera,
             InGame,

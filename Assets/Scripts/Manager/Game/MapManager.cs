@@ -1,6 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Akimichi.Game
 {
@@ -9,6 +10,7 @@ namespace Akimichi.Game
         private GameObject mapSpacesRoot = null;
         private List<MapSpaceViewBase> mapSpaceList = new List<MapSpaceViewBase>();
         private List<MapSpaceViewBase> playerStartMapSpaceList = new List<MapSpaceViewBase>();
+        private System.Random rand = new System.Random();
 
         public override void DataTransfer(ManagerData data)
         {
@@ -48,6 +50,37 @@ namespace Akimichi.Game
                 if (mapSpace.IsStartingPosition)
                 {
                     this.playerStartMapSpaceList.Add(mapSpace);
+                }
+            }
+        }
+
+        /// <summary>
+        /// スタート位置のランダムシード
+        /// </summary>
+        public List<int> StartPositionSetting()
+        {
+            List<int> result = new List<int>();
+            int count = this.rand.Next(1, 6);
+            for (int i = 0; i < count; ++i)
+            {
+                result.Add(rand.Next(0, this.playerStartMapSpaceList.Count));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// スタート位置のシャッフル
+        /// </summary>
+        /// <param name="list"></param>
+        public void StartPositionShuffle(List<int> list)
+        {
+            foreach (int item in list)
+            {
+                if(item < this.playerStartMapSpaceList.Count)
+                {
+                    MapSpaceViewBase space = this.playerStartMapSpaceList[item];
+                    this.playerStartMapSpaceList.RemoveAt(item);
+                    this.playerStartMapSpaceList.Add(space);
                 }
             }
         }
