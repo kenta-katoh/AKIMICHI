@@ -76,17 +76,30 @@ namespace Akimichi.Game
                     GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)data[0], 
                                                                 (GameConst.PlayerIndex)data[1]);
                     break;
+                case EventConst.Event.AffiliationMapSpace:
+                    MapManager.Instance().Separation((GameConst.PlayerIndex)data[1]);
+                    MapManager.Instance().Affiliation((int)data[0], (GameConst.PlayerIndex)data[1]);
+                    break;
+
+
                 case EventConst.Event.CreatePlayerObject:
                     CreatePlayerObject(data);
                     break;
                 case EventConst.Event.StartingPositionDistribution:
+                    // もらったシードでスタート位置をシャッフル
                     List<int> list = new List<int>();
                     for(int i = 0; i < data.Length; ++i)
                     {
                         if(data[i] != null) list.Add((int)data[i]);
                     }
                     MapManager.Instance().StartPositionShuffle(list);
-                    PlayerManager.Instance().SetPosInstantSync(MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition);
+
+                    // スタート位置確定後に所属の送信
+                    MapSpaceLogicBase logic = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex);
+                    MapManager.Instance().SendAffiliation(logic.Index, PlayerManager.Instance().PlayerIndex);
+
+                    // スタート位置に配置
+                    PlayerManager.Instance().SetPosInstantSync(logic.GetTransform().localPosition);
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.StartPositionSetting);
                     break;
             }

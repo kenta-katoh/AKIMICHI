@@ -8,8 +8,8 @@ namespace Akimichi.Game
     public class MapManager : ManagerBase<MapManager>
     {
         private GameObject mapSpacesRoot = null;
-        private List<MapSpaceViewBase> mapSpaceList = new List<MapSpaceViewBase>();
-        private List<MapSpaceViewBase> playerStartMapSpaceList = new List<MapSpaceViewBase>();
+        private List<MapSpaceLogicBase> mapSpaceList = new List<MapSpaceLogicBase>();
+        private List<MapSpaceLogicBase> playerStartMapSpaceList = new List<MapSpaceLogicBase>();
         private System.Random rand = new System.Random();
 
         public override void DataTransfer(ManagerData data)
@@ -36,7 +36,7 @@ namespace Akimichi.Game
                 if (map != null)
                 {
                     map.SetIndex(i);
-                    this.mapSpaceList.Add(map);
+                    this.mapSpaceList.Add((MapSpaceLogicBase)map.Logic);
                 }
             }
         }
@@ -45,9 +45,9 @@ namespace Akimichi.Game
         private void CashPlayerStartMapSpaces()
         {
             this.playerStartMapSpaceList.Clear();
-            foreach (MapSpaceViewBase mapSpace in this.mapSpaceList)
+            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
             {
-                if (mapSpace.IsStartingPosition)
+                if (mapSpace.IsStartingPosition())
                 {
                     this.playerStartMapSpaceList.Add(mapSpace);
                 }
@@ -78,7 +78,7 @@ namespace Akimichi.Game
             {
                 if(item < this.playerStartMapSpaceList.Count)
                 {
-                    MapSpaceViewBase space = this.playerStartMapSpaceList[item];
+                    MapSpaceLogicBase space = this.playerStartMapSpaceList[item];
                     this.playerStartMapSpaceList.RemoveAt(item);
                     this.playerStartMapSpaceList.Add(space);
                 }
@@ -90,9 +90,54 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public MapSpaceViewBase GetStartMapSpace(int index)
+        public MapSpaceLogicBase GetStartMapSpace(int index)
         {
             return this.playerStartMapSpaceList[index];
+        }
+
+        /// <summary>
+        /// マスに所属を送信
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="playerIndex"></param>
+        public void SendAffiliation(int index, GameConst.PlayerIndex playerIndex)
+        {
+            ClearSendData();
+            this.datas[0] = index;
+            this.datas[1] = (int)playerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
+        }
+
+        /// <summary>
+        /// マスに所属
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        public bool Affiliation(int index, GameConst.PlayerIndex playerIndex)
+        {
+            bool result = false;
+            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
+            {
+                if(mapSpace.Index == index)
+                {
+                    result = mapSpace.Affiliation(playerIndex);
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// マスから離属
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        public void Separation(GameConst.PlayerIndex playerIndex)
+        {
+            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
+            {
+                mapSpace.Separation(playerIndex);
+            }
         }
     }
 }

@@ -12,5 +12,10 @@ namespace Akimichi.Game
         { 
             this.view = viewBase;
         }
+
+        public Transform GetTransform()
+        {
+            return this.view.transform;
+        }
     }
 }

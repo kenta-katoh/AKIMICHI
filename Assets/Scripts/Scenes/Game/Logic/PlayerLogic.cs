@@ -2,7 +2,6 @@ using Akimichi.Game;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace Akimichi.Game
 {
@@ -55,15 +54,6 @@ namespace Akimichi.Game
         public bool IsCheckRotationBelow()
         {
             return this.targetRotation > this.rotation;
-        }
-
-        /// <summary>
-        /// プレイヤーtransform取得
-        /// </summary>
-        /// <returns></returns>
-        public Transform GetTransform()
-        {
-            return this.view.transform;
         }
 
         /// <summary>

@@ -14,10 +14,6 @@ namespace Akimichi.Game
         // player math
         private float rotRange = 0.0f;
 
-        // 一旦サイコロ処理はこちらに
-        private int dice = 0;
-        private System.Random rand = new System.Random();
-
         public override void Initialize()
         {
             base.Initialize();
