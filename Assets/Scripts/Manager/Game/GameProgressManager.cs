@@ -86,7 +86,7 @@ namespace Akimichi.Game
                         if(data[i] != null) list.Add((int)data[i]);
                     }
                     MapManager.Instance().StartPositionShuffle(list);
-                    PlayerManager.Instance().PlayerView.transform.localPosition = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition;
+                    PlayerManager.Instance().SetPosInstantSync(MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex).transform.localPosition);
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.StartPositionSetting);
                     break;
             }
@@ -120,7 +120,7 @@ namespace Akimichi.Game
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
                     // カメラ起動
-                    this.virtualCamera.Follow = PlayerManager.Instance().PlayerView.transform;
+                    this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
                     this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
                         GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
                     });

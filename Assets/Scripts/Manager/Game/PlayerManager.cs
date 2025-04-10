@@ -6,8 +6,9 @@ namespace Akimichi.Game
     public class PlayerManager : ManagerBase<PlayerManager>
     {
         public GameConst.PlayerIndex PlayerIndex {  get; private set; }
-        public PlayerView PlayerView { get; private set; } = null;
+        private PlayerLogic playerLogic = null;
         public PlayerConst.State State { get; private set; } = PlayerConst.State.None;
+        private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceViewBase nextSpace = null;
 
         // player math
@@ -28,7 +29,7 @@ namespace Akimichi.Game
             PlayerView view = obj.GetComponent<PlayerView>();
             if(view != null)
             {
-                this.PlayerView = view;
+                this.playerLogic = (PlayerLogic)view.Logic;
             }
         }
 
@@ -37,20 +38,20 @@ namespace Akimichi.Game
             base.ManagedUpdate();
             if(this.State == PlayerConst.State.OnMove)
             {
-                this.PlayerView.AddRotation(this.rotRange);
+                this.playerLogic.AddRotation(this.rotRange);
                 if(Mathf.Sign(this.rotRange) > 0.0f)
                 {
-                    if (this.PlayerView.IsCheckRotationExceed())
+                    if (this.playerLogic.IsCheckRotationExceed())
                     {
-                        this.PlayerView.SetTargetRotation(-PlayerConst.MaximumRot);
+                        this.playerLogic.SetTargetRotation(-PlayerConst.MaximumRot);
                         this.rotRange = -PlayerConst.RotRange;
                     }
                 }
                 else
                 {
-                    if (this.PlayerView.IsCheckRotationBelow())
+                    if (this.playerLogic.IsCheckRotationBelow())
                     {
-                        this.PlayerView.SetTargetRotation(PlayerConst.MaximumRot);
+                        this.playerLogic.SetTargetRotation(PlayerConst.MaximumRot);
                         this.rotRange = PlayerConst.RotRange;
                     }
                 }
@@ -62,19 +63,20 @@ namespace Akimichi.Game
         /// </summary>
         public void EnterGame()
         {
-            this.State = PlayerConst.State.WaitingInput;
+            SetPlayerState(PlayerConst.State.WaitingInput);
         }
 
         /// <summary>
-        /// ダイスロール
+        /// ダイス振り
         /// </summary>
-        public void RollDice()
+        public void DiceRoll()
         {
-            this.State = PlayerConst.State.DuringDice;
+            SetPlayerState(PlayerConst.State.DuringDice);
+        }
 
-            // 一旦サイコロ処理はここで
-            this.dice = rand.Next(1, 7);
-            MovePlayer();
+        private void SetPlayerState(PlayerConst.State state)
+        {
+            this.State = state;
         }
 
         /// <summary>
@@ -83,8 +85,35 @@ namespace Akimichi.Game
         public void MovePlayer()
         {
             this.State = PlayerConst.State.OnMove;
-            this.PlayerView.SetTargetRotation(PlayerConst.MaximumRot);
+            this.playerLogic.SetTargetRotation(PlayerConst.MaximumRot);
             this.rotRange = PlayerConst.RotRange;
+        }
+
+        /// <summary>
+        /// プレイヤーtransform取得
+        /// </summary>
+        /// <returns></returns>
+        public Transform GetPlayerTransform()
+        {
+            return this.playerLogic.GetTransform();
+        }
+
+        /// <summary>
+        /// 位置設定（即時同期）
+        /// </summary>
+        /// <param name="pos"></param>
+        public void SetPosInstantSync(Vector3 pos)
+        {
+            this.playerLogic.SetPosInstantSync(pos);
+        }
+
+        /// <summary>
+        /// 進行方向設定
+        /// </summary>
+        /// <param name="dir"></param>
+        public void SetDirection(PlayerConst.Direction dir)
+        {
+            this.direction = dir;
         }
     }
 }

@@ -14,6 +14,13 @@ namespace Akimichi.Game
             OnMove,          // 移動中
         }
 
+        public enum Direction
+        {
+            None,
+            ClockWise,              // 時計まわり
+            CounterClockWise,       // 反時計回り
+        }
+
         public static readonly float MaximumRot = 15.0f;
         public static readonly float RotRange = 0.25f;
     }
