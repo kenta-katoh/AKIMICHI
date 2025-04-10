@@ -51,11 +51,6 @@ namespace Akimichi.Game
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
 
-        private void Update()
-        {
-            PlayerManager.Instance().ManagedUpdate();
-        }
-
         private void ClearSendData()
         {
             for(int i = 0; i < this.datas.Length; ++i)
@@ -78,7 +73,11 @@ namespace Akimichi.Game
                     break;
                 case EventConst.Event.AffiliationMapSpace:
                     MapManager.Instance().Separation((GameConst.PlayerIndex)data[1]);
-                    MapManager.Instance().Affiliation((int)data[0], (GameConst.PlayerIndex)data[1]);
+                    bool isEvent = MapManager.Instance().Affiliation((int)data[0], (GameConst.PlayerIndex)data[1]);
+                    if(isEvent)
+                    {
+                        // 稽古
+                    }
                     break;
 
 
@@ -96,7 +95,8 @@ namespace Akimichi.Game
 
                     // スタート位置確定後に所属の送信
                     MapSpaceLogicBase logic = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex);
-                    MapManager.Instance().SendAffiliation(logic.Index, PlayerManager.Instance().PlayerIndex);
+                    MapManager.Instance().SendAffiliation(logic.Index);
+                    PlayerManager.Instance().SetMapSpace(logic);
 
                     // スタート位置に配置
                     PlayerManager.Instance().SetPosInstantSync(logic.GetTransform().localPosition);

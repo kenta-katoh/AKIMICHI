@@ -57,6 +57,7 @@ namespace Akimichi.Game
                 {
                     this.dice.text = DiceManager.Instance().DiceValue.ToString();
                     this.isRoll = false;
+                    PlayerManager.Instance().StartMove();
                 }
             }
         }

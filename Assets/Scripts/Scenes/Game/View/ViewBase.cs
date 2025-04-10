@@ -14,6 +14,13 @@ namespace Akimichi.Game
             OnAwake();
         }
 
+        private void Update()
+        {
+            this.logic.OnManagedUpdate();
+            OnManagedUpdate();
+        }
+
         protected virtual void OnAwake() { }
+        protected virtual void OnManagedUpdate() { }
     }
 }

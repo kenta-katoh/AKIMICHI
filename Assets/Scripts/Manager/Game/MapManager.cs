@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Akimichi.Game.GameConst;
 
 namespace Akimichi.Game
 {
@@ -11,6 +12,7 @@ namespace Akimichi.Game
         private List<MapSpaceLogicBase> mapSpaceList = new List<MapSpaceLogicBase>();
         private List<MapSpaceLogicBase> playerStartMapSpaceList = new List<MapSpaceLogicBase>();
         private System.Random rand = new System.Random();
+        private int mapSpaceLastIndex = 0;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -37,6 +39,7 @@ namespace Akimichi.Game
                 {
                     map.SetIndex(i);
                     this.mapSpaceList.Add((MapSpaceLogicBase)map.Logic);
+                    this.mapSpaceLastIndex = i;
                 }
             }
         }
@@ -100,11 +103,11 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <param name="playerIndex"></param>
-        public void SendAffiliation(int index, GameConst.PlayerIndex playerIndex)
+        public void SendAffiliation(int index)
         {
             ClearSendData();
             this.datas[0] = index;
-            this.datas[1] = (int)playerIndex;
+            this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
         }
 
@@ -138,6 +141,65 @@ namespace Akimichi.Game
             {
                 mapSpace.Separation(playerIndex);
             }
+        }
+
+        /// <summary>
+        /// インデックスからマスの取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private MapSpaceLogicBase GetMapSpace(int index)
+        {
+            MapSpaceLogicBase result = null;
+            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
+            {
+                if(mapSpace.Index == index)
+                {
+                    result = mapSpace;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 時計回りにつぎのマスの取得
+        /// </summary>
+        /// <param name="mapSpace"></param>
+        /// <returns></returns>
+        public MapSpaceLogicBase NextMapSpace(MapSpaceLogicBase mapSpace)
+        {
+            MapSpaceLogicBase result = null;
+            
+            int index = mapSpace.Index;
+            index++;
+            if(index > this.mapSpaceLastIndex)
+            {
+                index = 0;
+            }
+            result = GetMapSpace(index);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 時計回りにひとつ前のマスの取得
+        /// </summary>
+        /// <param name="mapSpace"></param>
+        /// <returns></returns>
+        public MapSpaceLogicBase PreviousMapSpace(MapSpaceLogicBase mapSpace)
+        {
+            MapSpaceLogicBase result = null;
+
+            int index = mapSpace.Index;
+            index--;
+            if (index < 0)
+            {
+                index = this.mapSpaceLastIndex;
+            }
+            result = GetMapSpace(index);
+
+            return result;
         }
     }
 }

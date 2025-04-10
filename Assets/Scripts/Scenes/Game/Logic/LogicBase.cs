@@ -13,6 +13,8 @@ namespace Akimichi.Game
             this.view = viewBase;
         }
 
+        public virtual void OnManagedUpdate() { }
+
         public Transform GetTransform()
         {
             return this.view.transform;

@@ -12,6 +12,7 @@ namespace Akimichi.Game
             WaitingInput,    // 入力待機
             DuringDice,      // サイコロ中
             OnMove,          // 移動中
+            MoveBehavior,    // 移動思考中
         }
 
         public enum Direction
@@ -23,5 +24,6 @@ namespace Akimichi.Game
 
         public static readonly float MaximumRot = 15.0f;
         public static readonly float RotRange = 0.25f;
+        public static readonly float MoveTime = 1.0f;   // マス間の移動時間
     }
 }
