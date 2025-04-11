@@ -13,32 +13,11 @@ namespace Akimichi.Game
         private float rotation = 0.0f;
         private float rotRange = 0.0f;
         private Transform targetTransform = null;
+        private Vector3 startRotation = new Vector3(0.0f, 0.0f, 15.0f);
+        private Vector3 loopRotation = new Vector3(0.0f, 0.0f, -15.0f);
 
         public PlayerLogic(ViewBase view) : base(view)
         {
-        }
-
-        public override void OnManagedUpdate()
-        {
-            base.OnManagedUpdate();
-            if (this.isMove)
-            {
-                AddRotation(this.rotRange);
-                if (Mathf.Sign(this.rotRange) > 0.0f)
-                {
-                    if (this.targetRotation < this.rotation)
-                    {
-                        SetTargetRotation(-PlayerConst.MaximumRot, -PlayerConst.RotRange);
-                    }
-                }
-                else
-                {
-                    if (this.targetRotation > this.rotation)
-                    {
-                        SetTargetRotation(PlayerConst.MaximumRot, PlayerConst.RotRange);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -47,14 +26,23 @@ namespace Akimichi.Game
         /// <param name="target"></param>
         public void StartMove(Transform target)
         {
-            this.isMove = true;
             this.targetTransform = target;
-            this.view.transform.DOLocalMove(target.localPosition, PlayerConst.MoveTime).OnComplete(() => 
+            this.view.transform.DOLocalMove(target.localPosition, PlayerConst.MoveTime).
+                SetEase(Ease.Linear).
+                OnComplete(() => 
             {
                 PlayerManager.Instance().MoveBehavior();
 
             });
-            SetTargetRotation(PlayerConst.MaximumRot, PlayerConst.RotRange);
+
+            this.view.transform.DOLocalRotate(this.startRotation, 0.25f).
+                SetEase(Ease.Linear).
+                OnComplete(() => 
+            {
+                this.view.transform.DOLocalRotate(this.loopRotation, 0.5f).
+                SetEase(Ease.Linear).
+                SetLoops(-1, LoopType.Yoyo);
+            });
         }
 
         /// <summary>
@@ -70,7 +58,7 @@ namespace Akimichi.Game
             this.targetRotation = 0.0f;
             this.rotRange = 0.0f;
             this.rotation = 0.0f;
-            SyncRotView();
+            this.view.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
 
         /// <summary>
@@ -84,34 +72,12 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// すり足回転
-        /// </summary>
-        /// <param name="value"></param>
-        private void AddRotation(float value)
-        {
-            this.rotation += value;
-            int sign = (int)Mathf.Sign(this.rotation);
-            float rot = Mathf.Abs(this.rotation) % 360.0f;
-            rot *= sign;
-            this.rotation = rot;
-            SyncRotView();
-        }
-
-        /// <summary>
         /// 位置設定（即時同期）
         /// </summary>
         /// <param name="pos"></param>
         public void SetPosInstantSync(Vector3 pos)
         {
             this.view.transform.localPosition = pos;
-        }
-
-        /// <summary>
-        /// logic側の回転に対してview側の同期を行う
-        /// </summary>
-        private void SyncRotView()
-        {
-            this.view.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, this.rotation);
         }
     }
 }

@@ -22,8 +22,6 @@ namespace Akimichi.Game
             CounterClockWise,       // 反時計回り
         }
 
-        public static readonly float MaximumRot = 15.0f;
-        public static readonly float RotRange = 0.25f;
         public static readonly float MoveTime = 1.0f;   // マス間の移動時間
     }
 }
