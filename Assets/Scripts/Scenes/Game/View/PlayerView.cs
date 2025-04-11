@@ -5,33 +5,12 @@ using UnityEngine;
 
 namespace Akimichi.Game
 {
-    public class PlayerView : MonoBehaviour
+    public class PlayerView : ViewBase
     {
-        public float value = 0.1f;
-
-        private void Update()
+        protected override void OnAwake()
         {
-            Vector3 pos = gameObject.transform.localPosition;
-            if (Input.GetKey(KeyCode.W))
-            {
-                pos.y += value;
-            }
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                pos.x -= value;
-            }
-
-            if (Input.GetKey(KeyCode.S))
-            {
-                pos.y -= value;
-            }
-
-            if (Input.GetKey(KeyCode.D))
-            {
-                pos.x += value;
-            }
-            gameObject.transform.localPosition = pos;
+            base.OnAwake();
+            this.logic = new PlayerLogic(this);
         }
     }
 }

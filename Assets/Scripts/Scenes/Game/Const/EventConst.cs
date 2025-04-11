@@ -8,10 +8,13 @@ namespace Akimichi.Game
     {
         public enum Event
         {
+            // 定期イベント
             None = 0,
             FinishState = 1,
-            TransitionState = 2,
-            CreatePlayerObject = 3,
+            AffiliationMapSpace = 2,
+
+            CreatePlayerObject = 100,
+            StartingPositionDistribution = 101,
         }
 
         public static Event ConvertEvent(byte data)
