@@ -25,6 +25,7 @@ namespace Akimichi.Game
         private GameObject playerPrefab = null;
 
         private object[] datas = new object[10];
+        private EventBrain eventBrain = null;
 
         private void Awake()
         {
@@ -39,6 +40,12 @@ namespace Akimichi.Game
             PlayerManagerData playerManagerData = new PlayerManagerData();
             playerManagerData.PlayerRoot = this.playerRoot;
             PlayerManager.Instance().DataTransfer(playerManagerData);
+
+            // ホスト思考
+            if(NetworkManager.Instance().IsMasterClient())
+            {
+                this.eventBrain = new EventBrain();
+            }
         }
 
         private void Start()
@@ -46,6 +53,7 @@ namespace Akimichi.Game
             GameStateManager.Instance().Initialize();
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
+            if (this.eventBrain != null) this.eventBrain.Initialize(MapManager.Instance().GetMapSpaces());
 
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
@@ -71,11 +79,32 @@ namespace Akimichi.Game
                                                                 (GameConst.PlayerIndex)data[1]);
                     break;
                 case EventConst.Event.AffiliationMapSpace:
-                    MapManager.Instance().Separation((GameConst.PlayerIndex)data[1]);
-                    bool isEvent = MapManager.Instance().Affiliation((int)data[0], (GameConst.PlayerIndex)data[1]);
-                    if(isEvent)
+                    // マス所属はホスト思考
+                    if (this.eventBrain != null)
                     {
-                        // 稽古
+                        List<GameConst.PlayerIndex> players = this.eventBrain.AffiliationMapSpace((int)data[0], (GameConst.PlayerIndex)data[1]);
+                        if (players.Count > 1)
+                        {
+                            // 稽古待機状態へ
+                            int index = 0;
+                            ClearSendData();
+                            foreach (GameConst.PlayerIndex item in players)
+                            {
+                                this.datas[index] = (int)item;
+                            }
+                            NetworkManager.Instance().SendEvent(EventConst.Event.WaitingPractice, this.datas);
+                        }
+                    }
+                    break;
+                
+                /////////////////////////////
+                // 稽古関連
+                /////////////////////////////
+                // 稽古待機状態
+                case EventConst.Event.WaitingPractice:
+                    if(IsReception(data))
+                    {
+                        EventManager.Instance().WaitingPractice();
                     }
                     break;
 
@@ -94,7 +123,7 @@ namespace Akimichi.Game
 
                     // スタート位置確定後に所属の送信
                     MapSpaceLogicBase logic = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex);
-                    MapManager.Instance().SendAffiliation(logic.Index);
+                    EventManager.Instance().SendAffiliation(logic.Index);
                     PlayerManager.Instance().SetMapSpace(logic);
 
                     // スタート位置に配置
@@ -224,6 +253,28 @@ namespace Akimichi.Game
             }
             GameStateManager.Instance().CompleteState(  GameConst.GameProgressState.CreatedPlayerObject,
                                                         (GameConst.PlayerIndex)data[1]);
+        }
+
+        /// <summary>
+        /// 送信対象に自身が含まれているか
+        /// </summary>
+        /// <param name="objects"></param>
+        /// <returns></returns>
+        private bool IsReception(object[] objects)
+        {
+            bool result = false;
+            for (int i = 0; i < objects.Length; ++i)
+            {
+                if (objects[i] != null)
+                {
+                    if (PlayerManager.Instance().PlayerIndex == (GameConst.PlayerIndex)(int)objects[i])
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
         }
     }
 }

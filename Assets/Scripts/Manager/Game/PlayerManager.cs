@@ -53,17 +53,23 @@ namespace Akimichi.Game
         {
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
-            // 1マス移動を完了して思考時間なので、稽古が強制発生する場合はここかも
-
-            // まだダイス目が残っているかの判断
-            if(DiceManager.Instance().IsDiceRest())
+            // 稽古関連の判定
+            if(EventManager.Instance().Practice != EventConst.Practice.Waiting)
             {
-                StartMove();
+                // まだダイス目が残っているかの判断
+                if (DiceManager.Instance().IsDiceRest())
+                {
+                    StartMove();
+                }
+                else
+                {
+                    SetPlayerState(PlayerConst.State.WaitingInput);
+                    this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                }
             }
             else
             {
-                SetPlayerState(PlayerConst.State.WaitingInput);
-                this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                EventManager.Instance().ReadyToGo();
             }
         }
 
@@ -85,7 +91,7 @@ namespace Akimichi.Game
                         break;
                 }
                 // logic側ではすでに所属マスが変わっているので通知
-                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
+                EventManager.Instance().SendAffiliation(this.currentMapSpace.Index);
 
                 // 1マス進んでいるのでデクリメント
                 DiceManager.Instance().DiceDecrement();

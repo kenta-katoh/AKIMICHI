@@ -62,16 +62,6 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// 回転設定
-        /// </summary>
-        /// <param name="rot"></param>
-        private void SetTargetRotation(float target, float range)
-        {
-            this.targetRotation = target;
-            this.rotRange = range;
-        }
-
-        /// <summary>
         /// 位置設定（即時同期）
         /// </summary>
         /// <param name="pos"></param>
