@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using System.Linq;
 
 public class PlaySceneButton : EditorWindow
 {
@@ -16,6 +17,8 @@ public class PlaySceneButton : EditorWindow
         window.Show();
     }
 
+    static string[] skipScenes = { "ManagerScene", "TitleScene" };
+
     private void OnGUI()
     {
         GUILayoutOption[] buttonOption = new GUILayoutOption[]
@@ -28,6 +31,8 @@ public class PlaySceneButton : EditorWindow
         {
             string path = scene.path;
             string sceneName = System.IO.Path.GetFileNameWithoutExtension(path);
+            
+            if (skipScenes.Contains(sceneName)) continue;
             if (GUILayout.Button(sceneName, buttonOption))
             {
                 if(!EditorApplication.isPlaying)
