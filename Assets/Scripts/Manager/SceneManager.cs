@@ -43,7 +43,7 @@ namespace Manager
                 string deleteSceneName = "";
                 deleteSceneName = this.sceneList[0];
                 this.sceneList.RemoveAt(0);
-                DeleteScene(name);
+                DeleteScene(deleteSceneName);
             }
             this.sceneList.Add(name);
             UnityEngine.SceneManagement.SceneManager.LoadScene(name, LoadSceneMode.Additive);
