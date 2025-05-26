@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Akimichi
+namespace Akimichi.Data
 {
     /// <summary>
     /// シーン間データ受け渡し想定
@@ -36,6 +36,16 @@ namespace Akimichi
         {
             if (this.dataList.ContainsKey(key)) return this.dataList[key];
             return null;
+        }
+
+        public void Delete(string key)
+        {
+            if (this.dataList.ContainsKey(key)) this.dataList[key] = null;
+        }
+
+        public void AllDelete()
+        {
+            this.dataList.Clear();
         }
     }
 
