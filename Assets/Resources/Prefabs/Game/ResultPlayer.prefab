@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9048851563750075551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8530431610432320607}
+  - component: {fileID: 7111519516828209871}
+  - component: {fileID: 1349517285520001750}
+  m_Layer: 0
+  m_Name: ResultPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8530431610432320607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048851563750075551}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &7111519516828209871
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048851563750075551}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: c0923c92ad9dd694194515c0c34c941c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5.12, y: 5.12}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &1349517285520001750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048851563750075551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51692a40895ed4f4fb4ed7c2c19c28b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSprites:
+  - {fileID: 21300000, guid: c4d600c1b4af9b54e9ab735ebc7e9e58, type: 3}
+  - {fileID: 21300000, guid: 01d4bb4a1e496c34b9c2f67d272d23bd, type: 3}
+  - {fileID: 21300000, guid: c08335f4ed92ec04a9351ed2171f6687, type: 3}
+  - {fileID: 21300000, guid: 79427c6eb79956843b5c2b87cd2064d2, type: 3}
+  - {fileID: 21300000, guid: 27374fff43bc55046af88d91d8f2398b, type: 3}
+  - {fileID: 21300000, guid: 8db8b4ab926be7f429de52f51a7bc217, type: 3}
+  - {fileID: 21300000, guid: 020733a0cfbad234aa693adf3de24138, type: 3}
+  - {fileID: 21300000, guid: c0923c92ad9dd694194515c0c34c941c, type: 3}
+  - {fileID: 21300000, guid: 331804a4e0df6454897bcce300e489ac, type: 3}
+  - {fileID: 21300000, guid: 2c03689175d558247be36eed59e7d4be, type: 3}
+  - {fileID: 21300000, guid: a24a81c0bc6aa6d4d82a9f5efe072fb8, type: 3}
+  - {fileID: 21300000, guid: 951b37b87c41f6f4494d71adfb359bf5, type: 3}
+  - {fileID: 21300000, guid: a27d5a9a41a586346a8f4198ced96f16, type: 3}
+  - {fileID: 21300000, guid: c470aa49166d6d84cb13daf369a18547, type: 3}
+  - {fileID: 21300000, guid: a6f99e934e069ce4c8adc712063ca99d, type: 3}
+  - {fileID: 21300000, guid: 91bbf2ff34ebacf49b594867953d2ee5, type: 3}
+  - {fileID: 21300000, guid: 8b87a1d57310d0c4fa8bdbcaea1e86fa, type: 3}
+  - {fileID: 21300000, guid: 6a8c9ba348f60c04db7af0867001ec9d, type: 3}
+  - {fileID: 21300000, guid: dddc7ea68d06c8a45b3bc4101f47ed80, type: 3}
+  - {fileID: 21300000, guid: 86d218b6713e676408436640b4959abc, type: 3}
