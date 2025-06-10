@@ -65,13 +65,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6647098302923657862, guid: 9220727d8165fc5468a78a7cc33f193f,
         type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fa9e5a5d98a3c804e8157fb298feb941,
+        type: 3}
+    - target: {fileID: 6647098302923657862, guid: 9220727d8165fc5468a78a7cc33f193f,
+        type: 3}
       propertyPath: m_Color.b
-      value: 0.36320752
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6647098302923657862, guid: 9220727d8165fc5468a78a7cc33f193f,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.42782637
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6647098302923657862, guid: 9220727d8165fc5468a78a7cc33f193f,
         type: 3}
@@ -105,3 +111,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ad7e4e480d8004da656aada161788c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStartingPosition: 0
