@@ -16,7 +16,7 @@ namespace Akimichi.Title
         public void ChangeScene()
         {
             // テストでリザルトへ
-            SceneManager.Instance().ChangeScene("ResultScene");
+            SceneManager.Instance().ChangeScene("LobbyScene");
         }
 
         public void CreateData()

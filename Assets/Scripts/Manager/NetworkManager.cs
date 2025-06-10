@@ -27,8 +27,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-
         eventOptions = new RaiseEventOptions
         {
             Receivers = ReceiverGroup.All,
