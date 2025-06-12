@@ -24,6 +24,12 @@ namespace Akimichi.Game
         [SerializeField]
         private List<GameObject> playerPrefabs = null;
 
+        [SerializeField]
+        private GameObject eventRoot = null;
+
+        [SerializeField]
+        private GameObject eventObject = null;
+
         private object[] datas = new object[10];
         private EventBrain eventBrain = null;
 
@@ -41,8 +47,17 @@ namespace Akimichi.Game
             playerManagerData.PlayerRoot = this.playerRoot;
             PlayerManager.Instance().DataTransfer(playerManagerData);
 
+            EventManagerData eventManagerData = new EventManagerData();
+            for(int i = 0; i < 2; ++i)
+            {
+                var obj = Instantiate(this.eventObject, Vector3.zero, Quaternion.identity);
+                obj.transform.SetParent(this.eventRoot.transform);
+                eventManagerData.Events.Add(obj);
+            }
+            EventManager.Instance().DataTransfer(eventManagerData);
+
             // ホスト思考
-            if(NetworkManager.Instance().IsMasterClient())
+            if (NetworkManager.Instance().IsMasterClient())
             {
                 this.eventBrain = new EventBrain();
             }
@@ -80,18 +95,34 @@ namespace Akimichi.Game
                     break;
                 case EventConst.Event.AffiliationMapSpace:
                     // マス所属はホスト思考
+                    bool isEvent = false;
+                    List<GameConst.PlayerIndex> players = null;
                     if (this.eventBrain != null)
                     {
-                        List<GameConst.PlayerIndex> players = this.eventBrain.AffiliationMapSpace((int)data[0], (GameConst.PlayerIndex)data[1]);
-                        if (players.Count > 1)
+                        players = this.eventBrain.AffiliationMapSpace((int)data[0], (GameConst.PlayerIndex)data[1]);
+                        // 着地したマスに2人以上所属していたので稽古遷移
+                        if (players != null && players.Count > 1)
                         {
                             // 稽古待機状態へ
+                            isEvent = true;
                             int index = 0;
                             ClearSendData();
                             foreach (GameConst.PlayerIndex item in players)
                             {
                                 this.datas[index] = (int)item;
+                                index++;
                             }
+                        }
+                    }
+
+                    if (isEvent)
+                    {
+                        MapSpaceLogicBase mapSpace = MapManager.Instance().GetMapSpace((int)data[0]);
+                        EventDataBase mapEvent = EventManager.Instance().EventBooking(mapSpace.GetTransform());
+                        if(this.eventBrain != null && players != null)
+                        {
+                            // 稽古イベント開始の監視対象の登録
+                            this.eventBrain.AddPracticeEvent(mapEvent, players);
                             NetworkManager.Instance().SendEvent(EventConst.Event.WaitingPractice, this.datas);
                         }
                     }
@@ -104,7 +135,29 @@ namespace Akimichi.Game
                 case EventConst.Event.WaitingPractice:
                     if(IsReception(data))
                     {
-                        EventManager.Instance().WaitingPractice();
+                        PlayerManager.Instance().WaitingPractice();
+                    }
+                    break;
+                // 稽古可能状態の監視（ブレインだけで良さそう）
+                case EventConst.Event.PracticePossible:
+                    if (this.eventBrain != null)
+                    {
+                        EventDataBase eventData = this.eventBrain.PracticeStartCheck((GameConst.PlayerIndex)data[0]);
+                        // プレイヤーがそろったので稽古発火
+                        if (eventData != null)
+                        {
+                            EventManager.Instance().SendPracticeBegins((PracticeEventData)eventData);
+                        }
+                    }
+                    break;
+                // 稽古開始
+                case EventConst.Event.PracticeBegins:
+                    int eventId = (int)data[0];
+                    EventManager.Instance().PracticeBegins(eventId);
+                    if((GameConst.PlayerIndex)data[1] == PlayerManager.Instance().PlayerIndex ||
+                        (GameConst.PlayerIndex)data[2] == PlayerManager.Instance().PlayerIndex)
+                    {
+                        PlayerManager.Instance().PracticeBegins();
                     }
                     break;
 
@@ -123,7 +176,7 @@ namespace Akimichi.Game
 
                     // スタート位置確定後に所属の送信
                     MapSpaceLogicBase logic = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex);
-                    EventManager.Instance().SendAffiliation(logic.Index);
+                    MapManager.Instance().SendAffiliation(logic.Index);
                     PlayerManager.Instance().SetMapSpace(logic);
 
                     // スタート位置に配置

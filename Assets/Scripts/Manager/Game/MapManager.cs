@@ -101,7 +101,7 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private MapSpaceLogicBase GetMapSpace(int index)
+        public MapSpaceLogicBase GetMapSpace(int index)
         {
             MapSpaceLogicBase result = null;
             foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
@@ -162,6 +162,19 @@ namespace Akimichi.Game
         public int GetMapSpaces()
         {
             return this.mapSpaceList.Count;
+        }
+
+        /// <summary>
+        /// マスに所属を送信
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="playerIndex"></param>
+        public void SendAffiliation(int index)
+        {
+            ClearSendData();
+            this.datas[0] = index;
+            this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
         }
     }
 }

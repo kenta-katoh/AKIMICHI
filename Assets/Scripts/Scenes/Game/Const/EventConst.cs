@@ -11,8 +11,10 @@ namespace Akimichi.Game
             // 定期イベント
             None = 0,
             FinishState = 1,
-            AffiliationMapSpace = 2,
-            WaitingPractice = 3,
+            AffiliationMapSpace = 2,    // マス所属
+            WaitingPractice = 3,        // 稽古待機
+            PracticePossible = 4,       // 稽古可能
+            PracticeBegins = 5,         // 稽古開始
 
             CreatePlayerObject = 100,
             StartingPositionDistribution = 101,
@@ -39,6 +41,13 @@ namespace Akimichi.Game
             Waiting,        // 稽古待機
             ReadyToGo,      // 稽古開始準備完了
             DuringPractice, // 稽古中
+        }
+
+        public enum MapEventState
+        {
+            None,
+            Waiting,        // 発火待機
+            DuringEvent,    // イベント中
         }
     }
 }

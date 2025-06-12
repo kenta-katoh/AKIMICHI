@@ -10,6 +10,7 @@ namespace Akimichi
         private Animator animator;
         private Action onFinished = null;
         private int animeHash = -1;
+        private bool isMonitoring = false;
         public bool IsPlaying { get; private set; } = false;
 
         public void PlayAnime(string boolTag, bool flag, string transTag, Action finish)
@@ -21,12 +22,23 @@ namespace Akimichi
                 this.IsPlaying = true;
                 this.onFinished = null;
                 this.onFinished = finish;
+                this.isMonitoring = true;
+            }
+        }
+
+        public void PlayAnime(string boolTag, bool flag)
+        {
+            if (this.animator != null && !this.IsPlaying)
+            {
+                this.animator.SetBool(boolTag, flag);
+                this.IsPlaying = true;
+                this.onFinished = null;
             }
         }
 
         private void Update()
         {
-            if(this.IsPlaying && this.animator != null)
+            if(this.IsPlaying && this.animator != null && this.isMonitoring)
             {
                 if (this.animator.GetCurrentAnimatorStateInfo(0).tagHash == this.animeHash &&
                     this.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)

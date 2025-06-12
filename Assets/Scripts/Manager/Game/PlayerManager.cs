@@ -10,6 +10,7 @@ namespace Akimichi.Game
         public PlayerConst.State State { get; private set; } = PlayerConst.State.None;
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
+        private EventConst.Practice practiceState = EventConst.Practice.None;
 
         public override void Initialize()
         {
@@ -54,7 +55,7 @@ namespace Akimichi.Game
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
             // 稽古関連の判定
-            if(EventManager.Instance().Practice != EventConst.Practice.Waiting)
+            if(this.practiceState != EventConst.Practice.Waiting)
             {
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())
@@ -67,9 +68,11 @@ namespace Akimichi.Game
                     this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                 }
             }
-            else
+            else if(this.practiceState == EventConst.Practice.Waiting)
             {
-                EventManager.Instance().ReadyToGo();
+                // viewが追いついたので稽古可能状態に遷移
+                this.practiceState = EventConst.Practice.ReadyToGo;
+                SendPracticePossible();
             }
         }
 
@@ -91,7 +94,7 @@ namespace Akimichi.Game
                         break;
                 }
                 // logic側ではすでに所属マスが変わっているので通知
-                EventManager.Instance().SendAffiliation(this.currentMapSpace.Index);
+                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
 
                 // 1マス進んでいるのでデクリメント
                 DiceManager.Instance().DiceDecrement();
@@ -140,6 +143,42 @@ namespace Akimichi.Game
         public void SetMapSpace(MapSpaceLogicBase logic)
         {
             this.currentMapSpace = logic;
+        }
+
+        /// <summary>
+        /// 稽古待機状態へ
+        /// </summary>
+        public void WaitingPractice()
+        {
+            this.practiceState = EventConst.Practice.Waiting;
+            switch(this.State)
+            {
+                // 入力待機 or ダイス中の場合は即時稽古可能状態に
+                case PlayerConst.State.WaitingInput:
+                case PlayerConst.State.DuringDice:
+                    this.practiceState = EventConst.Practice.ReadyToGo;
+                    SendPracticePossible();
+                    break;
+            }
+        }
+
+        // 稽古可能状態の送信
+        private void SendPracticePossible()
+        {
+            ClearSendData();
+            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
+        }
+
+        /// <summary>
+        /// 稽古開始
+        /// </summary>
+        public void PracticeBegins()
+        {
+            if(this.practiceState == EventConst.Practice.ReadyToGo)
+            {
+                this.practiceState = EventConst.Practice.DuringPractice;
+            }
         }
     }
 }
