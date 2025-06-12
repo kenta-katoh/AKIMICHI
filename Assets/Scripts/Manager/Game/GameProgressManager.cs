@@ -22,7 +22,7 @@ namespace Akimichi.Game
         private AnimeController bootCameraAnime = null;
 
         [SerializeField]
-        private GameObject playerPrefab = null;
+        private List<GameObject> playerPrefabs = null;
 
         private object[] datas = new object[10];
         private EventBrain eventBrain = null;
@@ -184,7 +184,8 @@ namespace Akimichi.Game
 
         private void CreatePlayerModel()
         {
-            var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
+            GameObject playerObj = this.playerPrefabs[(int)PlayerManager.Instance().PlayerIndex];
+            var obj = Instantiate(playerObj, Vector3.zero, Quaternion.identity);
             obj.transform.SetParent(this.playerRoot.transform);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
@@ -227,7 +228,8 @@ namespace Akimichi.Game
             if ((GameConst.PlayerIndex)data[1] != PlayerManager.Instance().PlayerIndex)
             {
                 // 受信したtransformを設定
-                var obj = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
+                GameObject playerObj = this.playerPrefabs[(int)data[1]];
+                var obj = Instantiate(playerObj, Vector3.zero, Quaternion.identity);
                 obj.transform.SetParent(this.playerRoot.transform);
                 obj.transform.localPosition = Vector3.zero;
                 obj.transform.localScale = Vector3.one;

@@ -9,13 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: 31791829e50c3704b82d349f22ab7c6e
   - enabled: 1
-    path: Assets/Test/Scenes/LobbyScene.unity
+    path: Assets/Scenes/LobbyScene.unity
     guid: 2d821b247f3cb474b9cb7e54598e761e
   - enabled: 1
-    path: Assets/Test/Scenes/MatchingScene.unity
+    path: Assets/Scenes/MatchingScene.unity
     guid: 3a5daeb191fa9314eb8d41e2e2f05fbf
   - enabled: 1
-    path: Assets/Test/Scenes/TestGameScene.unity
+    path: Assets/Scenes/GameScene.unity
     guid: 7815e87c5fec3424396af5106eca2ea7
   - enabled: 1
     path: Assets/Scenes/ResultScene.unity

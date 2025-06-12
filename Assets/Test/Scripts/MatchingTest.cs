@@ -46,7 +46,7 @@ public class MatchingTest : MonoBehaviour
     {
         if(NetworkManager.Instance().IsMasterClient())
         {
-            NetworkManager.Instance().SysncLoadScene("TestGameScene");
+            NetworkManager.Instance().SysncLoadScene("GameScene");
         }
     }
 
