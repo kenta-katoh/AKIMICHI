@@ -1,8 +1,8 @@
+using ExitGames.Client.Photon;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEngine;
-using static Akimichi.Game.GameConst;
+using static UnityEditor.Progress;
 
 namespace Akimichi.Game
 {
@@ -11,8 +11,10 @@ namespace Akimichi.Game
     /// </summary>
     public class EventBrain
     {
+        private int eventId = 1;
         private Dictionary<int, List<GameConst.PlayerIndex>> mapAffiliationDic = new Dictionary<int, List<GameConst.PlayerIndex>>();
-        private Dictionary<EventDataBase, List<GameConst.PlayerIndex>> mapEventDic = new Dictionary<EventDataBase, List<PlayerIndex>>();
+        private List<MapEventBase> mapEventBases = new List<MapEventBase>();
+        private Dictionary<int, List<GameConst.PlayerIndex>> mapEventObserver = new Dictionary<int, List<GameConst.PlayerIndex>>();
 
         public void Initialize(int mapSpaces)
         {
@@ -57,28 +59,62 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// 稽古イベントの監視登録
+        /// イベント作成
         /// </summary>
-        /// <param name="eventId"></param>
-        /// <param name="players"></param>
-        public void AddPracticeEvent(EventDataBase mapEvent, List<GameConst.PlayerIndex> players)
+        public int CreateEvent(EventConst.MapEventType type, int mapSpaceIndex, GameConst.PlayerIndex player)
         {
-            bool isEvent = true;
-            foreach (var item in this.mapEventDic)
+            this.eventId++;
+            MapEventBase mapEvent = new MapEventBase(this.eventId, type, mapSpaceIndex);
+            mapEvent.AddPlayer(player);
+            this.mapEventBases.Add(mapEvent);
+            AddEventObserver(mapEvent);
+
+            return this.eventId;
+        }
+
+        /// <summary>
+        /// イベント作成
+        /// </summary>
+        public int CreateEvent(EventConst.MapEventType type, int mapSpaceIndex, List<GameConst.PlayerIndex> players)
+        {
+            this.eventId++;
+            MapEventBase mapEvent = new MapEventBase(this.eventId, type, mapSpaceIndex);
+            foreach (var item in players)
             {
-                if(item.Key.EventID == mapEvent.EventID)
+                mapEvent.AddPlayer(item);
+            }
+            this.mapEventBases.Add(mapEvent);
+            AddEventObserver(mapEvent);
+
+            return this.eventId;
+        }
+
+        // 稽古イベントの監視登録
+        private void AddEventObserver(MapEventBase mapEvent)
+        {
+            if(!this.mapEventObserver.ContainsKey(mapEvent.EventID))
+            {
+                this.mapEventObserver.Add(mapEvent.EventID, new List<GameConst.PlayerIndex>(mapEvent.Players));
+            }
+        }
+
+        /// <summary>
+        /// イベント取得 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MapEventBase GetEvent(int id)
+        {
+            MapEventBase result = null;
+            foreach (var item in this.mapEventBases)
+            {
+                if (item.EventID == id)
                 {
-                    isEvent = false;
+                    result = item;
                     break;
                 }
             }
-
-            if(isEvent)
-            {
-                List <GameConst.PlayerIndex> list = new List<GameConst.PlayerIndex>(players);
-                ((PracticeEventData)mapEvent).PracticePlayer.AddRange(list);
-                this.mapEventDic.Add(mapEvent, list);
-            }
+            return result;
         }
 
         /// <summary>
@@ -86,23 +122,19 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public EventDataBase PracticeStartCheck(GameConst.PlayerIndex index)
+        public MapEventBase EventStartCheck(int id, GameConst.PlayerIndex index)
         {
-            EventDataBase result = null;
-            foreach(var item in this.mapEventDic)
+            MapEventBase result = null;
+            if(this.mapEventObserver.ContainsKey(id))
             {
-                if(item.Key.GetType() == typeof(PracticeEventData))
+                if (this.mapEventObserver[id].Contains(index))
                 {
-                    if(item.Value.Contains(index))
+                    this.mapEventObserver[id].Remove(index);
+                    // 事前に登録された開始の監視対象がそろった
+                    if (this.mapEventObserver[id].Count == 0)
                     {
-                        item.Value.Remove(index);
-                        // 事前に登録された開始の監視対象がそろった
-                        if(item.Value.Count == 0)
-                        {
-                            result = item.Key;
-                            this.mapEventDic.Remove(result);
-                            break;
-                        }
+                        result = GetEvent(id);
+                        this.mapEventObserver.Remove(id);
                     }
                 }
             }

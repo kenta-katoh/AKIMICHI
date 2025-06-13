@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8442554546251178906}
   - component: {fileID: 7622711437310304433}
   - component: {fileID: 7815473943390519235}
-  - component: {fileID: 1208733231864655128}
+  - component: {fileID: 5956954647468064339}
+  - component: {fileID: 1285866386268306554}
   m_Layer: 0
   m_Name: EventEffect
   m_TagString: Untagged
@@ -107,7 +108,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1208733231864655128
+--- !u!114 &5956954647468064339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,7 +117,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4690447352767616134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 846a3c8e99405224b889d4037e60c603, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e1077ae2c3875e438f53902fe116948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1285866386268306554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4690447352767616134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ee59dd99e28784983d85f68c5e426d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7815473943390519235}

@@ -16,6 +16,7 @@ namespace Akimichi.Game
         private bool isRoll = false;
         private float rollTime = 10.0f;
         private System.Random rand = new System.Random();
+        private bool isForceStop = false;
 
         protected override void OnAwake()
         {
@@ -44,6 +45,7 @@ namespace Akimichi.Game
                 PlayerManager.Instance().SetDirection(dir);
                 this.isRoll = true;
                 this.rollTime = this.diceRollTime;
+                this.isForceStop = false;
             }
         }
 
@@ -51,15 +53,33 @@ namespace Akimichi.Game
         {
             if(this.isRoll)
             {
-                this.rollTime -= Time.deltaTime;
-                this.dice.text = this.rand.Next(1, 7).ToString();
-                if (this.rollTime < 0.0f)
+                if(!this.isForceStop)
                 {
-                    this.dice.text = DiceManager.Instance().DiceValue.ToString();
+                    this.rollTime -= Time.deltaTime;
+                    this.dice.text = this.rand.Next(1, 7).ToString();
+                    if (this.rollTime < 0.0f)
+                    {
+                        this.dice.text = DiceManager.Instance().DiceValue.ToString();
+                        this.isRoll = false;
+                        PlayerManager.Instance().StartMove();
+                    }
+                }
+                else
+                {
+                    // ロール中に強制停止
+                    PlayerManager.Instance().SetDirection(PlayerConst.Direction.None);
                     this.isRoll = false;
-                    PlayerManager.Instance().StartMove();
+                    this.rollTime = this.diceRollTime;
                 }
             }
+        }
+
+        /// <summary>
+        /// イベントが発生したので強制停止
+        /// </summary>
+        public void ForceStop()
+        {
+            this.isForceStop = true;
         }
     }
 }

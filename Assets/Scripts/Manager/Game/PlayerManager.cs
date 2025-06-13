@@ -8,9 +8,10 @@ namespace Akimichi.Game
         public GameConst.PlayerIndex PlayerIndex {  get; private set; }
         private PlayerLogic playerLogic = null;
         public PlayerConst.State State { get; private set; } = PlayerConst.State.None;
+        private PlayerConst.State returnedState = PlayerConst.State.None;
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
-        private EventConst.Practice practiceState = EventConst.Practice.None;
+        public EventConst.PlayerEventState EventState { get; private set; } = EventConst.PlayerEventState.None;
 
         public override void Initialize()
         {
@@ -54,8 +55,8 @@ namespace Akimichi.Game
         {
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
-            // 稽古関連の判定
-            if(this.practiceState != EventConst.Practice.Waiting)
+            // イベント関連の判定
+            if(this.EventState != EventConst.PlayerEventState.ViewWaiting)
             {
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())
@@ -64,15 +65,15 @@ namespace Akimichi.Game
                 }
                 else
                 {
-                    SetPlayerState(PlayerConst.State.WaitingInput);
                     this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                    SetPlayerState(PlayerConst.State.WaitingInput);
                 }
             }
-            else if(this.practiceState == EventConst.Practice.Waiting)
+            else if(this.EventState == EventConst.PlayerEventState.ViewWaiting)
             {
                 // viewが追いついたので稽古可能状態に遷移
-                this.practiceState = EventConst.Practice.ReadyToGo;
-                SendPracticePossible();
+                this.EventState = EventConst.PlayerEventState.ReadyToGo;
+                SendEventPossible();
             }
         }
 
@@ -93,11 +94,11 @@ namespace Akimichi.Game
                         this.currentMapSpace = MapManager.Instance().PreviousMapSpace(this.currentMapSpace);
                         break;
                 }
-                // logic側ではすでに所属マスが変わっているので通知
-                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
-
                 // 1マス進んでいるのでデクリメント
                 DiceManager.Instance().DiceDecrement();
+
+                // logic側ではすでに所属マスが変わっているので通知
+                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index, DiceManager.Instance().DiceValue);
 
                 // view側の移動
                 this.playerLogic.StartMove(this.currentMapSpace.GetTransform());
@@ -146,38 +147,86 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// 稽古待機状態へ
+        /// イベント待機状態へ
         /// </summary>
-        public void WaitingPractice()
+        public void WaitingEvent()
         {
-            this.practiceState = EventConst.Practice.Waiting;
+            this.EventState = EventConst.PlayerEventState.ViewWaiting;
+            this.returnedState = this.State;    // イベントから復帰時に戻るステータス
+            DiceManager.Instance().ForceStop();
             switch(this.State)
             {
-                // 入力待機 or ダイス中の場合は即時稽古可能状態に
+                // Viewがすでに追いついている場合は即時イベント可能状態に
                 case PlayerConst.State.WaitingInput:
                 case PlayerConst.State.DuringDice:
-                    this.practiceState = EventConst.Practice.ReadyToGo;
-                    SendPracticePossible();
+                    SendEventPossible();
                     break;
             }
+            SetPlayerState(PlayerConst.State.Event);
         }
 
         // 稽古可能状態の送信
-        private void SendPracticePossible()
+        private void SendEventPossible()
         {
+            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            this.returnedState = this.State;    // イベントから復帰時に戻るステータス
+            SetPlayerState(PlayerConst.State.Event);
+            DiceManager.Instance().ForceStop();
+
             ClearSendData();
             this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
+            this.datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
         }
 
         /// <summary>
-        /// 稽古開始
+        /// ふたたびイベント待機状態へ
         /// </summary>
-        public void PracticeBegins()
+        public void SendReEventPossible()
         {
-            if(this.practiceState == EventConst.Practice.ReadyToGo)
+            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            SetPlayerState(PlayerConst.State.Event);
+            DiceManager.Instance().ForceStop();
+
+            ClearSendData();
+            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+        }
+
+        /// <summary>
+        /// イベント開始
+        /// </summary>
+        public void StartEvent()
+        {
+            if(this.EventState == EventConst.PlayerEventState.ReadyToGo)
             {
-                this.practiceState = EventConst.Practice.DuringPractice;
+                this.EventState = EventConst.PlayerEventState.Doing;
+                this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                SetPlayerState(PlayerConst.State.Event);
+            }
+        }
+
+        /// <summary>
+        /// イベントから解放
+        /// </summary>
+        public void ReleaseEvent()
+        {
+            if (this.EventState == EventConst.PlayerEventState.Doing)
+            {
+                this.EventState = EventConst.PlayerEventState.None;
+                SetPlayerState(this.returnedState);
+                switch(this.State)
+                {
+                    case PlayerConst.State.WaitingInput:
+                    case PlayerConst.State.DuringDice:
+                    case PlayerConst.State.OnMove:
+                        SetPlayerState(PlayerConst.State.WaitingInput);
+                        break;
+                    case PlayerConst.State.MoveBehavior:
+                        MoveBehavior();
+                        break;
+                }
             }
         }
     }

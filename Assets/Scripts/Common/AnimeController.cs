@@ -7,38 +7,26 @@ namespace Akimichi
     public class AnimeController : MonoBehaviour
     {
         [SerializeField]
-        private Animator animator;
+        protected Animator animator;
         private Action onFinished = null;
         private int animeHash = -1;
-        private bool isMonitoring = false;
         public bool IsPlaying { get; private set; } = false;
 
         public void PlayAnime(string boolTag, bool flag, string transTag, Action finish)
         {
-            if(this.animator != null && !this.IsPlaying)
+            if (this.animator != null && !this.IsPlaying)
             {
                 this.animeHash = Animator.StringToHash(transTag);
                 this.animator.SetBool(boolTag, flag);
                 this.IsPlaying = true;
                 this.onFinished = null;
                 this.onFinished = finish;
-                this.isMonitoring = true;
-            }
-        }
-
-        public void PlayAnime(string boolTag, bool flag)
-        {
-            if (this.animator != null && !this.IsPlaying)
-            {
-                this.animator.SetBool(boolTag, flag);
-                this.IsPlaying = true;
-                this.onFinished = null;
             }
         }
 
         private void Update()
         {
-            if(this.IsPlaying && this.animator != null && this.isMonitoring)
+            if(this.IsPlaying && this.animator != null)
             {
                 if (this.animator.GetCurrentAnimatorStateInfo(0).tagHash == this.animeHash &&
                     this.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
@@ -46,8 +34,11 @@ namespace Akimichi
                     this.animeHash = -1;
                     this.IsPlaying = false;
                     this.onFinished?.Invoke();
+                    OnFinished();
                 }
             }
         }
+
+        virtual protected void OnFinished() { }
     }
 }
