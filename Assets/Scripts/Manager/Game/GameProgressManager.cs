@@ -431,10 +431,13 @@ namespace Akimichi.Game
             string[] arr = player.Split(',');
             for (int i = 0; i < arr.Length; ++i)
             {
-                if (PlayerManager.Instance().PlayerIndex == (GameConst.PlayerIndex)Convert.ToInt32(arr[i]))
+                if (!string.IsNullOrEmpty(arr[i]))
                 {
-                    result = true;
-                    break;
+                    if (PlayerManager.Instance().PlayerIndex == (GameConst.PlayerIndex)Convert.ToInt32(arr[i]))
+                    {
+                        result = true;
+                        break;
+                    }
                 }
             }
             return result;
