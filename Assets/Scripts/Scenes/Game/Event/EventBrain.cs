@@ -2,7 +2,6 @@ using ExitGames.Client.Photon;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using static UnityEditor.Progress;
 
 namespace Akimichi.Game
 {
