@@ -88,6 +88,16 @@ namespace Akimichi.Game
             return this.eventId;
         }
 
+        /// <summary>
+        /// イベント終了
+        /// </summary>
+        /// <param name="id"></param>
+        public void ReleaseEvent(MapEventBase mapEvent)
+        {
+            if(this.mapEventBases.Contains(mapEvent)) this.mapEventBases.Remove(mapEvent);
+            mapEvent.ReleaseEvent();
+        }
+
         // 稽古イベントの監視登録
         private void AddEventObserver(MapEventBase mapEvent)
         {
@@ -135,6 +145,24 @@ namespace Akimichi.Game
                         result = GetEvent(id);
                         this.mapEventObserver.Remove(id);
                     }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 該当のマスで進行中のイベント取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public List<MapEventBase> GetEventFromMapSpace(int index)
+        {
+            List<MapEventBase> result = new List<MapEventBase>();
+            foreach (var item in this.mapEventBases)
+            {
+                if(item.MapSpaceIndex == index)
+                {
+                    result.Add(item);
                 }
             }
             return result;
