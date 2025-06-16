@@ -6,8 +6,9 @@ using Photon.Realtime;
 using System;
 using TMPro;
 using Akimichi.Lobby;
+using Manager;
 
-public class ConnectTest : MonoBehaviour
+public class LobbyScene : MonoBehaviour
 {
     private List<RoomInfo> cashRoomList = new List<RoomInfo>();
 
@@ -32,7 +33,7 @@ public class ConnectTest : MonoBehaviour
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
         {
-            TestSceneManager.Instance().ChangeScene("MatchingScene");
+            SceneManager.Instance().ChangeScene("MatchingScene");
         });
         NetworkManager.Instance().SetCallbackOnConnect(() => 
         { 

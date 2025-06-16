@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using Manager;
 
-public class MatchingTest : MonoBehaviour
+public class MatchingScene : MonoBehaviour
 {
     [SerializeField]
     private List<MatchingPlayerContents> playerList = new List<MatchingPlayerContents>();
@@ -16,9 +17,10 @@ public class MatchingTest : MonoBehaviour
 
     private void Awake()
     {
+        NetworkManager.Instance().DeleteCallBack();
         NetworkManager.Instance().SetCallbackOnLeaveRoom(() => 
         {
-            TestSceneManager.Instance().ChangeScene("LobbyScene");
+            SceneManager.Instance().ChangeScene("LobbyScene");
         });
 
         NetworkManager.Instance().SetCallbackOnPlayerEnteredRoom(OnPlayerEnteredRoom);

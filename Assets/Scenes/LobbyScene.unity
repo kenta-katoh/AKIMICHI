@@ -681,7 +681,7 @@ GameObject:
   - component: {fileID: 968026705}
   - component: {fileID: 968026704}
   m_Layer: 0
-  m_Name: ConnectManager
+  m_Name: LobbyScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
