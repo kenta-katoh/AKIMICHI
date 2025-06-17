@@ -35,6 +35,7 @@ namespace Akimichi.Game
         private DiceView diceView = null;
 
         private System.Random rand = new System.Random();
+        List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private object[] datas = new object[10];
         private EventBrain eventBrain = null;
 
@@ -106,15 +107,16 @@ namespace Akimichi.Game
                     // マス所属はホスト思考
                     if (this.eventBrain != null)
                     {
-                        List<GameConst.PlayerIndex> players = this.eventBrain.AffiliationMapSpace((int)data[0], (GameConst.PlayerIndex)data[1]);
-                        
+                        GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)data[1];
+                        this.playerList.Clear();
+                        this.playerList.AddRange(this.eventBrain.AffiliationMapSpace((int)data[0], playerIndex));
+                        AkimichiLog("所属 : " + this.playerList.Count.ToString());
                         ClearSendData();
                         bool isEvent = false;
                         int eventId = 0;
-                        GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)data[1];
 
                         // 稽古をしていない他プレイヤーの抽出
-                        players.Remove(playerIndex);
+                        this.playerList.Remove(playerIndex);
                         List<GameConst.PlayerIndex> practicePlayers = new List<GameConst.PlayerIndex>();
                         var mapEvents = this.eventBrain.GetEventFromMapSpace((int)data[0]);
                         foreach (var item in mapEvents)
@@ -130,10 +132,10 @@ namespace Akimichi.Game
                         }
                         foreach (var player in practicePlayers)
                         {
-                            if (players.Contains(player)) players.Remove(player);
+                            if (this.playerList.Contains(player)) this.playerList.Remove(player);
                         }
 
-                        switch (players.Count)
+                        switch (this.playerList.Count)
                         {
                             // 誰もいなかったのでマス目の思考
                             case 0:
@@ -167,19 +169,19 @@ namespace Akimichi.Game
                             // 着地したマスに暇そうにしていた人が一人いたので稽古遷移
                             case 1:
                                 isEvent = true;
-                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], players);
+                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], this.playerList);
                                 // 該当プレイヤーを稽古待機状態へ変更
-                                players.Add(playerIndex);
-                                this.datas[0] = CreatePlayerList(players);
+                                this.playerList.Add(playerIndex);
+                                this.datas[0] = CreatePlayerList(this.playerList);
                                 break;
                             // 複数人暇している
                             case 2:
                             case 3:
                                 // ランダムで誰かと稽古発生
-                                int index = rand.Next(0, players.Count);
+                                int index = rand.Next(0, this.playerList.Count);
                                 List<GameConst.PlayerIndex> practices = new List<GameConst.PlayerIndex>();
                                 practices.Add(playerIndex);
-                                practices.Add(players[index]);
+                                practices.Add(this.playerList[index]);
 
                                 isEvent = true;
                                 eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], practices);
