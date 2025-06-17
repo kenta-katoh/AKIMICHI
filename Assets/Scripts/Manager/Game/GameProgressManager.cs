@@ -110,7 +110,6 @@ namespace Akimichi.Game
                         GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)data[1];
                         this.playerList.Clear();
                         this.playerList.AddRange(this.eventBrain.AffiliationMapSpace((int)data[0], playerIndex));
-                        AkimichiLog("所属 : " + this.playerList.Count.ToString());
                         ClearSendData();
                         bool isEvent = false;
                         int eventId = 0;
@@ -169,9 +168,9 @@ namespace Akimichi.Game
                             // 着地したマスに暇そうにしていた人が一人いたので稽古遷移
                             case 1:
                                 isEvent = true;
+                                this.playerList.Add(playerIndex);
                                 eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], this.playerList);
                                 // 該当プレイヤーを稽古待機状態へ変更
-                                this.playerList.Add(playerIndex);
                                 this.datas[0] = CreatePlayerList(this.playerList);
                                 break;
                             // 複数人暇している
