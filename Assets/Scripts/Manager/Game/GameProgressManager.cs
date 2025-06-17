@@ -34,6 +34,7 @@ namespace Akimichi.Game
         [SerializeField]
         private DiceView diceView = null;
 
+        private System.Random rand = new System.Random();
         private object[] datas = new object[10];
         private EventBrain eventBrain = null;
 
@@ -174,6 +175,16 @@ namespace Akimichi.Game
                             // 複数人暇している
                             case 2:
                             case 3:
+                                // ランダムで誰かと稽古発生
+                                int index = rand.Next(0, players.Count);
+                                List<GameConst.PlayerIndex> practices = new List<GameConst.PlayerIndex>();
+                                practices.Add(playerIndex);
+                                practices.Add(players[index]);
+
+                                isEvent = true;
+                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], practices);
+                                // 該当プレイヤーを稽古待機状態へ変更
+                                this.datas[0] = CreatePlayerList(practices);
                                 break;
                         }
 
