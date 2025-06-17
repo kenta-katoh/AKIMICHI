@@ -13,6 +13,7 @@ namespace Akimichi.Game
             DuringDice,      // サイコロ中
             OnMove,          // 移動中
             MoveBehavior,    // 移動思考中
+            Event,          // イベント中
         }
 
         public enum Direction

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static Akimichi.Game.GameConst;
 
 namespace Akimichi.Game
 {
@@ -99,56 +97,11 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// マスに所属を送信
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="playerIndex"></param>
-        public void SendAffiliation(int index)
-        {
-            ClearSendData();
-            this.datas[0] = index;
-            this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
-            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
-        }
-
-        /// <summary>
-        /// マスに所属
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="playerIndex"></param>
-        /// <returns></returns>
-        public bool Affiliation(int index, GameConst.PlayerIndex playerIndex)
-        {
-            bool result = false;
-            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
-            {
-                if(mapSpace.Index == index)
-                {
-                    result = mapSpace.Affiliation(playerIndex);
-                    break;
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// マスから離属
-        /// </summary>
-        /// <param name="playerIndex"></param>
-        public void Separation(GameConst.PlayerIndex playerIndex)
-        {
-            foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
-            {
-                mapSpace.Separation(playerIndex);
-            }
-        }
-
-        /// <summary>
         /// インデックスからマスの取得
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private MapSpaceLogicBase GetMapSpace(int index)
+        public MapSpaceLogicBase GetMapSpace(int index)
         {
             MapSpaceLogicBase result = null;
             foreach (MapSpaceLogicBase mapSpace in this.mapSpaceList)
@@ -200,6 +153,29 @@ namespace Akimichi.Game
             result = GetMapSpace(index);
 
             return result;
+        }
+
+        /// <summary>
+        /// マス目数取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetMapSpaces()
+        {
+            return this.mapSpaceList.Count;
+        }
+
+        /// <summary>
+        /// マスに所属を送信
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="playerIndex"></param>
+        public void SendAffiliation(int index, int value)
+        {
+            ClearSendData();
+            this.datas[0] = index;
+            this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[2] = value;
+            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
         }
     }
 }

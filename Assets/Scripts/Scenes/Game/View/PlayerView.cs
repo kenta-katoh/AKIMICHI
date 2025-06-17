@@ -7,10 +7,17 @@ namespace Akimichi.Game
 {
     public class PlayerView : ViewBase
     {
+        [SerializeField]
+        private SpriteRenderer spriteRenderer;
+
+        [SerializeField]
+        private List<Sprite> sprites = new List<Sprite>();
+
         protected override void OnAwake()
         {
             base.OnAwake();
             this.logic = new PlayerLogic(this);
+            this.spriteRenderer.sprite = this.sprites[0];
         }
     }
 }

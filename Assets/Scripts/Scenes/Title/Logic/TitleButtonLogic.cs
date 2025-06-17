@@ -16,16 +16,16 @@ namespace Akimichi.Title
         public void ChangeScene()
         {
             // テストでリザルトへ
-            SceneManager.Instance().ChangeScene("ResultScene");
+            SceneManager.Instance().ChangeScene("LobbyScene");
         }
 
         public void CreateData()
         {
             // テストデータ作成
-            var data = new TestDataBase();
-            data.test = 15;
-            data.SetValue(DataConst.TestStringValueKey,"111");
-            DataManager.Instance().SetData(DataConst.TestDataBaseKey,data);
+            //var data = new TestDataBase();
+            //data.test = 15;
+            //data.SetValue(DataConst.TestStringValueKey,"111");
+            //DataManager.Instance().SetData(DataConst.TestDataBaseKey,data);
         }
     }
 }

@@ -8,13 +8,21 @@ namespace Akimichi.Game
     {
         public int DiceValue { get; private set; } = 0;
         private System.Random rand = new System.Random();
+        private DiceView diceView = null;
+
+        public override void DataTransfer(ManagerData data)
+        {
+            base.DataTransfer(data);
+            this.diceView = ((DiceManagerData)data).DiceView;
+        }
 
         /// <summary>
         /// ダイス振り
         /// </summary>
         public bool DiceRoll()
         {
-            if (PlayerManager.Instance().State == PlayerConst.State.WaitingInput)
+            if (PlayerManager.Instance().State == PlayerConst.State.WaitingInput && 
+                PlayerManager.Instance().EventState == EventConst.PlayerEventState.None)
             {
                 this.DiceValue = this.rand.Next(1, 7);
                 return true;
@@ -40,6 +48,14 @@ namespace Akimichi.Game
         public bool IsDiceRest()
         {
             return this.DiceValue > 0;
+        }
+
+        /// <summary>
+        /// イベントが発生したので強制停止
+        /// </summary>
+        public void ForceStop()
+        {
+            this.diceView.ForceStop();
         }
     }
 }

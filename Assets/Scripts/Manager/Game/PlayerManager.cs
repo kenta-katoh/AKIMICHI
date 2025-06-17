@@ -8,8 +8,10 @@ namespace Akimichi.Game
         public GameConst.PlayerIndex PlayerIndex {  get; private set; }
         private PlayerLogic playerLogic = null;
         public PlayerConst.State State { get; private set; } = PlayerConst.State.None;
+        private PlayerConst.State returnedState = PlayerConst.State.None;
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
+        public EventConst.PlayerEventState EventState { get; private set; } = EventConst.PlayerEventState.None;
 
         public override void Initialize()
         {
@@ -53,17 +55,25 @@ namespace Akimichi.Game
         {
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
-            // 1マス移動を完了して思考時間なので、稽古が強制発生する場合はここかも
-
-            // まだダイス目が残っているかの判断
-            if(DiceManager.Instance().IsDiceRest())
+            // イベント関連の判定
+            if(this.EventState != EventConst.PlayerEventState.ViewWaiting)
             {
-                StartMove();
+                // まだダイス目が残っているかの判断
+                if (DiceManager.Instance().IsDiceRest())
+                {
+                    StartMove();
+                }
+                else
+                {
+                    this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                    SetPlayerState(PlayerConst.State.WaitingInput);
+                }
             }
-            else
+            else if(this.EventState == EventConst.PlayerEventState.ViewWaiting)
             {
-                SetPlayerState(PlayerConst.State.WaitingInput);
-                this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                // viewが追いついたので稽古可能状態に遷移
+                this.EventState = EventConst.PlayerEventState.ReadyToGo;
+                SendEventPossible();
             }
         }
 
@@ -84,11 +94,11 @@ namespace Akimichi.Game
                         this.currentMapSpace = MapManager.Instance().PreviousMapSpace(this.currentMapSpace);
                         break;
                 }
-                // logic側ではすでに所属マスが変わっているので通知
-                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
-
                 // 1マス進んでいるのでデクリメント
                 DiceManager.Instance().DiceDecrement();
+
+                // logic側ではすでに所属マスが変わっているので通知
+                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index, DiceManager.Instance().DiceValue);
 
                 // view側の移動
                 this.playerLogic.StartMove(this.currentMapSpace.GetTransform());
@@ -134,6 +144,90 @@ namespace Akimichi.Game
         public void SetMapSpace(MapSpaceLogicBase logic)
         {
             this.currentMapSpace = logic;
+        }
+
+        /// <summary>
+        /// イベント待機状態へ
+        /// </summary>
+        public void WaitingEvent()
+        {
+            this.EventState = EventConst.PlayerEventState.ViewWaiting;
+            this.returnedState = this.State;    // イベントから復帰時に戻るステータス
+            DiceManager.Instance().ForceStop();
+            switch(this.State)
+            {
+                // Viewがすでに追いついている場合は即時イベント可能状態に
+                case PlayerConst.State.WaitingInput:
+                case PlayerConst.State.DuringDice:
+                    SendEventPossible();
+                    break;
+            }
+            SetPlayerState(PlayerConst.State.Event);
+        }
+
+        // 稽古可能状態の送信
+        private void SendEventPossible()
+        {
+            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            this.returnedState = this.State;    // イベントから復帰時に戻るステータス
+            SetPlayerState(PlayerConst.State.Event);
+            DiceManager.Instance().ForceStop();
+
+            ClearSendData();
+            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+        }
+
+        /// <summary>
+        /// ふたたびイベント待機状態へ
+        /// </summary>
+        public void SendReEventPossible()
+        {
+            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            SetPlayerState(PlayerConst.State.Event);
+            DiceManager.Instance().ForceStop();
+
+            ClearSendData();
+            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+        }
+
+        /// <summary>
+        /// イベント開始
+        /// </summary>
+        public void StartEvent()
+        {
+            if(this.EventState == EventConst.PlayerEventState.ReadyToGo)
+            {
+                this.EventState = EventConst.PlayerEventState.Doing;
+                this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
+                SetPlayerState(PlayerConst.State.Event);
+            }
+        }
+
+        /// <summary>
+        /// イベントから解放
+        /// </summary>
+        public void ReleaseEvent()
+        {
+            if (this.EventState == EventConst.PlayerEventState.Doing)
+            {
+                this.EventState = EventConst.PlayerEventState.None;
+                SetPlayerState(this.returnedState);
+                switch(this.State)
+                {
+                    case PlayerConst.State.WaitingInput:
+                    case PlayerConst.State.DuringDice:
+                    case PlayerConst.State.OnMove:
+                        SetPlayerState(PlayerConst.State.WaitingInput);
+                        break;
+                    case PlayerConst.State.MoveBehavior:
+                        MoveBehavior();
+                        break;
+                }
+            }
         }
     }
 }
