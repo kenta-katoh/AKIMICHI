@@ -221,6 +221,7 @@ namespace Akimichi.Game
                 case EventConst.Event.WaitingPractice:
                     if(IsReception(data))
                     {
+                        EventManager.Instance().AddEventId((int)data[1]);
                         PlayerManager.Instance().WaitingEvent();
                     }
                     break;
@@ -291,6 +292,7 @@ namespace Akimichi.Game
 
                     if (IsReception(data))
                     {
+                        EventManager.Instance().ReleaseEvent((int)data[1]);
                         PlayerManager.Instance().ReleaseEvent();
                     }
                     break;
@@ -325,12 +327,10 @@ namespace Akimichi.Game
                     break;
                 // 体重増加
                 case EventConst.Event.AddWeight:
-                    AkimichiLog(((int)data[1]).ToString());
                     this.playerStatusView.AddWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
                     break;
                 // 体重減少
                 case EventConst.Event.SubtractWeight:
-                    AkimichiLog(((int)data[1]).ToString());
                     this.playerStatusView.SubtractWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
                     break;
             }
