@@ -37,16 +37,16 @@ namespace Akimichi.Game
             switch(index)
             {
                 case GameConst.PlayerIndex.First:
-                    this.player1st.SetName(name);
+                    this.player1st.SetName(index, name);
                     break;
                 case GameConst.PlayerIndex.Second:
-                    this.player2nd.SetName(name);
+                    this.player2nd.SetName(index, name);
                     break;
                 case GameConst.PlayerIndex.Third:
-                    this.player3rd.SetName(name);
+                    this.player3rd.SetName(index, name);
                     break;
                 case GameConst.PlayerIndex.Fourth:
-                    this.player4th.SetName(name);
+                    this.player4th.SetName(index, name);
                     break;
             }
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -12,11 +13,20 @@ namespace Akimichi.Game
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
         public EventConst.Practice PracticeState { get; private set; } = EventConst.Practice.None;
+        private Dictionary<GameConst.PlayerIndex, PlayerLogic> playerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
+        private PlayerStatusView playerStatusView = null;
+
+        public override void DataTransfer(ManagerData data)
+        {
+            base.DataTransfer(data);
+            PlayerManagerData managerData = (PlayerManagerData)data;
+            this.playerStatusView = managerData.StatusView;
+        }
 
         public override void Initialize()
         {
             base.Initialize();
-            PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+            this.PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
         }
 
         /// <summary>
@@ -38,6 +48,20 @@ namespace Akimichi.Game
             if(view != null)
             {
                 this.playerLogic = (PlayerLogic)view.Logic;
+            }
+            ResistPlayer(this.PlayerIndex, this.playerLogic);
+        }
+
+        /// <summary>
+        /// プレイヤー登録
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="logic"></param>
+        public void ResistPlayer(GameConst.PlayerIndex index, PlayerLogic logic)
+        {
+            if(!this.playerDic.ContainsKey(index))
+            {
+                this.playerDic.Add(index, logic);
             }
         }
 
@@ -208,24 +232,9 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// ふたたびイベント待機状態へ
+        /// 稽古開始
         /// </summary>
-        public void SendReEventPossible()
-        {
-            this.PracticeState = EventConst.Practice.ReadyToGo;
-            SetPlayerState(PlayerConst.State.Event);
-            DiceManager.Instance().ForceStop();
-
-            ClearSendData();
-            this.datas[0] = (int)this.PlayerIndex;
-            this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
-        }
-
-        /// <summary>
-        /// イベント開始
-        /// </summary>
-        public void StartEvent()
+        public void StartPractice()
         {
             if(this.PracticeState == EventConst.Practice.ReadyToGo)
             {
@@ -236,9 +245,9 @@ namespace Akimichi.Game
         }
 
         /// <summary>
-        /// イベントから解放
+        /// 稽古から解放
         /// </summary>
-        public void ReleaseEvent()
+        public void ReleasePractice()
         {
             if (this.PracticeState == EventConst.Practice.DuringPractice)
             {
@@ -255,6 +264,49 @@ namespace Akimichi.Game
                         MoveBehavior();
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 名前設定
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="name"></param>
+        public void SetName(GameConst.PlayerIndex index, string name)
+        {
+            this.playerStatusView.SetName(index, name);
+        }
+
+        /// <summary>
+        /// 体重増加
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public void AddWeight(GameConst.PlayerIndex index, int value)
+        {
+            this.playerStatusView.AddWeight(index, value);
+        }
+
+        /// <summary>
+        /// 体重減少
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public void SubtractWeight(GameConst.PlayerIndex index, int value)
+        {
+            this.playerStatusView.SubtractWeight(index, value);
+        }
+
+        /// <summary>
+        /// プレイヤーの表示更新
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="level"></param>
+        public void ChangePlayerView(GameConst.PlayerIndex index, int level)
+        {
+            if(this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].ChangeView(level);
             }
         }
     }

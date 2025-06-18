@@ -27,6 +27,7 @@ namespace Akimichi.Game
         [SerializeField]
         private AnimeController animeController = null;
 
+        private GameConst.PlayerIndex playerIndex;
         private PlayerData playerData = new PlayerData();
         private int currentWeight = 0;
 
@@ -34,8 +35,9 @@ namespace Akimichi.Game
         /// 名前設定
         /// </summary>
         /// <param name="name"></param>
-        public void SetName(string name)
+        public void SetName(GameConst.PlayerIndex index, string name)
         {
+            this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
         }
@@ -56,8 +58,13 @@ namespace Akimichi.Game
         /// <param name="value"></param>
         public void AddWeight(int value)
         {
+            int currentLevel = this.playerData.GetLevel();
             this.currentWeight = this.playerData.Weight;
             this.playerData.Weight += value;
+            if(currentLevel != this.playerData.GetLevel())
+            {
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+            }
 
             var seq = DOTween.Sequence();
             seq.Append(DOTween.To(() => this.currentWeight, (n) => this.currentWeight = n, this.playerData.Weight, 1)
@@ -82,8 +89,14 @@ namespace Akimichi.Game
         /// <param name="value"></param>
         public void SubtractWeight(int value)
         {
+            int currentLevel = this.playerData.GetLevel();
             this.currentWeight = this.playerData.Weight;
             this.playerData.Weight -= value;
+            if(this.playerData.Weight < 1) this.playerData.Weight = 1;
+            if (currentLevel != this.playerData.GetLevel())
+            {
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+            }
 
             var seq = DOTween.Sequence();
             seq.Append(DOTween.To(() => this.currentWeight, (n) => this.currentWeight = n, this.playerData.Weight, 1)

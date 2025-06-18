@@ -54,7 +54,7 @@ namespace Akimichi.Game
             MapManager.Instance().DataTransfer(mapManagerData);
 
             PlayerManagerData playerManagerData = new PlayerManagerData();
-            playerManagerData.PlayerRoot = this.playerRoot;
+            playerManagerData.StatusView = this.playerStatusView;
             PlayerManager.Instance().DataTransfer(playerManagerData);
 
             EventManagerData eventManagerData = new EventManagerData();
@@ -255,17 +255,14 @@ namespace Akimichi.Game
                             this.datas[1] = (int)mapEvent.MapSpaceIndex;
                             this.datas[2] = (int)mapEvent.EventType;
                             NetworkManager.Instance().SendEvent(EventConst.Event.PracticeEffectStart, this.datas);
-
-                            ClearSendDataStatus();
-                            var list1 = GetPlayerList((string)data[0]);
-                            // ステータス計算
                         }
                     }
 
                     // 自分自身が対象なら状態遷移
                     if (IsReception(data))
                     {
-                        PlayerManager.Instance().StartEvent();
+                        PlayerManager.Instance().StartPractice();
+                        // ステータス計算
                     }
                     break;
                 // 稽古エフェクト再生
@@ -293,7 +290,7 @@ namespace Akimichi.Game
                     if (IsReception(data))
                     {
                         EventManager.Instance().ReleaseEvent((int)data[1]);
-                        PlayerManager.Instance().ReleaseEvent();
+                        PlayerManager.Instance().ReleasePractice();
                     }
                     break;
 
@@ -323,15 +320,15 @@ namespace Akimichi.Game
                 // ステータス関連
                 // 名前設定
                 case EventConst.Event.SetName:
-                    this.playerStatusView.SetName((GameConst.PlayerIndex)data[0], (string)data[1]);
+                    PlayerManager.Instance().SetName((GameConst.PlayerIndex)data[0], (string)data[1]);
                     break;
                 // 体重増加
                 case EventConst.Event.AddWeight:
-                    this.playerStatusView.AddWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
+                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
                     break;
                 // 体重減少
                 case EventConst.Event.SubtractWeight:
-                    this.playerStatusView.SubtractWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
+                    PlayerManager.Instance().SubtractWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
                     break;
             }
         }
@@ -437,6 +434,11 @@ namespace Akimichi.Game
                 obj.transform.SetParent(this.playerRoot.transform);
                 obj.transform.localPosition = Vector3.zero;
                 obj.transform.localScale = Vector3.one;
+                PlayerView view = obj.GetComponent<PlayerView>();
+                if (view != null)
+                {
+                    PlayerManager.Instance().ResistPlayer((GameConst.PlayerIndex)data[1], (PlayerLogic)view.Logic);
+                }
 
                 // Photon
                 var photonView = obj.AddComponent<PhotonView>();

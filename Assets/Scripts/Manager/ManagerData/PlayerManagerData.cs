@@ -1,9 +1,10 @@
+using Akimichi.Game;
 using UnityEngine;
 
 namespace Akimichi
 {
     public class PlayerManagerData : ManagerData
     {
-        public GameObject PlayerRoot { get; set; }
+        public PlayerStatusView StatusView { get; set; }
     }
 }
