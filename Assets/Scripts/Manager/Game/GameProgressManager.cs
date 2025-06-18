@@ -34,9 +34,13 @@ namespace Akimichi.Game
         [SerializeField]
         private DiceView diceView = null;
 
+        [SerializeField]
+        private PlayerStatusView playerStatusView = null;
+
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private object[] datas = new object[10];
+        private object[] statusDatas = new object[10];
         private EventBrain eventBrain = null;
 
         private void Awake()
@@ -80,6 +84,11 @@ namespace Akimichi.Game
             PlayerManager.Instance().Initialize();
             if (this.eventBrain != null) this.eventBrain.Initialize(MapManager.Instance().GetMapSpaces());
 
+            ClearSendData();
+            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[1] = PlayerManager.Instance().GetName();
+            NetworkManager.Instance().SendEvent(EventConst.Event.SetName, this.datas);
+
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
 
@@ -88,6 +97,14 @@ namespace Akimichi.Game
             for(int i = 0; i < this.datas.Length; ++i)
             {
                 this.datas[i] = null;
+            }
+        }
+
+        private void ClearSendDataStatus()
+        {
+            for (int i = 0; i < this.statusDatas.Length; ++i)
+            {
+                this.statusDatas[i] = null;
             }
         }
 
@@ -137,34 +154,34 @@ namespace Akimichi.Game
                         switch (this.playerList.Count)
                         {
                             // 誰もいなかったのでマス目の思考
-                            case 0:
-                                if (GameStateManager.Instance().CurrentState() == GameConst.GameProgressState.InGame)
-                                {
-                                    // 残りの進むダイス目がなかったので、マス目の着地と判断
-                                    if ((int)data[2] == 0)
-                                    {
-                                        isEvent = true;
-                                        MapSpaceLogicBase mapSpace1 = MapManager.Instance().GetMapSpace((int)data[0]);
-                                        EventConst.MapEventType eventType = EventConst.MapEventType.None;
-
-                                        switch (mapSpace1.MapSpaceType)
-                                        {
-                                            case GameConst.MapSpaceType.Plus:
-                                                eventType = EventConst.MapEventType.Plus;
-                                                break;
-                                            case GameConst.MapSpaceType.Minus:
-                                                eventType = EventConst.MapEventType.Minus;
-                                                break;
-                                            case GameConst.MapSpaceType.Event:
-                                                eventType = EventConst.MapEventType.Event;
-                                                break;
-                                        }
-                                        eventId = this.eventBrain.CreateEvent(eventType, (int)data[0], playerIndex);
-                                        // 該当プレイヤーをイベント待機状態へ変更
-                                        this.datas[0] = CreatePlayerList(playerIndex);
-                                    }
-                                }
-                                break;
+                            //case 0:
+                            //    if (GameStateManager.Instance().CurrentState() == GameConst.GameProgressState.InGame)
+                            //    {
+                            //        // 残りの進むダイス目がなかったので、マス目の着地と判断
+                            //        if ((int)data[2] == 0)
+                            //        {
+                            //            //isEvent = true;
+                            //            //MapSpaceLogicBase mapSpace1 = MapManager.Instance().GetMapSpace((int)data[0]);
+                            //            //EventConst.MapEventType eventType = EventConst.MapEventType.None;
+                            //            //
+                            //            //switch (mapSpace1.MapSpaceType)
+                            //            //{
+                            //            //    case GameConst.MapSpaceType.Plus:
+                            //            //        eventType = EventConst.MapEventType.Plus;
+                            //            //        break;
+                            //            //    case GameConst.MapSpaceType.Minus:
+                            //            //        eventType = EventConst.MapEventType.Minus;
+                            //            //        break;
+                            //            //    case GameConst.MapSpaceType.Event:
+                            //            //        eventType = EventConst.MapEventType.Event;
+                            //            //        break;
+                            //            //}
+                            //            //eventId = this.eventBrain.CreateEvent(eventType, (int)data[0], playerIndex);
+                            //            //// 該当プレイヤーをイベント待機状態へ変更
+                            //            this.datas[0] = CreatePlayerList(playerIndex);
+                            //        }
+                            //    }
+                            //    break;
                             // 着地したマスに暇そうにしていた人が一人いたので稽古遷移
                             case 1:
                                 isEvent = true;
@@ -192,7 +209,7 @@ namespace Akimichi.Game
                         if (isEvent)
                         {
                             this.datas[1] = eventId;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.WaitingEvent, this.datas);
+                            NetworkManager.Instance().SendEvent(EventConst.Event.WaitingPractice, this.datas);
                         }
                     }
                     break;
@@ -200,16 +217,15 @@ namespace Akimichi.Game
                 /////////////////////////////
                 // マップイベント関連
                 /////////////////////////////
-                // マップイベント待機状態
-                case EventConst.Event.WaitingEvent:
+                // 稽古待機状態
+                case EventConst.Event.WaitingPractice:
                     if(IsReception(data))
                     {
-                        EventManager.Instance().AddEventId((int)data[1]);
                         PlayerManager.Instance().WaitingEvent();
                     }
                     break;
-                // マップイベント可能状態の監視
-                case EventConst.Event.EventPossible:
+                // 稽古可能状態の監視
+                case EventConst.Event.PracticePossible:
                     if (this.eventBrain != null)
                     {
                         MapEventBase mapEvent = this.eventBrain.EventStartCheck((int)data[1], (GameConst.PlayerIndex)data[0]);
@@ -220,13 +236,12 @@ namespace Akimichi.Game
                             ClearSendData();
                             this.datas[0] = CreatePlayerList(mapEvent.Players);
                             this.datas[1] = mapEvent.EventID;
-                            this.datas[2] = (int)mapEvent.EventType;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.StartEvent, this.datas);
+                            NetworkManager.Instance().SendEvent(EventConst.Event.StartPractice, this.datas);
                         }
                     }
                     break;
                 // イベント開始
-                case EventConst.Event.StartEvent:
+                case EventConst.Event.StartPractice:
                     // エフェクトの再生通知
                     if(this.eventBrain != null)
                     {
@@ -234,25 +249,15 @@ namespace Akimichi.Game
                         MapEventBase mapEvent = this.eventBrain.GetEvent(eventId);
                         if(mapEvent != null)
                         {
-                            AkimichiLog(mapEvent.EventType.ToString());
                             ClearSendData();
                             this.datas[0] = eventId;
                             this.datas[1] = (int)mapEvent.MapSpaceIndex;
                             this.datas[2] = (int)mapEvent.EventType;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.EventEffectStart, this.datas);
+                            NetworkManager.Instance().SendEvent(EventConst.Event.PracticeEffectStart, this.datas);
 
+                            ClearSendDataStatus();
+                            var list1 = GetPlayerList((string)data[0]);
                             // ステータス計算
-                            switch ((EventConst.MapEventType)data[2])
-                            {
-                                case EventConst.MapEventType.Practice:
-                                    break;
-                                case EventConst.MapEventType.Plus:
-                                    break;
-                                case EventConst.MapEventType.Minus:
-                                    break;
-                                case EventConst.MapEventType.Event:
-                                    break;
-                            }
                         }
                     }
 
@@ -263,7 +268,7 @@ namespace Akimichi.Game
                     }
                     break;
                 // 稽古エフェクト再生
-                case EventConst.Event.EventEffectStart:
+                case EventConst.Event.PracticeEffectStart:
                     MapSpaceLogicBase mapSpace = MapManager.Instance().GetMapSpace((int)data[1]);
                     if(this.eventBrain == null) EventManager.Instance().StartEventEffect((EventConst.MapEventType)data[2], mapSpace, null);
                     else EventManager.Instance().StartEventEffect((EventConst.MapEventType)data[2], mapSpace, () => 
@@ -273,11 +278,11 @@ namespace Akimichi.Game
                         ClearSendData();
                         this.datas[0] = CreatePlayerList(mapEvent.Players);
                         this.datas[1] = mapEvent.EventID;
-                        NetworkManager.Instance().SendEvent(EventConst.Event.EventRelease, this.datas);
+                        NetworkManager.Instance().SendEvent(EventConst.Event.EndPractice, this.datas);
                     });
                     break;
                 // イベント終了
-                case EventConst.Event.EventRelease:
+                case EventConst.Event.EndPractice:
                     if(this.eventBrain != null)
                     {
                         MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[1]);
@@ -286,19 +291,11 @@ namespace Akimichi.Game
 
                     if (IsReception(data))
                     {
-                        EventManager.Instance().ReleaseEvent((int)data[1]);
-                        if(EventManager.Instance().GetEvent() > 0)
-                        {
-                            // まだつまれているイベントが存在する
-                            PlayerManager.Instance().SendReEventPossible();
-                        }
-                        else
-                        {
-                            PlayerManager.Instance().ReleaseEvent();
-                        }
+                        PlayerManager.Instance().ReleaseEvent();
                     }
                     break;
 
+                // ゲーム進行関連
                 case EventConst.Event.CreatePlayerObject:
                     CreatePlayerObject(data);
                     break;
@@ -319,6 +316,22 @@ namespace Akimichi.Game
                     // スタート位置に配置
                     PlayerManager.Instance().SetPosInstantSync(logic.GetTransform().localPosition);
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.StartPositionSetting);
+                    break;
+
+                // ステータス関連
+                // 名前設定
+                case EventConst.Event.SetName:
+                    this.playerStatusView.SetName((GameConst.PlayerIndex)data[0], (string)data[1]);
+                    break;
+                // 体重増加
+                case EventConst.Event.AddWeight:
+                    AkimichiLog(((int)data[1]).ToString());
+                    this.playerStatusView.AddWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
+                    break;
+                // 体重減少
+                case EventConst.Event.SubtractWeight:
+                    AkimichiLog(((int)data[1]).ToString());
+                    this.playerStatusView.SubtractWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
                     break;
             }
         }
@@ -353,6 +366,7 @@ namespace Akimichi.Game
                     // カメラ起動
                     this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
                     this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
+                        this.bootCameraAnime.enabled = false;
                         GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
                     });
                     break;
@@ -461,6 +475,24 @@ namespace Akimichi.Game
             {
                 result += Convert.ToString((int)item);
                 result += ",";
+            }
+            return result;
+        }
+
+        // 送信情報の解析
+        private List<GameConst.PlayerIndex> GetPlayerList(string list)
+        {
+            List<GameConst.PlayerIndex> result = new List<GameConst.PlayerIndex>();
+            string[] arr = list.Split(',');
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                if (!string.IsNullOrEmpty(arr[i]))
+                {
+                    if(!result.Contains((GameConst.PlayerIndex)Convert.ToInt32(arr[i])))
+                    {
+                        result.Add((GameConst.PlayerIndex)Convert.ToInt32(arr[i]));
+                    }
+                }
             }
             return result;
         }

@@ -222,6 +222,25 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
+    /// 名前取得
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public string GetName(string userID)
+    {
+        string result = "";
+        foreach (Player item in PhotonNetwork.PlayerList)
+        {
+            if (item.UserId == userID)
+            {
+                result = item.NickName;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
     /// ユーザーID取得
     /// </summary>
     /// <returns></returns>

@@ -1,8 +1,5 @@
-using Akimichi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -11,6 +8,8 @@ namespace Akimichi.Game
     {
         private List<int> eventList = new List<int>();
         private List<EventLogic> eventLogics = new List<EventLogic>();
+        private System.Random seed = new System.Random();
+        private System.Random rate = new System.Random();
 
         public override void DataTransfer(ManagerData data)
         {
@@ -87,6 +86,62 @@ namespace Akimichi.Game
                 return this.eventList[0];
             }
             return -1;
+        }
+
+        // シード取得
+        private int Seed()
+        {
+            return this.seed.Next(0, 10);
+        }
+
+        /// <summary>
+        /// 増加マスでの増加量取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetPlusValue()
+        {
+            int result = 0;
+            int seed = Seed();
+            switch (seed)
+            {
+                case 0:
+                    result = rate.Next(20, 31);
+                    break;
+                case 1:
+                case 2:
+                    result = rate.Next(10, 16);
+                    break;
+                default:
+                    result = rate.Next(15, 21);
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 減少マスでの減少量取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetMinusValue()
+        {
+            int result = 0;
+            int seed = Seed();
+            switch (seed)
+            {
+                case 0:
+                    result = rate.Next(15, 21);
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    result = rate.Next(10, 16);
+                    break;
+                default:
+                    result = rate.Next(5, 11);
+                    break;
+            }
+            return result;
         }
     }
 }

@@ -39,6 +39,16 @@ namespace Akimichi
             }
         }
 
+        /// <summary>
+        /// フラグ制御
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="flag"></param>
+        public void SetBool(string tag, bool flag)
+        {
+            this.animator.SetBool(tag, flag);
+        }
+
         virtual protected void OnFinished() { }
     }
 }

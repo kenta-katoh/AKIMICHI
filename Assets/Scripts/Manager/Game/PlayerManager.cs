@@ -11,12 +11,21 @@ namespace Akimichi.Game
         private PlayerConst.State returnedState = PlayerConst.State.None;
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
-        public EventConst.PlayerEventState EventState { get; private set; } = EventConst.PlayerEventState.None;
+        public EventConst.Practice PracticeState { get; private set; } = EventConst.Practice.None;
 
         public override void Initialize()
         {
             base.Initialize();
             PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+        }
+
+        /// <summary>
+        /// 名前取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetName()
+        {
+            return NetworkManager.Instance().GetName(NetworkManager.Instance().GetUserID());
         }
 
         /// <summary>
@@ -56,7 +65,7 @@ namespace Akimichi.Game
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
             // イベント関連の判定
-            if(this.EventState != EventConst.PlayerEventState.ViewWaiting)
+            if(this.PracticeState != EventConst.Practice.Waiting)
             {
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())
@@ -65,14 +74,33 @@ namespace Akimichi.Game
                 }
                 else
                 {
+                    // 止まったマス目の思考
+                    switch(this.currentMapSpace.MapSpaceType)
+                    {
+                        case GameConst.MapSpaceType.Plus:
+                            ClearSendData();
+                            this.datas[0] = (int)this.PlayerIndex;
+                            this.datas[1] = EventManager.Instance().GetPlusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
+                            break;
+                        case GameConst.MapSpaceType.Minus:
+                            ClearSendData();
+                            this.datas[0] = (int)this.PlayerIndex;
+                            this.datas[1] = EventManager.Instance().GetMinusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+                            break;
+                        case GameConst.MapSpaceType.Event:
+                            break;
+                    }
+
                     this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                     SetPlayerState(PlayerConst.State.WaitingInput);
                 }
             }
-            else if(this.EventState == EventConst.PlayerEventState.ViewWaiting)
+            else if(this.PracticeState == EventConst.Practice.Waiting)
             {
                 // viewが追いついたので稽古可能状態に遷移
-                this.EventState = EventConst.PlayerEventState.ReadyToGo;
+                this.PracticeState = EventConst.Practice.ReadyToGo;
                 SendEventPossible();
             }
         }
@@ -151,7 +179,7 @@ namespace Akimichi.Game
         /// </summary>
         public void WaitingEvent()
         {
-            this.EventState = EventConst.PlayerEventState.ViewWaiting;
+            this.PracticeState = EventConst.Practice.Waiting;
             this.returnedState = this.State;    // イベントから復帰時に戻るステータス
             DiceManager.Instance().ForceStop();
             switch(this.State)
@@ -168,15 +196,15 @@ namespace Akimichi.Game
         // 稽古可能状態の送信
         private void SendEventPossible()
         {
-            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            this.PracticeState = EventConst.Practice.ReadyToGo;
             this.returnedState = this.State;    // イベントから復帰時に戻るステータス
             SetPlayerState(PlayerConst.State.Event);
             DiceManager.Instance().ForceStop();
 
             ClearSendData();
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[0] = (int)this.PlayerIndex;
             this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
         }
 
         /// <summary>
@@ -184,14 +212,14 @@ namespace Akimichi.Game
         /// </summary>
         public void SendReEventPossible()
         {
-            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            this.PracticeState = EventConst.Practice.ReadyToGo;
             SetPlayerState(PlayerConst.State.Event);
             DiceManager.Instance().ForceStop();
 
             ClearSendData();
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            this.datas[0] = (int)this.PlayerIndex;
             this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
         }
 
         /// <summary>
@@ -199,9 +227,9 @@ namespace Akimichi.Game
         /// </summary>
         public void StartEvent()
         {
-            if(this.EventState == EventConst.PlayerEventState.ReadyToGo)
+            if(this.PracticeState == EventConst.Practice.ReadyToGo)
             {
-                this.EventState = EventConst.PlayerEventState.Doing;
+                this.PracticeState = EventConst.Practice.DuringPractice;
                 this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                 SetPlayerState(PlayerConst.State.Event);
             }
@@ -212,9 +240,9 @@ namespace Akimichi.Game
         /// </summary>
         public void ReleaseEvent()
         {
-            if (this.EventState == EventConst.PlayerEventState.Doing)
+            if (this.PracticeState == EventConst.Practice.DuringPractice)
             {
-                this.EventState = EventConst.PlayerEventState.None;
+                this.PracticeState = EventConst.Practice.None;
                 SetPlayerState(this.returnedState);
                 switch(this.State)
                 {

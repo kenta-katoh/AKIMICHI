@@ -22,7 +22,7 @@ namespace Akimichi.Game
         public bool DiceRoll()
         {
             if (PlayerManager.Instance().State == PlayerConst.State.WaitingInput && 
-                PlayerManager.Instance().EventState == EventConst.PlayerEventState.None)
+                PlayerManager.Instance().PracticeState == EventConst.Practice.None)
             {
                 this.DiceValue = this.rand.Next(1, 7);
                 return true;

@@ -10,20 +10,21 @@ namespace Akimichi.Game
         {
             // 定期イベント
             None = 0,
-            FinishState = 1,
-            AffiliationMapSpace = 2,    // マス所属
-            WaitingEvent = 3,           // イベント待機
-            EventPossible = 4,          // イベント可能
-            StartEvent,
-            PracticeBegins = 5,         // 稽古開始
-            EventEffectStart = 6,    // 稽古エフェクト再生
-            PlusEventBegins = 7,        // 増加イベント
-            MinusEventBegins = 7,       // 現象イベント
-            MapEventBegins = 7,         // イベント
-            EventRelease = 8,           // イベント終了
+            FinishState,
+            AffiliationMapSpace,    // マス所属
+            WaitingPractice,           // イベント待機
+            PracticePossible,          // イベント可能
+            StartPractice,             // イベント開始
+            PracticeBegins,         // 稽古開始
+            PracticeEffectStart,       // 稽古エフェクト再生
+            EndPractice,           // イベント終了
 
-            CreatePlayerObject = 100,
-            StartingPositionDistribution = 101,
+            SetName,                // 名前設定
+            AddWeight,              // 体重増加
+            SubtractWeight,         // 体重減少
+
+            CreatePlayerObject,
+            StartingPositionDistribution,
         }
 
         public static Event ConvertEvent(byte data)
@@ -38,14 +39,6 @@ namespace Akimichi.Game
             byte result = 0;
             result = (byte)((int)data);
             return result;
-        }
-
-        public enum PlayerEventState
-        {
-            None,
-            ViewWaiting,    // View側の追いつき待ち
-            ReadyToGo,      // イベント発火可能状態
-            Doing,
         }
 
         // 稽古状態
