@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using static Cinemachine.DocumentationSortingAttribute;
 
 namespace Akimichi.Game
 {
@@ -65,6 +66,22 @@ namespace Akimichi.Game
         public void ChangeView(int level)
         {
             this.playerView.ChangeView(level);
+        }
+
+        /// <summary>
+        /// 減少エフェクト
+        /// </summary>
+        public void SubtractEffect()
+        {
+            this.playerView.SubtractEffect();
+        }
+
+        /// <summary>
+        /// 増加エフェクト
+        /// </summary>
+        public void AddEffect()
+        {
+            this.playerView.AddEffect();
         }
     }
 }

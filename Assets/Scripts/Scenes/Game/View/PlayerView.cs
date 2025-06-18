@@ -13,6 +13,12 @@ namespace Akimichi.Game
         [SerializeField]
         private List<Sprite> sprites = new List<Sprite>();
 
+        [SerializeField]
+        private AnimeController statusAnime = null;
+
+        [SerializeField]
+        private AnimeController changeAnime = null;
+
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -29,7 +35,33 @@ namespace Akimichi.Game
             if(level < this.sprites.Count)
             {
                 this.spriteRenderer.sprite = this.sprites[level];
+                this.changeAnime.PlayAnime("Change", true, "Change", () =>
+                {
+                    this.changeAnime.SetBool("Change", false);
+                });
             }
+        }
+
+        /// <summary>
+        /// 減少エフェクト
+        /// </summary>
+        public void SubtractEffect()
+        {
+            this.statusAnime.PlayAnime("Down", true, "Down", () =>
+            {
+                this.statusAnime.SetBool("Down", false);
+            });
+        }
+
+        /// <summary>
+        /// 増加エフェクト
+        /// </summary>
+        public void AddEffect()
+        {
+            this.statusAnime.PlayAnime("Up", true, "Up", () =>
+            {
+                this.statusAnime.SetBool("Up", false);
+            });
         }
     }
 }

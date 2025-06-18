@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 namespace Akimichi.Game
 {
@@ -285,6 +286,10 @@ namespace Akimichi.Game
         public void AddWeight(GameConst.PlayerIndex index, int value)
         {
             this.playerStatusView.AddWeight(index, value);
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].AddEffect();
+            }
         }
 
         /// <summary>
@@ -295,6 +300,10 @@ namespace Akimichi.Game
         public void SubtractWeight(GameConst.PlayerIndex index, int value)
         {
             this.playerStatusView.SubtractWeight(index, value);
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].SubtractEffect();
+            }
         }
 
         /// <summary>
