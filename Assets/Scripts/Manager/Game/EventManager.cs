@@ -96,9 +96,9 @@ namespace Akimichi.Game
         }
 
         // シード取得
-        private int Seed()
+        private int Seed(int value)
         {
-            return this.seed.Next(0, 10);
+            return this.seed.Next(0, value);
         }
 
         /// <summary>
@@ -108,18 +108,25 @@ namespace Akimichi.Game
         public int GetPlusValue()
         {
             int result = 0;
-            int seed = Seed();
+            int seed = Seed(20);
             switch (seed)
             {
                 case 0:
-                    result = rate.Next(20, 31);
+                    result = 100;
                     break;
                 case 1:
+                    result = rate.Next(61, 80);
+                    break;
                 case 2:
-                    result = rate.Next(10, 16);
+                case 3:
+                    result = rate.Next(41, 60);
+                    break;
+                case 4:
+                case 5:
+                    result = rate.Next(10, 20);
                     break;
                 default:
-                    result = rate.Next(15, 21);
+                    result = rate.Next(21, 40);
                     break;
             }
             return result;
@@ -132,7 +139,7 @@ namespace Akimichi.Game
         public int GetMinusValue()
         {
             int result = 0;
-            int seed = Seed();
+            int seed = Seed(10);
             switch (seed)
             {
                 case 0:
