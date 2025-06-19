@@ -73,6 +73,7 @@ namespace Akimichi.Game
             Yes,
             No,
         }
+
         public static readonly string MessageLastChar = "F";    // メッセージの末尾を示す文字
         public static readonly int FontWaitFrame = 5;   // 文字送りフレーム
     }

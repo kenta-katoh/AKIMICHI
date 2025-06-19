@@ -17,6 +17,7 @@ namespace Akimichi.Game
         private int noMessageIndex = 0;
         public bool IsNoMessageLast { get; private set; } = false;
         protected List<string> noMessageList = new List<string>();
+        public bool IsSelectEvent {  get; protected set; } = false; // セレクト方式かどうか
 
         /// <summary>
         /// 文章取得
@@ -88,5 +89,9 @@ namespace Akimichi.Game
             }
             return result;
         }
+
+        public virtual void YesAction() { }
+        public virtual void NoAction() { }
+        public virtual void OnFinished() { }
     }
 }
