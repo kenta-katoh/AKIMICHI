@@ -16,6 +16,12 @@ namespace Akimichi.Game
             this.diceView = ((DiceManagerData)data).DiceView;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.diceView = null;
+        }
+
         /// <summary>
         /// ダイス振り
         /// </summary>

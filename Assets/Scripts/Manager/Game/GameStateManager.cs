@@ -15,6 +15,13 @@ namespace Akimichi.Game
             this.progressManager = ((GameStateManagerData)data).ProgressManager;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.stateDic.Clear();
+            this.progressManager = null;
+        }
+
         public override void Initialize()
         {
             base.Initialize();

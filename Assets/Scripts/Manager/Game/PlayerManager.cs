@@ -24,6 +24,19 @@ namespace Akimichi.Game
             this.playerStatusView = managerData.StatusView;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.playerLogic = null;
+            this.State = PlayerConst.State.None;
+            this.returnedState = PlayerConst.State.None;
+            this.direction = PlayerConst.Direction.None;
+            this.currentMapSpace = null;
+            this.PracticeState = EventConst.Practice.None;
+            this.playerDic.Clear();
+            this.playerStatusView = null;
+        }
+
         public override void Initialize()
         {
             base.Initialize();

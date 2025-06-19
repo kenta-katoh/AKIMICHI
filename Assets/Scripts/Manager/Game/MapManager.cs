@@ -18,6 +18,15 @@ namespace Akimichi.Game
             this.mapSpacesRoot = ((MapManagerData)data).MapSpacesRoot;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.mapSpacesRoot = null;
+            this.mapSpaceList.Clear();
+            this.playerStartMapSpaceList.Clear();
+            this.mapSpaceLastIndex = 0;
+        }
+
         public override void Initialize()
         {
             base.Initialize();

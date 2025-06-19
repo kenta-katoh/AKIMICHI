@@ -21,6 +21,13 @@ namespace Akimichi.Game
             }
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.eventList.Clear();
+            this.eventLogics.Clear();
+        }
+
         // 使用していない稽古アニメ取得
         private EventLogic GetEventAnime()
         {
