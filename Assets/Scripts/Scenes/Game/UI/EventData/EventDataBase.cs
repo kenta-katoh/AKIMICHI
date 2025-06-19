@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace Akimichi.Game
         public bool IsNoMessageLast { get; private set; } = false;
         protected List<string> noMessageList = new List<string>();
         public bool IsSelectEvent {  get; protected set; } = false; // セレクト方式かどうか
+        protected System.Random random = new System.Random();
+        protected object[] datas = new object[10];
 
         /// <summary>
         /// 文章取得
