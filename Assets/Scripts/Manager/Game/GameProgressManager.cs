@@ -37,6 +37,9 @@ namespace Akimichi.Game
         [SerializeField]
         private PlayerStatusView playerStatusView = null;
 
+        [SerializeField]
+        private EventWindow eventWindow = null;
+
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private object[] datas = new object[10];
@@ -64,6 +67,7 @@ namespace Akimichi.Game
                 obj.transform.SetParent(this.eventRoot.transform);
                 eventManagerData.Events.Add(obj);
             }
+            eventManagerData.EventWindow = this.eventWindow;
             EventManager.Instance().DataTransfer(eventManagerData);
 
             DiceManagerData diceManagerData = new DiceManagerData();

@@ -115,18 +115,21 @@ namespace Akimichi.Game
                     switch(this.currentMapSpace.MapSpaceType)
                     {
                         case GameConst.MapSpaceType.Plus:
-                            ClearSendData();
-                            this.datas[0] = (int)this.PlayerIndex;
-                            this.datas[1] = EventManager.Instance().GetPlusValue();
-                            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
+                            EventManager.Instance().MapEventStart();
+                            //ClearSendData();
+                            //this.datas[0] = (int)this.PlayerIndex;
+                            //this.datas[1] = EventManager.Instance().GetPlusValue();
+                            //NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
                             break;
                         case GameConst.MapSpaceType.Minus:
-                            ClearSendData();
-                            this.datas[0] = (int)this.PlayerIndex;
-                            this.datas[1] = EventManager.Instance().GetMinusValue();
-                            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+                            EventManager.Instance().MapEventStart();
+                            //ClearSendData();
+                            //this.datas[0] = (int)this.PlayerIndex;
+                            //this.datas[1] = EventManager.Instance().GetMinusValue();
+                            //NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
                             break;
                         case GameConst.MapSpaceType.Event:
+                            EventManager.Instance().MapEventStart();
                             break;
                     }
 

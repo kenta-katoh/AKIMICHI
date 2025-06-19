@@ -10,6 +10,7 @@ namespace Akimichi.Game
         private List<EventLogic> eventLogics = new List<EventLogic>();
         private System.Random seed = new System.Random();
         private System.Random rate = new System.Random();
+        private EventWindow eventWindow = null;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -19,6 +20,7 @@ namespace Akimichi.Game
             {
                 this.eventLogics.Add((EventLogic)obj.GetComponent<EventView>().Logic);
             }
+            this.eventWindow = ((EventManagerData)data).EventWindow;
         }
 
         public override void Dispose()
@@ -26,6 +28,7 @@ namespace Akimichi.Game
             base.Dispose();
             this.eventList.Clear();
             this.eventLogics.Clear();
+            this.eventWindow = null;
         }
 
         // 使用していない稽古アニメ取得
@@ -156,6 +159,16 @@ namespace Akimichi.Game
                     break;
             }
             return result;
+        }
+
+        /// <summary>
+        /// マップイベント開始
+        /// </summary>
+        public void MapEventStart()
+        {
+            EventDataBase eventData = null;
+            eventData = new EventData01();
+            this.eventWindow.StartEvent(eventData);
         }
     }
 }

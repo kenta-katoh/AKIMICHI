@@ -1104,6 +1104,7 @@ MonoBehaviour:
     type: 3}
   diceView: {fileID: 1568185327}
   playerStatusView: {fileID: 1459600171}
+  eventWindow: {fileID: 873714430878119545}
 --- !u!4 &1051308185
 Transform:
   m_ObjectHideFlags: 0
@@ -1977,7 +1978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animeController: {fileID: 2277460781209775509}
-  message: {fileID: 0}
+  message: {fileID: 9048221489092595462}
+  image: {fileID: 8247100387937658511}
+  input: {fileID: 1332577284}
 --- !u!114 &1462081500013204262
 MonoBehaviour:
   m_ObjectHideFlags: 0
