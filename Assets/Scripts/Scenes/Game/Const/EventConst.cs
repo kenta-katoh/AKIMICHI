@@ -65,5 +65,14 @@ namespace Akimichi.Game
             Minus,
             Event,
         }
+
+        public enum EventMessageType
+        {
+            None,
+            Main,
+            Yes,
+            No,
+        }
+        public static readonly string MessageLastChar = "F";    // メッセージの末尾を示す文字
     }
 }
