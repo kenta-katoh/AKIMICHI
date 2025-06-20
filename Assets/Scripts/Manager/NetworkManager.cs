@@ -266,9 +266,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// イベント送信
     /// </summary>
-    public void SendEvent(EventConst.Event _event, object[] data)
+    public void SendEvent(EventConst.Event _event, SendObjectData data)
     {
-        PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), data, eventOptions, sendOptions);
+        PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), data.Datas, eventOptions, sendOptions);
+        data.IsUse = false;
     }
 
     /// <summary>
@@ -408,5 +409,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         base.OnPlayerLeftRoom(otherPlayer);
         Debug.Log("プレイヤーが退室しました");
         onPlayerLeftRoom?.Invoke(otherPlayer);
+    }
+
+    internal void SendEvent(EventConst.Event subtractWeight, object datas)
+    {
+        throw new NotImplementedException();
     }
 }

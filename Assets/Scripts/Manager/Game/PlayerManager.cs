@@ -16,7 +16,6 @@ namespace Akimichi.Game
         private Dictionary<GameConst.PlayerIndex, PlayerLogic> playerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
         private PlayerStatusView playerStatusView = null;
         private bool isfatigue = false;
-        private object[] fatigueObjects = new object[1];
 
         public override void DataTransfer(ManagerData data)
         {
@@ -37,7 +36,6 @@ namespace Akimichi.Game
             this.playerDic.Clear();
             this.playerStatusView = null;
             this.isfatigue = false;
-            this.fatigueObjects[0] = null; ;
         }
 
         public override void Initialize()
@@ -120,19 +118,20 @@ namespace Akimichi.Game
                     {
                         case GameConst.MapSpaceType.Plus:
                             this.isfatigue = false; // 疲労回復
-                            this.fatigueObjects[0] = (int)this.PlayerIndex;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, this.fatigueObjects);
+                            var send2 = DataObjectManager.Instance().Get();
+                            send2.Datas[0] = (int)this.PlayerIndex;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, send2);
 
-                            ClearSendData();
-                            this.datas[0] = (int)this.PlayerIndex;
-                            this.datas[1] = EventManager.Instance().GetPlusValue();
-                            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = (int)this.PlayerIndex;
+                            send.Datas[1] = EventManager.Instance().GetPlusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
                             break;
                         case GameConst.MapSpaceType.Minus:
-                            ClearSendData();
-                            this.datas[0] = (int)this.PlayerIndex;
-                            this.datas[1] = EventManager.Instance().GetMinusValue();
-                            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+                            var send1 = DataObjectManager.Instance().Get();
+                            send1.Datas[0] = (int)this.PlayerIndex;
+                            send1.Datas[1] = EventManager.Instance().GetMinusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send1);
                             break;
                         case GameConst.MapSpaceType.Event:
                             EventManager.Instance().MapEventStart();
@@ -247,10 +246,10 @@ namespace Akimichi.Game
             SetPlayerState(PlayerConst.State.Event);
             DiceManager.Instance().ForceStop();
 
-            ClearSendData();
-            this.datas[0] = (int)this.PlayerIndex;
-            this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, this.datas);
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)this.PlayerIndex;
+            send.Datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, send);
         }
 
         /// <summary>
@@ -281,10 +280,10 @@ namespace Akimichi.Game
             {
                 result = (int)(weight * 0.15f);
             }
-            ClearSendData();
-            this.datas[0] = (int)this.PlayerIndex;
-            this.datas[1] = result;
-            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)this.PlayerIndex;
+            send.Datas[1] = result;
+            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send);
         }
 
         /// <summary>
@@ -310,8 +309,9 @@ namespace Akimichi.Game
 
                 // 疲労状態へ
                 this.isfatigue = true;
-                this.fatigueObjects[0] = (int)this.PlayerIndex;
-                NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, this.fatigueObjects);
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = (int)this.PlayerIndex;
+                NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, send);
             }
         }
 

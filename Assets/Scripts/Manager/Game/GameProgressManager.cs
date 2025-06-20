@@ -42,7 +42,6 @@ namespace Akimichi.Game
 
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
-        private object[] datas = new object[10];
         private EventBrain eventBrain = null;
 
         private void Awake()
@@ -82,25 +81,18 @@ namespace Akimichi.Game
 
         private void Start()
         {
+            DataObjectManager.Instance().Initialize();
             GameStateManager.Instance().Initialize();
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
             if (this.eventBrain != null) this.eventBrain.Initialize(MapManager.Instance().GetMapSpaces());
 
-            ClearSendData();
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[1] = PlayerManager.Instance().GetName();
-            NetworkManager.Instance().SendEvent(EventConst.Event.SetName, this.datas);
+            var data = DataObjectManager.Instance().Get();
+            data.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            data.Datas[1] = PlayerManager.Instance().GetName();
+            NetworkManager.Instance().SendEvent(EventConst.Event.SetName, data);
 
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
-        }
-
-        private void ClearSendData()
-        {
-            for(int i = 0; i < this.datas.Length; ++i)
-            {
-                this.datas[i] = null;
-            }
         }
 
         public void OnEvent(EventData photonEvent)
@@ -122,7 +114,6 @@ namespace Akimichi.Game
                         GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)data[1];
                         this.playerList.Clear();
                         this.playerList.AddRange(this.eventBrain.AffiliationMapSpace((int)data[0], playerIndex));
-                        ClearSendData();
                         bool isEvent = false;
                         int eventId = 0;
 
@@ -146,6 +137,7 @@ namespace Akimichi.Game
                             if (this.playerList.Contains(player)) this.playerList.Remove(player);
                         }
 
+                        string playerStr = "";
                         switch (this.playerList.Count)
                         {
                             // 誰もいなかったのでマス目の思考
@@ -183,7 +175,7 @@ namespace Akimichi.Game
                                 this.playerList.Add(playerIndex);
                                 eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], this.playerList);
                                 // 該当プレイヤーを稽古待機状態へ変更
-                                this.datas[0] = CreatePlayerList(this.playerList);
+                                playerStr = CreatePlayerList(this.playerList);
                                 break;
                             // 複数人暇している
                             case 2:
@@ -197,14 +189,16 @@ namespace Akimichi.Game
                                 isEvent = true;
                                 eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], practices);
                                 // 該当プレイヤーを稽古待機状態へ変更
-                                this.datas[0] = CreatePlayerList(practices);
+                                playerStr = CreatePlayerList(practices);
                                 break;
                         }
 
                         if (isEvent)
                         {
-                            this.datas[1] = eventId;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.WaitingPractice, this.datas);
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = playerStr;
+                            send.Datas[1] = eventId;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.WaitingPractice, send);
                         }
                     }
                     break;
@@ -229,10 +223,10 @@ namespace Akimichi.Game
                         if (mapEvent != null)
                         {
                             mapEvent.StartEvent();  // イベントを開始中へ
-                            ClearSendData();
-                            this.datas[0] = CreatePlayerList(mapEvent.Players);
-                            this.datas[1] = mapEvent.EventID;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.StartPractice, this.datas);
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = CreatePlayerList(mapEvent.Players);
+                            send.Datas[1] = mapEvent.EventID;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.StartPractice, send);
                         }
                     }
                     break;
@@ -245,10 +239,10 @@ namespace Akimichi.Game
                         MapEventBase mapEvent = this.eventBrain.GetEvent(eventId);
                         if(mapEvent != null)
                         {
-                            ClearSendData();
-                            this.datas[0] = eventId;
-                            this.datas[1] = (int)mapEvent.MapSpaceIndex;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.PracticeEffectStart, this.datas);
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = eventId;
+                            send.Datas[1] = (int)mapEvent.MapSpaceIndex;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.PracticeEffectStart, send);
                         }
                     }
 
@@ -266,18 +260,18 @@ namespace Akimichi.Game
                     {
                         // 稽古ステータス計算
                         MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[0]);
-                        ClearSendData();
-                        this.datas[0] = CreatePlayerList(mapEvent.Players);
-                        NetworkManager.Instance().SendEvent(EventConst.Event.CalcPractice, this.datas);
+                        var send = DataObjectManager.Instance().Get();
+                        send.Datas[0] = CreatePlayerList(mapEvent.Players);
+                        NetworkManager.Instance().SendEvent(EventConst.Event.CalcPractice, send);
 
                         // ホストはイベントエフェクト終了の監視
                         EventManager.Instance().StartEventEffect(mapSpace, () =>
                         {
                             MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[0]);
-                            ClearSendData();
-                            this.datas[0] = CreatePlayerList(mapEvent.Players);
-                            this.datas[1] = mapEvent.EventID;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.EndPractice, this.datas);
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = CreatePlayerList(mapEvent.Players);
+                            send.Datas[1] = mapEvent.EventID;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.EndPractice, send);
                         });
                     }
                     break;
@@ -367,13 +361,13 @@ namespace Akimichi.Game
                     // ホストのみで行って配布
                     if(NetworkManager.Instance().IsMasterClient())
                     {
-                        ClearSendData();
+                        var send = DataObjectManager.Instance().Get();
                         List<int> seed = MapManager.Instance().StartPositionSetting();
                         for(int i = 0; i < seed.Count; ++i)
                         {
-                            this.datas[i] = seed[i];
+                            send.Datas[i] = seed[i];
                         }
-                        NetworkManager.Instance().SendEvent(EventConst.Event.StartingPositionDistribution, this.datas);
+                        NetworkManager.Instance().SendEvent(EventConst.Event.StartingPositionDistribution, send);
                     }
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
@@ -429,10 +423,10 @@ namespace Akimichi.Game
             if (NetworkManager.Instance().IsAllocateViewID(photonView))
             {
                 // 同じRoom内の他のユーザーへ通知
-                ClearSendData();
-                this.datas[0] = photonView.ViewID;
-                this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
-                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject, this.datas);
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = photonView.ViewID;
+                send.Datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+                NetworkManager.Instance().SendEvent(EventConst.Event.CreatePlayerObject, send);
             }
             else
             {
