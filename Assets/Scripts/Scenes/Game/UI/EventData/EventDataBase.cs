@@ -21,6 +21,7 @@ namespace Akimichi.Game
         public bool IsSelectEvent {  get; protected set; } = false; // セレクト方式かどうか
         protected System.Random random = new System.Random();
         protected object[] datas = new object[10];
+        protected EventConst.EventMessageType resultType = EventConst.EventMessageType.None;
 
         /// <summary>
         /// 文章取得
@@ -47,6 +48,7 @@ namespace Akimichi.Game
 
         private string MainMessage()
         {
+            this.resultType = EventConst.EventMessageType.Main;
             string result = "";
             if (this.mainMessageIndex < this.mainMessageList.Count)
             {
@@ -63,6 +65,7 @@ namespace Akimichi.Game
 
         private string YesMessage()
         {
+            this.resultType = EventConst.EventMessageType.Yes;
             string result = "";
             if (this.yesMessageIndex < this.yesMessageList.Count)
             {
@@ -79,6 +82,7 @@ namespace Akimichi.Game
 
         private string NoMessage()
         {
+            this.resultType = EventConst.EventMessageType.No;
             string result = "";
             if (this.noMessageIndex < this.noMessageList.Count)
             {

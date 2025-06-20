@@ -11,6 +11,7 @@ namespace Akimichi.Game
         private System.Random seed = new System.Random();
         private System.Random rate = new System.Random();
         private EventWindow eventWindow = null;
+        private System.Random eventSeed = new System.Random();
 
         public override void DataTransfer(ManagerData data)
         {
@@ -167,7 +168,31 @@ namespace Akimichi.Game
         public void MapEventStart()
         {
             EventDataBase eventData = null;
-            eventData = new EventData01();
+            int seed = this.eventSeed.Next(0, 7);
+            switch(seed)
+            {
+                case 0:
+                    eventData = new EventData01();
+                    break;
+                case 1:
+                    eventData = new EventData02();
+                    break;
+                case 2:
+                    eventData = new EventData03();
+                    break;
+                case 3:
+                    eventData = new EventData04();
+                    break;
+                case 4:
+                    eventData = new EventData05();
+                    break;
+                case 5:
+                    eventData = new EventData06();
+                    break;
+                case 6:
+                    eventData = new EventData07();
+                    break;
+            }
             this.eventWindow.StartEvent(eventData);
         }
     }

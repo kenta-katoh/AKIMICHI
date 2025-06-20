@@ -1,13 +1,13 @@
 
 namespace Akimichi.Game
 {
-    public class EventData01 : EventDataBase
+    public class EventData02 : EventDataBase
     {
         private int value = 0;
 
-        public EventData01()
+        public EventData02()
         {
-            this.value = this.random.Next(50, 71);
+            this.value = this.random.Next(30, 51);
             this.IsSelectEvent = true;
             this.mainMessageList.Add("ラッキー！\n豪華な食事にありつけた。");
             this.mainMessageList.Add("料理を平らげますか？");
@@ -25,3 +25,4 @@ namespace Akimichi.Game
         }
     }
 }
+
