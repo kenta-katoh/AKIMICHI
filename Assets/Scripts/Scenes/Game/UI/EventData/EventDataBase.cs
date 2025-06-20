@@ -20,7 +20,6 @@ namespace Akimichi.Game
         protected List<string> noMessageList = new List<string>();
         public bool IsSelectEvent {  get; protected set; } = false; // セレクト方式かどうか
         protected System.Random random = new System.Random();
-        protected object[] datas = new object[10];
         protected EventConst.EventMessageType resultType = EventConst.EventMessageType.None;
 
         /// <summary>

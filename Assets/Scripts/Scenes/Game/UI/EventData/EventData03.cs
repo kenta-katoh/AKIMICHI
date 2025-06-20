@@ -19,9 +19,10 @@ namespace Akimichi.Game
         {
             base.OnFinished();
             if (this.resultType != EventConst.EventMessageType.Yes) return;
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[1] = this.value;
-            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[1] = this.value;
+            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
         }
     }
 }

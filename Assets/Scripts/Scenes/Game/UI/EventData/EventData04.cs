@@ -31,15 +31,16 @@ namespace Akimichi.Game
         {
             base.OnFinished();
             if (this.resultType != EventConst.EventMessageType.Yes) return;
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[1] = this.value;
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[1] = this.value;
             if (this.result)
             {
-                NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, this.datas);
+                NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
             }
             else
             {
-                NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+                NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send);
             }
         }
     }
