@@ -17,7 +17,10 @@ namespace Akimichi.Game
             StartPractice,             // イベント開始
             PracticeBegins,         // 稽古開始
             PracticeEffectStart,       // 稽古エフェクト再生
+            CalcPractice,           // 稽古ステータス計算
             EndPractice,           // イベント終了
+            HoldFatigue,            // 疲労開始
+            ReleaseFatigue,            // 疲労終了
 
             SetName,                // 名前設定
             AddWeight,              // 体重増加

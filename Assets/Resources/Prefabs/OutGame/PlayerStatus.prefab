@@ -320,7 +320,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImages: []
   playerImage: {fileID: 5015568674532484300}
-  practiceIcon: {fileID: 1694427294045321382}
+  fatigueIcon: {fileID: 7753418987404952175}
   weight: {fileID: 4947274329821329305}
   playerName: {fileID: 7126602281140730959}
   animeController: {fileID: 3847308774199421974}
@@ -471,12 +471,12 @@ GameObject:
   - component: {fileID: 4258727114448891209}
   - component: {fileID: 1694427294045321382}
   m_Layer: 5
-  m_Name: Status
+  m_Name: Fatigue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2096363481003371822
 RectTransform:
   m_ObjectHideFlags: 0

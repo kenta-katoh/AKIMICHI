@@ -98,5 +98,77 @@ namespace Akimichi.Game
                     break;
             }
         }
+
+        /// <summary>
+        /// 疲労開始
+        /// </summary>
+        /// <param name="index"></param>
+        public void HoldFatigue(GameConst.PlayerIndex index)
+        {
+            switch (index)
+            {
+                case GameConst.PlayerIndex.First:
+                    this.player1st.VisibleFatigue(true);
+                    break;
+                case GameConst.PlayerIndex.Second:
+                    this.player2nd.VisibleFatigue(true);
+                    break;
+                case GameConst.PlayerIndex.Third:
+                    this.player3rd.VisibleFatigue(true);
+                    break;
+                case GameConst.PlayerIndex.Fourth:
+                    this.player4th.VisibleFatigue(true);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 疲労終了
+        /// </summary>
+        /// <param name="index"></param>
+        public void ReleaseFatigue(GameConst.PlayerIndex index)
+        {
+            switch (index)
+            {
+                case GameConst.PlayerIndex.First:
+                    this.player1st.VisibleFatigue(false);
+                    break;
+                case GameConst.PlayerIndex.Second:
+                    this.player2nd.VisibleFatigue(false);
+                    break;
+                case GameConst.PlayerIndex.Third:
+                    this.player3rd.VisibleFatigue(false);
+                    break;
+                case GameConst.PlayerIndex.Fourth:
+                    this.player4th.VisibleFatigue(false);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 体重取得
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public int GetWeight(GameConst.PlayerIndex index)
+        {
+            int weight = 0;
+            switch (index)
+            {
+                case GameConst.PlayerIndex.First:
+                    weight = this.player1st.GetWeight();
+                    break;
+                case GameConst.PlayerIndex.Second:
+                    weight = this.player2nd.GetWeight();
+                    break;
+                case GameConst.PlayerIndex.Third:
+                    weight = this.player3rd.GetWeight();
+                    break;
+                case GameConst.PlayerIndex.Fourth:
+                    weight = this.player4th.GetWeight();
+                    break;
+            }
+            return weight;
+        }
     }
 }

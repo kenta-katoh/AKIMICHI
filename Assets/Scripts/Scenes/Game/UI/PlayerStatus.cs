@@ -16,7 +16,7 @@ namespace Akimichi.Game
         private Image playerImage = null;
 
         [SerializeField]
-        private Image practiceIcon = null;
+        private GameObject fatigueIcon = null;
 
         [SerializeField]
         private TextMeshProUGUI weight = null;
@@ -113,6 +113,24 @@ namespace Akimichi.Game
             {
                 this.animeController.SetBool("Down", false);
             });
+        }
+
+        /// <summary>
+        /// 疲労アイコン
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleFatigue(bool flag)
+        {
+            this.fatigueIcon.SetActive(flag);
+        }
+
+        /// <summary>
+        /// 体重取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetWeight()
+        {
+            return this.playerData.Weight;
         }
     }
 }

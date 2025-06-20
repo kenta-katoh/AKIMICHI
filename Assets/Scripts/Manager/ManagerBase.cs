@@ -28,7 +28,10 @@ namespace Akimichi
             }
         }
 
-        public virtual void Dispose() { }
+        public virtual void Dispose()
+        { 
+            ClearSendData();
+        }
         public virtual void DataTransfer(ManagerData data) { }
         public virtual void Initialize() { }
         public virtual void CreateData() { }

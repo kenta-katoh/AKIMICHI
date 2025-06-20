@@ -51,7 +51,7 @@ namespace Akimichi.Game
         /// 稽古イベント開始
         /// </summary>
         /// <param name="id"></param>
-        public void StartEventEffect(EventConst.MapEventType type, MapSpaceLogicBase space, Action action)
+        public void StartEventEffect(MapSpaceLogicBase space, Action action)
         {
             EventLogic eventLogic = GetEventAnime();
             if(eventLogic != null)

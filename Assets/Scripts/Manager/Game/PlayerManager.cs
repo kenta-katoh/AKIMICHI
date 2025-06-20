@@ -15,6 +15,8 @@ namespace Akimichi.Game
         public EventConst.Practice PracticeState { get; private set; } = EventConst.Practice.None;
         private Dictionary<GameConst.PlayerIndex, PlayerLogic> playerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
         private PlayerStatusView playerStatusView = null;
+        private bool isfatigue = false;
+        private object[] fatigueObjects = new object[1];
 
         public override void DataTransfer(ManagerData data)
         {
@@ -34,6 +36,8 @@ namespace Akimichi.Game
             this.PracticeState = EventConst.Practice.None;
             this.playerDic.Clear();
             this.playerStatusView = null;
+            this.isfatigue = false;
+            this.fatigueObjects[0] = null; ;
         }
 
         public override void Initialize()
@@ -115,6 +119,10 @@ namespace Akimichi.Game
                     switch(this.currentMapSpace.MapSpaceType)
                     {
                         case GameConst.MapSpaceType.Plus:
+                            this.isfatigue = false; // 疲労回復
+                            this.fatigueObjects[0] = (int)this.PlayerIndex;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, this.fatigueObjects);
+
                             ClearSendData();
                             this.datas[0] = (int)this.PlayerIndex;
                             this.datas[1] = EventManager.Instance().GetPlusValue();
@@ -259,6 +267,27 @@ namespace Akimichi.Game
         }
 
         /// <summary>
+        /// 稽古ステータス計算
+        /// </summary>
+        public void CalcPractice()
+        {
+            int weight = this.playerStatusView.GetWeight(this.PlayerIndex);
+            int result = 0;
+            if(!this.isfatigue)
+            {
+                result = (int)(weight * 0.1f);
+            }
+            else
+            {
+                result = (int)(weight * 0.15f);
+            }
+            ClearSendData();
+            this.datas[0] = (int)this.PlayerIndex;
+            this.datas[1] = result;
+            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, this.datas);
+        }
+
+        /// <summary>
         /// 稽古から解放
         /// </summary>
         public void ReleasePractice()
@@ -278,6 +307,11 @@ namespace Akimichi.Game
                         MoveBehavior();
                         break;
                 }
+
+                // 疲労状態へ
+                this.isfatigue = true;
+                this.fatigueObjects[0] = (int)this.PlayerIndex;
+                NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, this.fatigueObjects);
             }
         }
 
@@ -330,6 +364,24 @@ namespace Akimichi.Game
             {
                 this.playerDic[index].ChangeView(level);
             }
+        }
+
+        /// <summary>
+        /// 疲労開始
+        /// </summary>
+        /// <param name="index"></param>
+        public void HoldFatigue(GameConst.PlayerIndex index)
+        {
+            this.playerStatusView.HoldFatigue(index);
+        }
+
+        /// <summary>
+        /// 疲労終了
+        /// </summary>
+        /// <param name="index"></param>
+        public void ReleaseFatigue(GameConst.PlayerIndex index)
+        {
+            this.playerStatusView.ReleaseFatigue(index);
         }
     }
 }
