@@ -16,13 +16,19 @@ namespace Akimichi.Game
             this.diceView = ((DiceManagerData)data).DiceView;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.diceView = null;
+        }
+
         /// <summary>
         /// ダイス振り
         /// </summary>
         public bool DiceRoll()
         {
             if (PlayerManager.Instance().State == PlayerConst.State.WaitingInput && 
-                PlayerManager.Instance().EventState == EventConst.PlayerEventState.None)
+                PlayerManager.Instance().PracticeState == EventConst.Practice.None)
             {
                 this.DiceValue = this.rand.Next(1, 7);
                 return true;

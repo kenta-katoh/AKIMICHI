@@ -18,6 +18,15 @@ namespace Akimichi.Game
             this.mapSpacesRoot = ((MapManagerData)data).MapSpacesRoot;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.mapSpacesRoot = null;
+            this.mapSpaceList.Clear();
+            this.playerStartMapSpaceList.Clear();
+            this.mapSpaceLastIndex = 0;
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -171,11 +180,11 @@ namespace Akimichi.Game
         /// <param name="playerIndex"></param>
         public void SendAffiliation(int index, int value)
         {
-            ClearSendData();
-            this.datas[0] = index;
-            this.datas[1] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[2] = value;
-            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, this.datas);
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = index;
+            send.Datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[2] = value;
+            NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, send);
         }
     }
 }

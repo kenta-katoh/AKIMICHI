@@ -8,5 +8,6 @@ namespace Akimichi.Game
     public class EventManagerData : ManagerData
     {
         public List<GameObject> Events { get; set; } = new List<GameObject>();
+        public EventWindow EventWindow { get; set; } = null;
     }
 }

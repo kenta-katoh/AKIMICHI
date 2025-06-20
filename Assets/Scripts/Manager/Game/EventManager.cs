@@ -1,8 +1,5 @@
-using Akimichi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -11,6 +8,10 @@ namespace Akimichi.Game
     {
         private List<int> eventList = new List<int>();
         private List<EventLogic> eventLogics = new List<EventLogic>();
+        private System.Random seed = new System.Random();
+        private System.Random rate = new System.Random();
+        private EventWindow eventWindow = null;
+        private System.Random eventSeed = new System.Random();
 
         public override void DataTransfer(ManagerData data)
         {
@@ -20,6 +21,15 @@ namespace Akimichi.Game
             {
                 this.eventLogics.Add((EventLogic)obj.GetComponent<EventView>().Logic);
             }
+            this.eventWindow = ((EventManagerData)data).EventWindow;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.eventList.Clear();
+            this.eventLogics.Clear();
+            this.eventWindow = null;
         }
 
         // 使用していない稽古アニメ取得
@@ -41,7 +51,7 @@ namespace Akimichi.Game
         /// 稽古イベント開始
         /// </summary>
         /// <param name="id"></param>
-        public void StartEventEffect(EventConst.MapEventType type, MapSpaceLogicBase space, Action action)
+        public void StartEventEffect(MapSpaceLogicBase space, Action action)
         {
             EventLogic eventLogic = GetEventAnime();
             if(eventLogic != null)
@@ -87,6 +97,103 @@ namespace Akimichi.Game
                 return this.eventList[0];
             }
             return -1;
+        }
+
+        // シード取得
+        private int Seed(int value)
+        {
+            return this.seed.Next(0, value);
+        }
+
+        /// <summary>
+        /// 増加マスでの増加量取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetPlusValue()
+        {
+            int result = 0;
+            int seed = Seed(20);
+            switch (seed)
+            {
+                case 0:
+                    result = 100;
+                    break;
+                case 1:
+                    result = rate.Next(61, 80);
+                    break;
+                case 2:
+                case 3:
+                    result = rate.Next(41, 60);
+                    break;
+                case 4:
+                case 5:
+                    result = rate.Next(10, 20);
+                    break;
+                default:
+                    result = rate.Next(21, 40);
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 減少マスでの減少量取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetMinusValue()
+        {
+            int result = 0;
+            int seed = Seed(10);
+            switch (seed)
+            {
+                case 0:
+                    result = rate.Next(15, 21);
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    result = rate.Next(10, 16);
+                    break;
+                default:
+                    result = rate.Next(5, 11);
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// マップイベント開始
+        /// </summary>
+        public void MapEventStart()
+        {
+            EventDataBase eventData = null;
+            int seed = this.eventSeed.Next(0, 7);
+            switch(seed)
+            {
+                case 0:
+                    eventData = new EventData01();
+                    break;
+                case 1:
+                    eventData = new EventData02();
+                    break;
+                case 2:
+                    eventData = new EventData03();
+                    break;
+                case 3:
+                    eventData = new EventData04();
+                    break;
+                case 4:
+                    eventData = new EventData05();
+                    break;
+                case 5:
+                    eventData = new EventData06();
+                    break;
+                case 6:
+                    eventData = new EventData07();
+                    break;
+            }
+            this.eventWindow.StartEvent(eventData);
         }
     }
 }

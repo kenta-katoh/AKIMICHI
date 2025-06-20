@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -11,12 +12,45 @@ namespace Akimichi.Game
         private PlayerConst.State returnedState = PlayerConst.State.None;
         private PlayerConst.Direction direction = PlayerConst.Direction.None;
         private MapSpaceLogicBase currentMapSpace = null;
-        public EventConst.PlayerEventState EventState { get; private set; } = EventConst.PlayerEventState.None;
+        public EventConst.Practice PracticeState { get; private set; } = EventConst.Practice.None;
+        private Dictionary<GameConst.PlayerIndex, PlayerLogic> playerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
+        private PlayerStatusView playerStatusView = null;
+        private bool isfatigue = false;
+
+        public override void DataTransfer(ManagerData data)
+        {
+            base.DataTransfer(data);
+            PlayerManagerData managerData = (PlayerManagerData)data;
+            this.playerStatusView = managerData.StatusView;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            this.playerLogic = null;
+            this.State = PlayerConst.State.None;
+            this.returnedState = PlayerConst.State.None;
+            this.direction = PlayerConst.Direction.None;
+            this.currentMapSpace = null;
+            this.PracticeState = EventConst.Practice.None;
+            this.playerDic.Clear();
+            this.playerStatusView = null;
+            this.isfatigue = false;
+        }
 
         public override void Initialize()
         {
             base.Initialize();
-            PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+            this.PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+        }
+
+        /// <summary>
+        /// 名前取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetName()
+        {
+            return NetworkManager.Instance().GetName(NetworkManager.Instance().GetUserID());
         }
 
         /// <summary>
@@ -29,6 +63,20 @@ namespace Akimichi.Game
             if(view != null)
             {
                 this.playerLogic = (PlayerLogic)view.Logic;
+            }
+            ResistPlayer(this.PlayerIndex, this.playerLogic);
+        }
+
+        /// <summary>
+        /// プレイヤー登録
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="logic"></param>
+        public void ResistPlayer(GameConst.PlayerIndex index, PlayerLogic logic)
+        {
+            if(!this.playerDic.ContainsKey(index))
+            {
+                this.playerDic.Add(index, logic);
             }
         }
 
@@ -56,7 +104,7 @@ namespace Akimichi.Game
             SetPlayerState(PlayerConst.State.MoveBehavior);
             
             // イベント関連の判定
-            if(this.EventState != EventConst.PlayerEventState.ViewWaiting)
+            if(this.PracticeState != EventConst.Practice.Waiting)
             {
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())
@@ -65,14 +113,39 @@ namespace Akimichi.Game
                 }
                 else
                 {
+                    // 止まったマス目の思考
+                    switch(this.currentMapSpace.MapSpaceType)
+                    {
+                        case GameConst.MapSpaceType.Plus:
+                            this.isfatigue = false; // 疲労回復
+                            var send2 = DataObjectManager.Instance().Get();
+                            send2.Datas[0] = (int)this.PlayerIndex;
+                            NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, send2);
+
+                            var send = DataObjectManager.Instance().Get();
+                            send.Datas[0] = (int)this.PlayerIndex;
+                            send.Datas[1] = EventManager.Instance().GetPlusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
+                            break;
+                        case GameConst.MapSpaceType.Minus:
+                            var send1 = DataObjectManager.Instance().Get();
+                            send1.Datas[0] = (int)this.PlayerIndex;
+                            send1.Datas[1] = EventManager.Instance().GetMinusValue();
+                            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send1);
+                            break;
+                        case GameConst.MapSpaceType.Event:
+                            EventManager.Instance().MapEventStart();
+                            break;
+                    }
+
                     this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                     SetPlayerState(PlayerConst.State.WaitingInput);
                 }
             }
-            else if(this.EventState == EventConst.PlayerEventState.ViewWaiting)
+            else if(this.PracticeState == EventConst.Practice.Waiting)
             {
                 // viewが追いついたので稽古可能状態に遷移
-                this.EventState = EventConst.PlayerEventState.ReadyToGo;
+                this.PracticeState = EventConst.Practice.ReadyToGo;
                 SendEventPossible();
             }
         }
@@ -151,7 +224,7 @@ namespace Akimichi.Game
         /// </summary>
         public void WaitingEvent()
         {
-            this.EventState = EventConst.PlayerEventState.ViewWaiting;
+            this.PracticeState = EventConst.Practice.Waiting;
             this.returnedState = this.State;    // イベントから復帰時に戻るステータス
             DiceManager.Instance().ForceStop();
             switch(this.State)
@@ -168,53 +241,59 @@ namespace Akimichi.Game
         // 稽古可能状態の送信
         private void SendEventPossible()
         {
-            this.EventState = EventConst.PlayerEventState.ReadyToGo;
+            this.PracticeState = EventConst.Practice.ReadyToGo;
             this.returnedState = this.State;    // イベントから復帰時に戻るステータス
             SetPlayerState(PlayerConst.State.Event);
             DiceManager.Instance().ForceStop();
 
-            ClearSendData();
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)this.PlayerIndex;
+            send.Datas[1] = EventManager.Instance().GetEvent();
+            NetworkManager.Instance().SendEvent(EventConst.Event.PracticePossible, send);
         }
 
         /// <summary>
-        /// ふたたびイベント待機状態へ
+        /// 稽古開始
         /// </summary>
-        public void SendReEventPossible()
+        public void StartPractice()
         {
-            this.EventState = EventConst.PlayerEventState.ReadyToGo;
-            SetPlayerState(PlayerConst.State.Event);
-            DiceManager.Instance().ForceStop();
-
-            ClearSendData();
-            this.datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-            this.datas[1] = EventManager.Instance().GetEvent();
-            NetworkManager.Instance().SendEvent(EventConst.Event.EventPossible, this.datas);
-        }
-
-        /// <summary>
-        /// イベント開始
-        /// </summary>
-        public void StartEvent()
-        {
-            if(this.EventState == EventConst.PlayerEventState.ReadyToGo)
+            if(this.PracticeState == EventConst.Practice.ReadyToGo)
             {
-                this.EventState = EventConst.PlayerEventState.Doing;
+                this.PracticeState = EventConst.Practice.DuringPractice;
                 this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                 SetPlayerState(PlayerConst.State.Event);
             }
         }
 
         /// <summary>
-        /// イベントから解放
+        /// 稽古ステータス計算
         /// </summary>
-        public void ReleaseEvent()
+        public void CalcPractice()
         {
-            if (this.EventState == EventConst.PlayerEventState.Doing)
+            int weight = this.playerStatusView.GetWeight(this.PlayerIndex);
+            int result = 0;
+            if(!this.isfatigue)
             {
-                this.EventState = EventConst.PlayerEventState.None;
+                result = (int)(weight * 0.1f);
+            }
+            else
+            {
+                result = (int)(weight * 0.15f);
+            }
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)this.PlayerIndex;
+            send.Datas[1] = result;
+            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send);
+        }
+
+        /// <summary>
+        /// 稽古から解放
+        /// </summary>
+        public void ReleasePractice()
+        {
+            if (this.PracticeState == EventConst.Practice.DuringPractice)
+            {
+                this.PracticeState = EventConst.Practice.None;
                 SetPlayerState(this.returnedState);
                 switch(this.State)
                 {
@@ -227,7 +306,82 @@ namespace Akimichi.Game
                         MoveBehavior();
                         break;
                 }
+
+                // 疲労状態へ
+                this.isfatigue = true;
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = (int)this.PlayerIndex;
+                NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, send);
             }
+        }
+
+        /// <summary>
+        /// 名前設定
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="name"></param>
+        public void SetName(GameConst.PlayerIndex index, string name)
+        {
+            this.playerStatusView.SetName(index, name);
+        }
+
+        /// <summary>
+        /// 体重増加
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public void AddWeight(GameConst.PlayerIndex index, int value)
+        {
+            this.playerStatusView.AddWeight(index, value);
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].AddEffect();
+            }
+        }
+
+        /// <summary>
+        /// 体重減少
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public void SubtractWeight(GameConst.PlayerIndex index, int value)
+        {
+            this.playerStatusView.SubtractWeight(index, value);
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].SubtractEffect();
+            }
+        }
+
+        /// <summary>
+        /// プレイヤーの表示更新
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="level"></param>
+        public void ChangePlayerView(GameConst.PlayerIndex index, int level)
+        {
+            if(this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].ChangeView(level);
+            }
+        }
+
+        /// <summary>
+        /// 疲労開始
+        /// </summary>
+        /// <param name="index"></param>
+        public void HoldFatigue(GameConst.PlayerIndex index)
+        {
+            this.playerStatusView.HoldFatigue(index);
+        }
+
+        /// <summary>
+        /// 疲労終了
+        /// </summary>
+        /// <param name="index"></param>
+        public void ReleaseFatigue(GameConst.PlayerIndex index)
+        {
+            this.playerStatusView.ReleaseFatigue(index);
         }
     }
 }
