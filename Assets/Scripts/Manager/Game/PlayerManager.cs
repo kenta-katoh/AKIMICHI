@@ -383,5 +383,13 @@ namespace Akimichi.Game
         {
             this.playerStatusView.ReleaseFatigue(index);
         }
+
+        /// <summary>
+        /// 体重の表示切り替え
+        /// </summary>
+        public void VisibleWeight(bool flag)
+        {
+            this.playerStatusView.VisibleWeight(flag);
+        }
     }
 }

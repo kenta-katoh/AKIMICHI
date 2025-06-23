@@ -170,5 +170,17 @@ namespace Akimichi.Game
             }
             return weight;
         }
+
+        /// <summary>
+        /// 体重表示切り替え
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleWeight(bool flag)
+        {
+            this.player1st.VisibleWeight(flag);
+            this.player2nd.VisibleWeight(flag);
+            this.player3rd.VisibleWeight(flag);
+            this.player4th.VisibleWeight(flag);
+        }
     }
 }

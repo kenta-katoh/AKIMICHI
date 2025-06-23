@@ -13,6 +13,7 @@ namespace Akimichi.Game
         private double delayTime = 0;
         private int leftTime = 0;
         private TextMeshProUGUI timer = null;
+        private bool isLast = false;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -30,6 +31,7 @@ namespace Akimichi.Game
             this.delayTime = 0;
             this.leftTime = 0;
             this.timer = null;
+            this.isLast = false;
         }
 
         public override void Initialize()
@@ -136,6 +138,7 @@ namespace Akimichi.Game
             this.leftTime = 0;
             this.serverTime = NetworkManager.Instance().GetServerTime();
             this.delayTime = NetworkManager.Instance().GetPhotonTime() - this.serverTime;
+            this.isLast = false;
         }
 
         public override void ManagedUpdate()
@@ -146,6 +149,12 @@ namespace Akimichi.Game
                 this.leftTime = GameConst.GameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
                 var t = TimeSpan.FromSeconds(this.leftTime);
                 this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
+
+                if (!this.isLast && this.leftTime < GameConst.LastTime)
+                {
+                    this.isLast = true;
+                    PlayerManager.Instance().VisibleWeight(false);
+                }
             }
         }
     }
