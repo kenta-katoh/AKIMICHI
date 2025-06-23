@@ -94,30 +94,44 @@ public class LobbyScene : MonoBehaviour
         {
             this.state = State.CreateRoom;
             string roomName = string.Empty;
-            foreach(string name in LobbySceneConst.RoomNameList)
-            {
-                bool isUse = false;
-                foreach (RoomInfo room in this.cashRoomList)
-                {
-                    if(name == room.Name)
-                    {
-                        isUse = true; 
-                        break;
-                    }
-                }
+            //foreach(string name in LobbySceneConst.RoomNameList)
+            //{
+            //    bool isUse = false;
+            //    foreach (RoomInfo room in this.cashRoomList)
+            //    {
+            //        if(name == room.Name)
+            //        {
+            //            isUse = true; 
+            //            break;
+            //        }
+            //    }
+            //
+            //    if(!isUse)
+            //    {
+            //        roomName = name;
+            //        break;
+            //    }
+            //}
 
-                if(!isUse)
-                {
-                    roomName = name;
-                    break;
-                }
-            }
-
-            if(!string.IsNullOrEmpty(roomName))
+            roomName = GenerateRandomString(8);
+            if (!string.IsNullOrEmpty(roomName))
             {
                 NetworkManager.Instance().CreateRoom(roomName);
             }
         }
+    }
+
+    private const string PASSWORD_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private string GenerateRandomString(int size = 32)
+    {
+        var stringBuilder = new System.Text.StringBuilder(size);
+        var pathLength = PASSWORD_CHARS.Length;
+        for (var i = 0; i < size; ++i)
+        {
+            var range = Random.Range(0, pathLength);
+            stringBuilder.Append(PASSWORD_CHARS[range]);
+        }
+        return stringBuilder.ToString();
     }
 
     public void BackHome()
