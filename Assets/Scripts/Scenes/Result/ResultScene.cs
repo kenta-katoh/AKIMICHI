@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResultScene : MonoBehaviour
+namespace Akimichi
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ResultScene : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Awake()
+        {
+            NetworkManager.Instance().DeleteCallBack();
+            NetworkManager.Instance().LeaveRoom();
+            NetworkManager.Instance().Disconnect();
+        }
     }
 }
