@@ -1,9 +1,7 @@
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RoomContents : MonoBehaviour
 {
@@ -11,25 +9,61 @@ public class RoomContents : MonoBehaviour
     private TextMeshProUGUI roomName = null;
 
     [SerializeField]
-    private TextMeshProUGUI member = null;
+    private List<GameObject> member = null;
+
+    [SerializeField]
+    private List<GameObject> memberDisable = null;
 
     public void SetRoomData(RoomInfo info)
     {
-        roomName.text = info.Name;
-        member.text = info.PlayerCount + "/" + info.MaxPlayers;
+        this.roomName.text = info.Name;
+        int memberValue = info.PlayerCount;
+        foreach (GameObject obj in this.member)
+        {
+            if(memberValue > 0)
+            {
+                obj.SetActive(true);
+            }
+            else
+            {
+                obj.SetActive(false);
+            }
+            memberValue--;
+        }
+
+        int disableMemberValue = info.MaxPlayers - info.PlayerCount;
+        foreach (GameObject obj in this.memberDisable)
+        {
+            if (disableMemberValue > 0)
+            {
+                obj.SetActive(true);
+            }
+            else
+            {
+                obj.SetActive(false);
+            }
+            disableMemberValue--;
+        }
     }
 
     public void ClearData()
     {
-        roomName.text = string.Empty;
-        member.text = string.Empty;
+        this.roomName.text = string.Empty;
+        foreach (GameObject obj in this.member)
+        {
+            obj.SetActive(false);
+        }
+        foreach (GameObject obj in this.memberDisable)
+        {
+            obj.SetActive(true);
+        }
     }
 
     public void JoinRoom()
     {
-        if(roomName.text != string.Empty)
+        if(this.roomName.text != string.Empty)
         {
-            NetworkManager.Instance().JoinRoom(roomName.text);
+            NetworkManager.Instance().JoinRoom(this.roomName.text);
         }
     }
 }
