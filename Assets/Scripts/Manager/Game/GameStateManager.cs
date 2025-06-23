@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 namespace Akimichi.Game
 {
@@ -8,11 +9,16 @@ namespace Akimichi.Game
         private Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>> stateDic = new Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>>();
         private GameConst.GameProgressState currentState = GameConst.GameProgressState.None;
         private GameProgressManager progressManager = null;
+        private double serverTime = 0;
+        private double delayTime = 0;
+        private int leftTime = 0;
+        private TextMeshProUGUI timer = null;
 
         public override void DataTransfer(ManagerData data)
         {
             base.DataTransfer(data);
             this.progressManager = ((GameStateManagerData)data).ProgressManager;
+            this.timer = ((GameStateManagerData)data).Timer;
         }
 
         public override void Dispose()
@@ -20,6 +26,10 @@ namespace Akimichi.Game
             base.Dispose();
             this.stateDic.Clear();
             this.progressManager = null;
+            this.serverTime = 0;
+            this.delayTime = 0;
+            this.leftTime = 0;
+            this.timer = null;
         }
 
         public override void Initialize()
@@ -33,6 +43,9 @@ namespace Akimichi.Game
                 List<GameConst.PlayerIndex> list = new List<GameConst.PlayerIndex>();
                 this.stateDic.Add((GameConst.GameProgressState)state, list);
             }
+
+            var t = TimeSpan.FromSeconds(GameConst.GameTime);
+            this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
         }
 
         /// <summary>
@@ -112,6 +125,28 @@ namespace Akimichi.Game
         public GameConst.GameProgressState CurrentState()
         {
             return this.currentState;
+        }
+
+        /// <summary>
+        /// サーバー時間設定
+        /// </summary>
+        public void SetServerTime()
+        {
+            this.serverTime = 0;
+            this.leftTime = 0;
+            this.serverTime = NetworkManager.Instance().GetServerTime();
+            this.delayTime = NetworkManager.Instance().GetPhotonTime() - this.serverTime;
+        }
+
+        public override void ManagedUpdate()
+        {
+            base.ManagedUpdate();
+            if(this.currentState == GameConst.GameProgressState.InGame)
+            {
+                this.leftTime = GameConst.GameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
+                var t = TimeSpan.FromSeconds(this.leftTime);
+                this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
+            }
         }
     }
 }

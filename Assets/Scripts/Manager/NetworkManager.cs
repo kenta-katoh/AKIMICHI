@@ -38,11 +38,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             Reliability = true
         };
+
+        if (instance == null) instance = new NetworkManager();
     }
 
     public static NetworkManager Instance()
     {
-        if(instance == null) instance = new NetworkManager();
         return instance;
     }
 
@@ -279,6 +280,37 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public int GetRoomPlayerValue()
     {
         return PhotonNetwork.CurrentRoom.PlayerCount;
+    }
+
+    /// <summary>
+    /// サーバー時間の設定
+    /// </summary>
+    public void SetServerTime()
+    {
+        if(IsMasterClient())
+        {
+            var properties = new Hashtable();
+            properties.Add("ServerTime", PhotonNetwork.Time);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+        }
+    }
+
+    /// <summary>
+    /// サーバー時間取得
+    /// </summary>
+    /// <returns></returns>
+    public double GetServerTime()
+    {
+        return (double)PhotonNetwork.CurrentRoom.CustomProperties["ServerTime"];
+    }
+
+    /// <summary>
+    /// photon内時間取得
+    /// </summary>
+    /// <returns></returns>
+    public double GetPhotonTime()
+    {
+        return PhotonNetwork.Time;
     }
 
     ///////////////////////////////////////////////////////////

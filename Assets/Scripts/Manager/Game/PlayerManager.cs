@@ -171,7 +171,7 @@ namespace Akimichi.Game
                 DiceManager.Instance().DiceDecrement();
 
                 // logic側ではすでに所属マスが変わっているので通知
-                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index, DiceManager.Instance().DiceValue);
+                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
 
                 // view側の移動
                 this.playerLogic.StartMove(this.currentMapSpace.GetTransform());

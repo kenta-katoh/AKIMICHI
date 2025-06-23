@@ -43,5 +43,7 @@ namespace Akimichi.Game
             BootCamera,
             InGame,
         }
+
+        public static readonly int GameTime = 180;     // 制限時間（秒）
     }
 }
