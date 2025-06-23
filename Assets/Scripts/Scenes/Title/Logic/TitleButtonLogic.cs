@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Akimichi.Game;
-using Manager;
 using Akimichi.Data;
+using UnityEngine.SceneManagement;
 
 namespace Akimichi.Title
 {
@@ -16,7 +16,7 @@ namespace Akimichi.Title
         public void ChangeScene()
         {
             // テストでリザルトへ
-            SceneManager.Instance().ChangeScene("LobbyScene");
+            SceneManager.LoadScene("LobbyScene");
         }
 
         public void CreateData()

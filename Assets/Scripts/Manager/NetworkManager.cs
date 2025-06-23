@@ -24,10 +24,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private static RaiseEventOptions eventOptions = new RaiseEventOptions();
     private static SendOptions sendOptions = new SendOptions();
+    private bool isLoad = false;
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if(!this.isLoad)
+        {
+            this.isLoad = true;
+            DontDestroyOnLoad(gameObject);
+        }
         eventOptions = new RaiseEventOptions
         {
             Receivers = ReceiverGroup.All,

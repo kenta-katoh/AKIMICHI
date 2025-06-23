@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Akimichi.Lobby;
-using Manager;
+using UnityEngine.SceneManagement;
 
 public class LobbyScene : MonoBehaviour
 {
@@ -30,7 +30,7 @@ public class LobbyScene : MonoBehaviour
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
         {
-            SceneManager.Instance().ChangeScene("MatchingScene");
+            SceneManager.LoadScene("MatchingScene");
         });
         NetworkManager.Instance().SetCallbackOnConnect(() => 
         { 

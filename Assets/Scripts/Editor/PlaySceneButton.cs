@@ -17,7 +17,7 @@ public class PlaySceneButton : EditorWindow
         window.Show();
     }
 
-    static string[] skipScenes = { "ManagerScene", "TitleScene" };
+    static string[] listScenes = { "TitleScene" };
 
     private void OnGUI()
     {
@@ -32,7 +32,7 @@ public class PlaySceneButton : EditorWindow
             string path = scene.path;
             string sceneName = System.IO.Path.GetFileNameWithoutExtension(path);
             
-            if (skipScenes.Contains(sceneName)) continue;
+            if (!listScenes.Contains(sceneName)) continue;
             if (GUILayout.Button(sceneName, buttonOption))
             {
                 if(!EditorApplication.isPlaying)

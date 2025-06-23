@@ -159,7 +159,7 @@ namespace Akimichi.Game
                     PlayerManager.Instance().VisibleWeight(false);
                 }
 
-                if(!this.isFinish && this.leftTime < 150)
+                if(!this.isFinish && this.leftTime < 1)
                 {
                     this.isFinish = true;
                     this.progressManager.FinishGame();
