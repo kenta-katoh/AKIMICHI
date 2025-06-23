@@ -374,7 +374,7 @@ namespace Akimichi.Game
                     this.finishAnime.PlayAnime("Finish", true, "Finish", () =>
                     {
                         // ゲーム終了
-                        SceneManager.LoadScene("ResultScene");
+                        SceneManager.LoadScene(SceneConst.Result);
                     });
                     break;
             }

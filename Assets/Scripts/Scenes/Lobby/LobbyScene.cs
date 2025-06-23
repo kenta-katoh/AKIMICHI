@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Akimichi.Lobby;
 using UnityEngine.SceneManagement;
+using Akimichi;
 
 public class LobbyScene : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class LobbyScene : MonoBehaviour
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
         {
-            SceneManager.LoadScene("MatchingScene");
+            SceneManager.LoadScene(SceneConst.Matching);
         });
         NetworkManager.Instance().SetCallbackOnConnect(() => 
         { 
@@ -117,5 +118,10 @@ public class LobbyScene : MonoBehaviour
                 NetworkManager.Instance().CreateRoom(roomName);
             }
         }
+    }
+
+    public void BackHome()
+    {
+        SceneManager.LoadScene(SceneConst.Home);
     }
 }

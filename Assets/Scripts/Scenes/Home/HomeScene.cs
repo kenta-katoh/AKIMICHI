@@ -7,9 +7,14 @@ namespace Akimichi
 {
     public class HomeScene : MonoBehaviour
     {
+        private void Awake()
+        {
+            NetworkManager.Instance().Disconnect();
+        }
+
         public void ChangeLobby()
         {
-            SceneManager.LoadScene("LobbyScene");
+            SceneManager.LoadScene(SceneConst.Lobby);
         }
 
         public void ChangeTutorial()

@@ -1,3 +1,4 @@
+using Akimichi;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ public class MatchingScene : MonoBehaviour
         NetworkManager.Instance().DeleteCallBack();
         NetworkManager.Instance().SetCallbackOnLeaveRoom(() => 
         {
-            SceneManager.LoadScene("LobbyScene");
+            SceneManager.LoadScene(SceneConst.Lobby);
         });
 
         NetworkManager.Instance().SetCallbackOnPlayerEnteredRoom(OnPlayerEnteredRoom);
@@ -47,7 +48,7 @@ public class MatchingScene : MonoBehaviour
     {
         if(NetworkManager.Instance().IsMasterClient())
         {
-            NetworkManager.Instance().SysncLoadScene("GameScene");
+            NetworkManager.Instance().SysncLoadScene(SceneConst.Game);
         }
     }
 

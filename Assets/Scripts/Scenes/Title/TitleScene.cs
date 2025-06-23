@@ -9,7 +9,7 @@ namespace Akimichi
     {
         public void ChangeScene()
         {
-            SceneManager.LoadScene("HomeScene");
+            SceneManager.LoadScene(SceneConst.Home);
         }
     }
 }
