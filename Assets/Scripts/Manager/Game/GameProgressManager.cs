@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Akimichi.Game
 {
@@ -42,8 +43,13 @@ namespace Akimichi.Game
         private EventWindow eventWindow = null;
 
         [SerializeField]
-
         private TextMeshProUGUI timer = null;
+
+        [SerializeField]
+        private CanvasGroup canvasGroup = null;
+
+        [SerializeField]
+        private AnimeController finishAnime = null;
 
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
@@ -84,6 +90,9 @@ namespace Akimichi.Game
             {
                 this.eventBrain = new EventBrain();
             }
+
+            this.canvasGroup.blocksRaycasts = true;
+            this.finishAnime.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -360,6 +369,14 @@ namespace Akimichi.Game
                     PlayerManager.Instance().EnterGame();
                     GameStateManager.Instance().SetServerTime();
                     break;
+                case GameConst.GameProgressState.FinishGame:
+                    this.finishAnime.gameObject.SetActive(true);
+                    this.finishAnime.PlayAnime("Finish", true, "Finish", () =>
+                    {
+                        // ゲーム終了
+                        SceneManager.LoadScene("ResultScene");
+                    });
+                    break;
             }
         }
 
@@ -494,9 +511,12 @@ namespace Akimichi.Game
             return result;
         }
 
-        private void AkimichiLog(string message)
+        /// <summary>
+        /// 入力阻害
+        /// </summary>
+        public void FinishGame()
         {
-            Debug.Log("akimichi_log : " + message);
+            this.canvasGroup.blocksRaycasts = false;
         }
     }
 }

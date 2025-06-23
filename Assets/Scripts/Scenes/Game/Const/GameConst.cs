@@ -42,6 +42,7 @@ namespace Akimichi.Game
             InitializedFinish,
             BootCamera,
             InGame,
+            FinishGame,
         }
 
         public static readonly int GameTime = 180;     // 制限時間（秒）

@@ -14,6 +14,7 @@ namespace Akimichi.Game
         private int leftTime = 0;
         private TextMeshProUGUI timer = null;
         private bool isLast = false;
+        private bool isFinish = false;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -32,6 +33,7 @@ namespace Akimichi.Game
             this.leftTime = 0;
             this.timer = null;
             this.isLast = false;
+            this.isFinish = false;
         }
 
         public override void Initialize()
@@ -146,6 +148,7 @@ namespace Akimichi.Game
             base.ManagedUpdate();
             if(this.currentState == GameConst.GameProgressState.InGame)
             {
+                if (this.isFinish) return;
                 this.leftTime = GameConst.GameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
                 var t = TimeSpan.FromSeconds(this.leftTime);
                 this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
@@ -154,6 +157,13 @@ namespace Akimichi.Game
                 {
                     this.isLast = true;
                     PlayerManager.Instance().VisibleWeight(false);
+                }
+
+                if(!this.isFinish && this.leftTime < 150)
+                {
+                    this.isFinish = true;
+                    this.progressManager.FinishGame();
+                    SendState(GameConst.GameProgressState.FinishGame);
                 }
             }
         }
