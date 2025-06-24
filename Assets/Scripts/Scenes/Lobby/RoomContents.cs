@@ -1,4 +1,5 @@
 using Photon.Realtime;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class RoomContents : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> memberDisable = null;
+
+    public Action<string> onInput { get; set; } = null;
+
 
     public void SetRoomData(RoomInfo info)
     {
@@ -63,7 +67,7 @@ public class RoomContents : MonoBehaviour
     {
         if(this.roomName.text != string.Empty)
         {
-            NetworkManager.Instance().JoinRoom(this.roomName.text);
+            this.onInput?.Invoke(this.roomName.text);
         }
     }
 }

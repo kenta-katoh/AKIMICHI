@@ -8,7 +8,7 @@ using Akimichi;
 
 public class LobbyScene : MonoBehaviour
 {
-    private List<RoomInfo> cashRoomList = new List<RoomInfo>();
+    private SortedDictionary<int, RoomInfo> cashRoomDic = new SortedDictionary<int, RoomInfo>();
 
     [SerializeField]
     private List<RoomContents> roomInfo = new List<RoomContents>();
@@ -18,6 +18,8 @@ public class LobbyScene : MonoBehaviour
 
     [SerializeField]
     private Transform disableParent = null;
+
+    private bool isInput = false;
 
     private enum State
     {
@@ -39,30 +41,92 @@ public class LobbyScene : MonoBehaviour
         }); 
         NetworkManager.Instance().Connect();
         this.state = State.None;
+
+        foreach(var room in this.roomInfo)
+        {
+            room.onInput = JoinRoom;
+        }
     }
 
     private void Start()
     {
         NetworkManager.Instance().SetSysncScene(false);
-        foreach (RoomContents room in roomInfo)
+        foreach (RoomContents room in this.roomInfo)
         {
             room.transform.parent = this.disableParent;
         }
-        this.cashRoomList.Clear();
+        this.cashRoomDic.Clear();
     }
 
     public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        this.cashRoomList.Clear();
+        this.isInput = true;
         foreach(RoomInfo room in roomList)
         {
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
             {
-                continue;
+                RemoveRoomList(room);
             }
-            this.cashRoomList.Add(room);
+            else
+            {
+                AddRoomList(room);
+            }
         }
         UpdateRoomList();
+    }
+
+    private void AddRoomList(RoomInfo room)
+    {
+        bool result = false;
+        foreach(var item in this.cashRoomDic)
+        {
+            if(item.Value.Name == room.Name)
+            {
+                result = true;
+                break;
+            }
+        }
+
+        if (!result)
+        {
+            int index = 0;
+            foreach (string name in LobbySceneConst.RoomNameList)
+            {
+                if (room.Name == name)
+                {
+                    break;
+                }
+                index++;
+            }
+            this.cashRoomDic.Add(index, room);
+        }
+    }
+
+    private void RemoveRoomList(RoomInfo room)
+    {
+        bool result = false;
+        foreach (var item in this.cashRoomDic)
+        {
+            if (item.Value.Name == room.Name)
+            {
+                result = true;
+                break;
+            }
+        }
+
+        if (result)
+        {
+            int index = 0;
+            foreach (string name in LobbySceneConst.RoomNameList)
+            {
+                if (room.Name == name)
+                {
+                    break;
+                }
+                index++;
+            }
+            this.cashRoomDic.Remove(index);
+        }
     }
 
     private void UpdateRoomList()
@@ -74,12 +138,12 @@ public class LobbyScene : MonoBehaviour
         }
 
         int index = 0;
-        foreach (RoomInfo room in this.cashRoomList)
+        foreach (var room in this.cashRoomDic)
         {
             if (index < this.roomInfo.Count)
             {
                 this.roomInfo[index].transform.parent = this.listParent;
-                this.roomInfo[index].SetRoomData(room);
+                this.roomInfo[index].SetRoomData(room.Value);
             }
             index++;
         }
@@ -90,30 +154,30 @@ public class LobbyScene : MonoBehaviour
     /// </summary>
     public void CreateRoom()
     {
+        if (!this.isInput) return;
         if (this.state == State.None)
         {
             this.state = State.CreateRoom;
             string roomName = string.Empty;
-            //foreach(string name in LobbySceneConst.RoomNameList)
-            //{
-            //    bool isUse = false;
-            //    foreach (RoomInfo room in this.cashRoomList)
-            //    {
-            //        if(name == room.Name)
-            //        {
-            //            isUse = true; 
-            //            break;
-            //        }
-            //    }
-            //
-            //    if(!isUse)
-            //    {
-            //        roomName = name;
-            //        break;
-            //    }
-            //}
+            foreach(string name in LobbySceneConst.RoomNameList)
+            {
+                bool isUse = false;
+                foreach (var room in this.cashRoomDic)
+                {
+                    if(name == room.Value.Name)
+                    {
+                        isUse = true; 
+                        break;
+                    }
+                }
+            
+                if(!isUse)
+                {
+                    roomName = name;
+                    break;
+                }
+            }
 
-            roomName = GenerateRandomString(8);
             if (!string.IsNullOrEmpty(roomName))
             {
                 NetworkManager.Instance().CreateRoom(roomName);
@@ -121,21 +185,15 @@ public class LobbyScene : MonoBehaviour
         }
     }
 
-    private const string PASSWORD_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private string GenerateRandomString(int size = 32)
-    {
-        var stringBuilder = new System.Text.StringBuilder(size);
-        var pathLength = PASSWORD_CHARS.Length;
-        for (var i = 0; i < size; ++i)
-        {
-            var range = Random.Range(0, pathLength);
-            stringBuilder.Append(PASSWORD_CHARS[range]);
-        }
-        return stringBuilder.ToString();
-    }
-
     public void BackHome()
     {
+        if(!this.isInput) return;
         SceneManager.LoadScene(SceneConst.Home);
+    }
+
+    public void JoinRoom(string name)
+    {
+        if(!this.isInput) return;
+        NetworkManager.Instance().JoinRoom(name);
     }
 }
