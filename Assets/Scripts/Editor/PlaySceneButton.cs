@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using System.Linq;
+using Akimichi;
 
 public class PlaySceneButton : EditorWindow
 {
@@ -17,7 +18,7 @@ public class PlaySceneButton : EditorWindow
         window.Show();
     }
 
-    static string[] listScenes = { "TitleScene", "HomeScene" };
+    static string[] listScenes = { SceneConst.Title, SceneConst.Home, SceneConst.Result };
 
     private void OnGUI()
     {
