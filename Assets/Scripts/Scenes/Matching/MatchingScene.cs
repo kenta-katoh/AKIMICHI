@@ -1,4 +1,6 @@
 using Akimichi;
+using Akimichi.Game;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -7,13 +9,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MatchingScene : MonoBehaviour
+public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField]
     private List<MatchingPlayerContents> playerList = new List<MatchingPlayerContents>();
 
     [SerializeField]
     private TMP_InputField inputField = null;
+
+    [SerializeField]
+    private GameObject inputIcon = null;
+
+    private bool isReady = false;
+    private GameConst.PlayerIndex playerIndex = GameConst.PlayerIndex.First;
+    private List<GameConst.PlayerIndex> readyPlayer = new List<GameConst.PlayerIndex>();
 
     private void Awake()
     {
@@ -25,6 +34,8 @@ public class MatchingScene : MonoBehaviour
 
         NetworkManager.Instance().SetCallbackOnPlayerEnteredRoom(OnPlayerEnteredRoom);
         NetworkManager.Instance().SetCallbackOnPlayerLeftRoom(OnPlayerLeftRoom);
+        this.isReady = false;
+        this.inputIcon.SetActive(true);
     }
 
     private void Start()
@@ -38,33 +49,51 @@ public class MatchingScene : MonoBehaviour
     /// </summary>
     public void LeaveRoom()
     {
-        NetworkManager.Instance().LeaveRoom();
-    }
-
-    /// <summary>
-    /// 同期遷移
-    /// </summary>
-    public void LoadScene()
-    {
-        if(NetworkManager.Instance().IsMasterClient())
+        if (!this.isReady)
         {
-            NetworkManager.Instance().SysncLoadScene(SceneConst.Game);
+            NetworkManager.Instance().LeaveRoom();
         }
     }
 
-    public void OnPlayerEnteredRoom(Player newPlayer)
+    public void ReadyGame()
     {
+        // 押下切り替え
+        if (!this.isReady)
+        {
+            this.isReady = true;
+            this.inputField.readOnly = true;
+            this.inputIcon.SetActive(false);
+            SendReadyGame();
+        }
+    }
+
+    private void SendReadyGame()
+    {
+        if(this.isReady)
+        {
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (int)this.playerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.ReadyMatch, send);
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
         UpdateRoomData();
     }
 
-    public void OnPlayerLeftRoom(Player otherPlayer)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        base.OnPlayerLeftRoom((Player)otherPlayer);
         UpdateRoomData();
     }
 
     private void UpdateRoomData()
     {
-        foreach (var player in playerList)
+        this.readyPlayer.Clear();
+        this.playerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+        foreach (var player in this.playerList)
         {
             player.ClearData();
         }
@@ -73,16 +102,51 @@ public class MatchingScene : MonoBehaviour
         var dic = PhotonNetwork.CurrentRoom.Players.OrderBy(x => x.Key).ToList();
         foreach (var item in dic)
         {
-            if(index < this.playerList.Count)
-            {
-                this.playerList[index].SetPlayerData(index + 1, item.Value);
-                index++;
-            }
+            this.playerList[index].SetPlayerData((GameConst.PlayerIndex)index, item.Value);
+            index++;
         }
+        SendReadyGame();
     }
 
     public void ChangeName(string name)
     {
         NetworkManager.Instance().SetName(inputField.text);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        var eventCode = photonEvent.Code;
+        EventConst.Event _event = EventConst.ConvertEvent(eventCode);
+        var data = (object[])photonEvent.CustomData;
+        switch (_event)
+        {
+            case EventConst.Event.ReadyMatch:
+                GameConst.PlayerIndex index = (GameConst.PlayerIndex)data[0];
+                foreach (var item in this.playerList)
+                {
+                    item.Ready(index);
+                }
+
+                if(NetworkManager.Instance().IsMasterClient())
+                {
+                    if(!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
+                    if(this.readyPlayer.Count == GameConst.MaximumPlayers(true))
+                    {
+                        // 全員そろったので遷移
+                        NetworkManager.Instance().SysncLoadScene(SceneConst.Game);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 }
