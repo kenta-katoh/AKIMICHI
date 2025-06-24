@@ -543,7 +543,7 @@ GameObject:
   - component: {fileID: 295809968}
   - component: {fileID: 295809967}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1075,8 +1075,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5, y: 5}
-  m_SizeDelta: {x: -10, y: -10}
+  m_AnchoredPosition: {x: 10, y: 5}
+  m_SizeDelta: {x: -20, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &672588690
 MonoBehaviour:
@@ -1118,7 +1118,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3069\u3059\u3053\u3044"
+  m_text: "\u56DB\u80A1\u540D"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fddfdc329f12cf54cb7f4db4a89ed77a, type: 2}
   m_sharedMaterial: {fileID: -7786892333198751292, guid: fddfdc329f12cf54cb7f4db4a89ed77a,
@@ -2362,6 +2362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 454420c02b81b7f429ba8206717a025f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomName: {fileID: 1618613839}
   playerList:
   - {fileID: 4843838660749904317}
   - {fileID: 1753807172}
@@ -2369,6 +2370,8 @@ MonoBehaviour:
   - {fileID: 269150505}
   inputField: {fileID: 1544642558}
   inputIcon: {fileID: 1600152438}
+  readyBtn: {fileID: 786884775}
+  readyText: {fileID: 295809967}
 --- !u!4 &1917611295
 Transform:
   m_ObjectHideFlags: 0

@@ -8,9 +8,13 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    [SerializeField]
+    private TextMeshProUGUI roomName = null;
+
     [SerializeField]
     private List<MatchingPlayerContents> playerList = new List<MatchingPlayerContents>();
 
@@ -19,6 +23,12 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [SerializeField]
     private GameObject inputIcon = null;
+
+    [SerializeField]
+    private Button readyBtn = null;
+
+    [SerializeField]
+    private TextMeshProUGUI readyText = null;
 
     private bool isReady = false;
     private GameConst.PlayerIndex playerIndex = GameConst.PlayerIndex.First;
@@ -36,6 +46,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         NetworkManager.Instance().SetCallbackOnPlayerLeftRoom(OnPlayerLeftRoom);
         this.isReady = false;
         this.inputIcon.SetActive(true);
+        this.inputField.text = "どすこい";
+        this.roomName.text = PhotonNetwork.CurrentRoom.Name;
     }
 
     private void Start()
@@ -63,6 +75,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
             this.isReady = true;
             this.inputField.readOnly = true;
             this.inputIcon.SetActive(false);
+            this.readyBtn.interactable = false;
+            this.readyText.text = "待機中";
             SendReadyGame();
         }
     }
