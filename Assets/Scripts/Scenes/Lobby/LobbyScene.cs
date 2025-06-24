@@ -53,7 +53,7 @@ public class LobbyScene : MonoBehaviour
         NetworkManager.Instance().SetSysncScene(false);
         foreach (RoomContents room in this.roomInfo)
         {
-            room.transform.parent = this.disableParent;
+            room.transform.SetParent(this.disableParent);
         }
         this.cashRoomDic.Clear();
     }
@@ -133,7 +133,7 @@ public class LobbyScene : MonoBehaviour
     {
         foreach (RoomContents room in this.roomInfo)
         {
-            room.transform.parent = this.disableParent;
+            room.transform.SetParent(this.disableParent);
             room.ClearData();
         }
 
@@ -142,7 +142,7 @@ public class LobbyScene : MonoBehaviour
         {
             if (index < this.roomInfo.Count)
             {
-                this.roomInfo[index].transform.parent = this.listParent;
+                this.roomInfo[index].transform.SetParent(this.listParent);
                 this.roomInfo[index].SetRoomData(room.Value);
             }
             index++;
