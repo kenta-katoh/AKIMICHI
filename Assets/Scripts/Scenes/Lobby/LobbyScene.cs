@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Akimichi.Lobby;
-using UnityEngine.SceneManagement;
 using Akimichi;
 
 public class LobbyScene : MonoBehaviour
@@ -30,10 +28,12 @@ public class LobbyScene : MonoBehaviour
 
     private void Awake()
     {
+        TransitionManager.Instance().AddScene(SceneConst.Lobby);
+        NetworkManager.Instance().LeaveRoom();
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
         {
-            SceneManager.LoadScene(SceneConst.Matching);
+            TransitionManager.Instance().Transition(SceneConst.Matching);
         });
         NetworkManager.Instance().SetCallbackOnConnect(() => 
         { 
@@ -50,6 +50,7 @@ public class LobbyScene : MonoBehaviour
 
     private void Start()
     {
+        TransitionManager.Instance().Open(() => {  });
         NetworkManager.Instance().SetSysncScene(false);
         foreach (RoomContents room in this.roomInfo)
         {
@@ -61,7 +62,7 @@ public class LobbyScene : MonoBehaviour
     public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         this.isInput = true;
-        foreach(RoomInfo room in roomList)
+        foreach (RoomInfo room in roomList)
         {
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
             {
@@ -188,7 +189,7 @@ public class LobbyScene : MonoBehaviour
     public void BackHome()
     {
         if(!this.isInput) return;
-        SceneManager.LoadScene(SceneConst.Home);
+        TransitionManager.Instance().Transition(SceneConst.Home);
     }
 
     public void JoinRoom(string name)

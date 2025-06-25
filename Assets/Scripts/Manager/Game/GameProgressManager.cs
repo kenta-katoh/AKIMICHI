@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Akimichi.Game
 {
@@ -57,6 +56,7 @@ namespace Akimichi.Game
 
         private void Awake()
         {
+            TransitionManager.Instance().AddScene(SceneConst.Game);
             NetworkManager.Instance().SetServerTime();
             GameStateManagerData stateManagerData = new GameStateManagerData();
             stateManagerData.ProgressManager = this;
@@ -109,6 +109,7 @@ namespace Akimichi.Game
             data.Datas[1] = PlayerManager.Instance().GetName();
             NetworkManager.Instance().SendEvent(EventConst.Event.SetName, data);
 
+            TransitionManager.Instance().Open();
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
 
@@ -376,7 +377,7 @@ namespace Akimichi.Game
                     {
                         // ゲーム終了
                         PlayerManager.Instance().SendResultData();
-                        SceneManager.LoadScene(SceneConst.Result);
+                        TransitionManager.Instance().Transition(SceneConst.Result);
                     });
                     break;
             }

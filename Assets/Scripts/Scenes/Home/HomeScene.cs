@@ -1,20 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Akimichi
 {
     public class HomeScene : MonoBehaviour
     {
+        [SerializeField]
+        private AkimichiPhotonManager photonManager = null;
+
         private void Awake()
         {
             NetworkManager.Instance().Disconnect();
+            TransitionManager.Instance().AddScene(SceneConst.Home);
+            if (TransitionManager.Instance().IsFirstTransedScene(SceneConst.Home))
+            {
+                DontDestroyOnLoad(photonManager);
+            }
+        }
+
+        private void Start()
+        {
+            TransitionManager.Instance().Open();
         }
 
         public void ChangeLobby()
         {
-            SceneManager.LoadScene(SceneConst.Lobby);
+            TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
 
         public void ChangeTutorial()

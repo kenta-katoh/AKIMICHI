@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -36,12 +35,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Awake()
     {
-        NetworkManager.Instance().DeleteCallBack();
-        NetworkManager.Instance().SetCallbackOnLeaveRoom(() => 
-        {
-            SceneManager.LoadScene(SceneConst.Lobby);
-        });
-
+        TransitionManager.Instance().AddScene(SceneConst.Matching);
         NetworkManager.Instance().SetCallbackOnPlayerEnteredRoom(OnPlayerEnteredRoom);
         NetworkManager.Instance().SetCallbackOnPlayerLeftRoom(OnPlayerLeftRoom);
         this.isReady = false;
@@ -52,6 +46,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Start()
     {
+        TransitionManager.Instance().Open();
         NetworkManager.Instance().SetSysncScene(true);
         UpdateRoomData();
     }
@@ -63,7 +58,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (!this.isReady)
         {
-            NetworkManager.Instance().LeaveRoom();
+            TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
     }
 
@@ -147,7 +142,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
                     if(this.readyPlayer.Count == GameConst.MaximumPlayers(true))
                     {
                         // 全員そろったので遷移
-                        NetworkManager.Instance().SysncLoadScene(SceneConst.Game);
+                        TransitionManager.Instance().SysncTransition(SceneConst.Game);
                     }
                 }
                 break;

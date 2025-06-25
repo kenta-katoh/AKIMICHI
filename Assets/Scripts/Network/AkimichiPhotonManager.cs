@@ -9,17 +9,6 @@ namespace Akimichi
 {
     public class AkimichiPhotonManager : MonoBehaviourPunCallbacks
     {
-        private bool isLoad = false;
-
-        private void Awake()
-        {
-            if (!this.isLoad)
-            {
-                this.isLoad = true;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
-
         /// <summary>
         /// マスターサーバーへの接続が成功した時に呼ばれるコールバック
         /// </summary>

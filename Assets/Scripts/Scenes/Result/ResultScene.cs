@@ -42,6 +42,7 @@ namespace Akimichi
 
         private void Awake()
         {
+            TransitionManager.Instance().AddScene(SceneConst.Result);
             NetworkManager.Instance().DeleteCallBack();
             NetworkManager.Instance().LeaveRoom();
             NetworkManager.Instance().Disconnect();
@@ -104,6 +105,7 @@ namespace Akimichi
 
         private void Start()
         {
+            TransitionManager.Instance().Open();
             this.resultAnime.PlayAnime("End", true, "End", () =>
             {
                 this.winEffect.SetActive(true);
