@@ -150,5 +150,13 @@ namespace Akimichi.Game
             this.weight.gameObject.SetActive(flag);
             this.hideWeight.SetActive(!flag);
         }
+
+        /// <summary>
+        /// リザルトデータ受け渡し
+        /// </summary>
+        public void SendResultData()
+        {
+            ResultDataManager.Instance().SetPlayerData(this.playerIndex, this.playerData);
+        }
     }
 }

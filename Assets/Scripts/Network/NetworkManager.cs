@@ -147,7 +147,10 @@ public class NetworkManager : ManagerBase<NetworkManager>
     /// </summary>
     public void LeaveRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        if(PhotonNetwork.CurrentRoom != null)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
     }
 
     /// <summary>

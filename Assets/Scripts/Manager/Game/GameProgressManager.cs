@@ -101,6 +101,7 @@ namespace Akimichi.Game
             GameStateManager.Instance().Initialize();
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
+            ResultDataManager.Instance().Initialize();
             if (this.eventBrain != null) this.eventBrain.Initialize(MapManager.Instance().GetMapSpaces());
 
             var data = DataObjectManager.Instance().Get();
@@ -374,6 +375,7 @@ namespace Akimichi.Game
                     this.finishAnime.PlayAnime("Finish", true, "Finish", () =>
                     {
                         // ゲーム終了
+                        PlayerManager.Instance().SendResultData();
                         SceneManager.LoadScene(SceneConst.Result);
                     });
                     break;

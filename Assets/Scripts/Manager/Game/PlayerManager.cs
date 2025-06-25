@@ -391,5 +391,13 @@ namespace Akimichi.Game
         {
             this.playerStatusView.VisibleWeight(flag);
         }
+
+        /// <summary>
+        /// リザルトデータ受け渡し
+        /// </summary>
+        public void SendResultData()
+        {
+            this.playerStatusView.SendResultData();
+        }
     }
 }
