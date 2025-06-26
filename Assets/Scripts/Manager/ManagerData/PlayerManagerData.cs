@@ -6,6 +6,6 @@ namespace Akimichi
     public class PlayerManagerData : ManagerData
     {
         public PlayerStatusView StatusView { get; set; }
-        public PlayerLoupe PlayerLoupe {  get; set; }
+        public PlayerLoupeView PlayerLoupeView {  get; set; }
     }
 }

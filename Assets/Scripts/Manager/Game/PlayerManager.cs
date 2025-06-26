@@ -17,14 +17,14 @@ namespace Akimichi.Game
         private PlayerStatusView playerStatusView = null;
         private bool isfatigue = false;
         private Dictionary<GameConst.PlayerIndex, PlayerLogic> otherPlayerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
-        private PlayerLoupe playerLoupe = null;
+        private PlayerLoupeView playerLoupeView = null;
 
         public override void DataTransfer(ManagerData data)
         {
             base.DataTransfer(data);
             PlayerManagerData managerData = (PlayerManagerData)data;
             this.playerStatusView = managerData.StatusView;
-            this.playerLoupe = managerData.PlayerLoupe;
+            this.playerLoupeView = managerData.PlayerLoupeView;
         }
 
         public override void Dispose()
@@ -40,7 +40,7 @@ namespace Akimichi.Game
             this.playerStatusView = null;
             this.isfatigue = false;
             this.otherPlayerDic.Clear();
-            this.playerLoupe = null;
+            this.playerLoupeView = null;
         }
 
         public override void Initialize()
@@ -57,7 +57,7 @@ namespace Akimichi.Game
                 Vector3 vec = item.Value.GetTransform().localPosition - this.playerLogic.GetTransform().localPosition;
                 float dir = Mathf.Sqrt((vec.x * vec.x) + (vec.y * vec.y));
                 float radian = Mathf.Atan2(vec.y, vec.x) * Mathf.Rad2Deg;
-                this.playerLoupe.UpdateLoupe(item.Key, dir, radian);
+                this.playerLoupeView.UpdateLoupe(item.Key, dir, radian);
             }
         }
 
