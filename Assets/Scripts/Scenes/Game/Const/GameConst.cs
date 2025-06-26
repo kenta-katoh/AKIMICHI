@@ -42,6 +42,10 @@ namespace Akimichi.Game
             InitializedFinish,
             BootCamera,
             InGame,
+            FinishGame,
         }
+
+        public static readonly int GameTime = 180;     // 制限時間（秒）
+        public static readonly int LastTime = 60;     // 最終時間（秒）
     }
 }

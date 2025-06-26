@@ -178,12 +178,11 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <param name="playerIndex"></param>
-        public void SendAffiliation(int index, int value)
+        public void SendAffiliation(int index)
         {
             var send = DataObjectManager.Instance().Get();
             send.Datas[0] = index;
             send.Datas[1] = (int)PlayerManager.Instance().PlayerIndex;
-            send.Datas[2] = value;
             NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, send);
         }
     }

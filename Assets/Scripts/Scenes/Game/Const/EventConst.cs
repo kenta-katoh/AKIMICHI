@@ -28,6 +28,9 @@ namespace Akimichi.Game
 
             CreatePlayerObject,
             StartingPositionDistribution,
+
+            // matching
+            ReadyMatch,
         }
 
         public static Event ConvertEvent(byte data)

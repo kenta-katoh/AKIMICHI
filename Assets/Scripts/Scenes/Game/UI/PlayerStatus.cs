@@ -27,9 +27,17 @@ namespace Akimichi.Game
         [SerializeField]
         private AnimeController animeController = null;
 
+        [SerializeField]
+        private GameObject hideWeight = null;
+
         private GameConst.PlayerIndex playerIndex;
         private PlayerData playerData = new PlayerData();
         private int currentWeight = 0;
+
+        private void Awake()
+        {
+            VisibleWeight(true);
+        }
 
         /// <summary>
         /// 名前設定
@@ -131,6 +139,24 @@ namespace Akimichi.Game
         public int GetWeight()
         {
             return this.playerData.Weight;
+        }
+
+        /// <summary>
+        /// 体重表示切り替え
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleWeight(bool flag)
+        {
+            this.weight.gameObject.SetActive(flag);
+            this.hideWeight.SetActive(!flag);
+        }
+
+        /// <summary>
+        /// リザルトデータ受け渡し
+        /// </summary>
+        public void SendResultData()
+        {
+            ResultDataManager.Instance().SetPlayerData(this.playerIndex, this.playerData);
         }
     }
 }

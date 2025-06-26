@@ -171,7 +171,7 @@ namespace Akimichi.Game
                 DiceManager.Instance().DiceDecrement();
 
                 // logic側ではすでに所属マスが変わっているので通知
-                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index, DiceManager.Instance().DiceValue);
+                MapManager.Instance().SendAffiliation(this.currentMapSpace.Index);
 
                 // view側の移動
                 this.playerLogic.StartMove(this.currentMapSpace.GetTransform());
@@ -382,6 +382,22 @@ namespace Akimichi.Game
         public void ReleaseFatigue(GameConst.PlayerIndex index)
         {
             this.playerStatusView.ReleaseFatigue(index);
+        }
+
+        /// <summary>
+        /// 体重の表示切り替え
+        /// </summary>
+        public void VisibleWeight(bool flag)
+        {
+            this.playerStatusView.VisibleWeight(flag);
+        }
+
+        /// <summary>
+        /// リザルトデータ受け渡し
+        /// </summary>
+        public void SendResultData()
+        {
+            this.playerStatusView.SendResultData();
         }
     }
 }

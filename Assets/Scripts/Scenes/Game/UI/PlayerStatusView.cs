@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 using static UnityEngine.Rendering.DebugUI;
 
 namespace Akimichi.Game
@@ -169,6 +170,29 @@ namespace Akimichi.Game
                     break;
             }
             return weight;
+        }
+
+        /// <summary>
+        /// 体重表示切り替え
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleWeight(bool flag)
+        {
+            this.player1st.VisibleWeight(flag);
+            this.player2nd.VisibleWeight(flag);
+            this.player3rd.VisibleWeight(flag);
+            this.player4th.VisibleWeight(flag);
+        }
+
+        /// <summary>
+        /// リザルトデータ受け渡し
+        /// </summary>
+        public void SendResultData()
+        {
+            this.player1st.SendResultData();
+            this.player2nd.SendResultData();
+            this.player3rd.SendResultData();
+            this.player4th.SendResultData();
         }
     }
 }

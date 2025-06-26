@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 namespace Akimichi.Game
 {
@@ -8,11 +9,18 @@ namespace Akimichi.Game
         private Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>> stateDic = new Dictionary<GameConst.GameProgressState, List<GameConst.PlayerIndex>>();
         private GameConst.GameProgressState currentState = GameConst.GameProgressState.None;
         private GameProgressManager progressManager = null;
+        private double serverTime = 0;
+        private double delayTime = 0;
+        private int leftTime = 0;
+        private TextMeshProUGUI timer = null;
+        private bool isLast = false;
+        private bool isFinish = false;
 
         public override void DataTransfer(ManagerData data)
         {
             base.DataTransfer(data);
             this.progressManager = ((GameStateManagerData)data).ProgressManager;
+            this.timer = ((GameStateManagerData)data).Timer;
         }
 
         public override void Dispose()
@@ -20,6 +28,12 @@ namespace Akimichi.Game
             base.Dispose();
             this.stateDic.Clear();
             this.progressManager = null;
+            this.serverTime = 0;
+            this.delayTime = 0;
+            this.leftTime = 0;
+            this.timer = null;
+            this.isLast = false;
+            this.isFinish = false;
         }
 
         public override void Initialize()
@@ -33,6 +47,9 @@ namespace Akimichi.Game
                 List<GameConst.PlayerIndex> list = new List<GameConst.PlayerIndex>();
                 this.stateDic.Add((GameConst.GameProgressState)state, list);
             }
+
+            var t = TimeSpan.FromSeconds(GameConst.GameTime);
+            this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
         }
 
         /// <summary>
@@ -112,6 +129,43 @@ namespace Akimichi.Game
         public GameConst.GameProgressState CurrentState()
         {
             return this.currentState;
+        }
+
+        /// <summary>
+        /// サーバー時間設定
+        /// </summary>
+        public void SetServerTime()
+        {
+            this.serverTime = 0;
+            this.leftTime = 0;
+            this.serverTime = NetworkManager.Instance().GetServerTime();
+            this.delayTime = NetworkManager.Instance().GetPhotonTime() - this.serverTime;
+            this.isLast = false;
+        }
+
+        public override void ManagedUpdate()
+        {
+            base.ManagedUpdate();
+            if(this.currentState == GameConst.GameProgressState.InGame)
+            {
+                if (this.isFinish) return;
+                this.leftTime = GameConst.GameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
+                var t = TimeSpan.FromSeconds(this.leftTime);
+                this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
+
+                if (!this.isLast && this.leftTime < GameConst.LastTime)
+                {
+                    this.isLast = true;
+                    PlayerManager.Instance().VisibleWeight(false);
+                }
+
+                if(!this.isFinish && this.leftTime < 1)
+                {
+                    this.isFinish = true;
+                    this.progressManager.FinishGame();
+                    SendState(GameConst.GameProgressState.FinishGame);
+                }
+            }
         }
     }
 }

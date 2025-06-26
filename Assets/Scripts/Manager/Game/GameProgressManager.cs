@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -40,14 +41,26 @@ namespace Akimichi.Game
         [SerializeField]
         private EventWindow eventWindow = null;
 
+        [SerializeField]
+        private TextMeshProUGUI timer = null;
+
+        [SerializeField]
+        private CanvasGroup canvasGroup = null;
+
+        [SerializeField]
+        private AnimeController finishAnime = null;
+
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private EventBrain eventBrain = null;
 
         private void Awake()
         {
+            TransitionManager.Instance().AddScene(SceneConst.Game);
+            NetworkManager.Instance().SetServerTime();
             GameStateManagerData stateManagerData = new GameStateManagerData();
             stateManagerData.ProgressManager = this;
+            stateManagerData.Timer = this.timer;
             GameStateManager.Instance().DataTransfer(stateManagerData);
 
             MapManagerData mapManagerData = new MapManagerData();
@@ -77,6 +90,9 @@ namespace Akimichi.Game
             {
                 this.eventBrain = new EventBrain();
             }
+
+            this.canvasGroup.blocksRaycasts = true;
+            this.finishAnime.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -85,6 +101,7 @@ namespace Akimichi.Game
             GameStateManager.Instance().Initialize();
             MapManager.Instance().Initialize();
             PlayerManager.Instance().Initialize();
+            ResultDataManager.Instance().Initialize();
             if (this.eventBrain != null) this.eventBrain.Initialize(MapManager.Instance().GetMapSpaces());
 
             var data = DataObjectManager.Instance().Get();
@@ -92,6 +109,7 @@ namespace Akimichi.Game
             data.Datas[1] = PlayerManager.Instance().GetName();
             NetworkManager.Instance().SendEvent(EventConst.Event.SetName, data);
 
+            TransitionManager.Instance().Open();
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
 
@@ -140,35 +158,6 @@ namespace Akimichi.Game
                         string playerStr = "";
                         switch (this.playerList.Count)
                         {
-                            // 誰もいなかったのでマス目の思考
-                            //case 0:
-                            //    if (GameStateManager.Instance().CurrentState() == GameConst.GameProgressState.InGame)
-                            //    {
-                            //        // 残りの進むダイス目がなかったので、マス目の着地と判断
-                            //        if ((int)data[2] == 0)
-                            //        {
-                            //            //isEvent = true;
-                            //            //MapSpaceLogicBase mapSpace1 = MapManager.Instance().GetMapSpace((int)data[0]);
-                            //            //EventConst.MapEventType eventType = EventConst.MapEventType.None;
-                            //            //
-                            //            //switch (mapSpace1.MapSpaceType)
-                            //            //{
-                            //            //    case GameConst.MapSpaceType.Plus:
-                            //            //        eventType = EventConst.MapEventType.Plus;
-                            //            //        break;
-                            //            //    case GameConst.MapSpaceType.Minus:
-                            //            //        eventType = EventConst.MapEventType.Minus;
-                            //            //        break;
-                            //            //    case GameConst.MapSpaceType.Event:
-                            //            //        eventType = EventConst.MapEventType.Event;
-                            //            //        break;
-                            //            //}
-                            //            //eventId = this.eventBrain.CreateEvent(eventType, (int)data[0], playerIndex);
-                            //            //// 該当プレイヤーをイベント待機状態へ変更
-                            //            this.datas[0] = CreatePlayerList(playerIndex);
-                            //        }
-                            //    }
-                            //    break;
                             // 着地したマスに暇そうにしていた人が一人いたので稽古遷移
                             case 1:
                                 isEvent = true;
@@ -312,7 +301,7 @@ namespace Akimichi.Game
 
                     // スタート位置確定後に所属の送信
                     MapSpaceLogicBase logic = MapManager.Instance().GetStartMapSpace((int)PlayerManager.Instance().PlayerIndex);
-                    MapManager.Instance().SendAffiliation(logic.Index, 0);
+                    MapManager.Instance().SendAffiliation(logic.Index);
                     PlayerManager.Instance().SetMapSpace(logic);
 
                     // スタート位置に配置
@@ -380,8 +369,23 @@ namespace Akimichi.Game
                     break;
                 case GameConst.GameProgressState.InGame:
                     PlayerManager.Instance().EnterGame();
+                    GameStateManager.Instance().SetServerTime();
+                    break;
+                case GameConst.GameProgressState.FinishGame:
+                    this.finishAnime.gameObject.SetActive(true);
+                    this.finishAnime.PlayAnime("Finish", true, "Finish", () =>
+                    {
+                        // ゲーム終了
+                        PlayerManager.Instance().SendResultData();
+                        TransitionManager.Instance().Transition(SceneConst.Result);
+                    });
                     break;
             }
+        }
+
+        private void Update()
+        {
+            GameStateManager.Instance().ManagedUpdate();
         }
 
         private void OnEnable()
@@ -510,9 +514,12 @@ namespace Akimichi.Game
             return result;
         }
 
-        private void AkimichiLog(string message)
+        /// <summary>
+        /// 入力阻害
+        /// </summary>
+        public void FinishGame()
         {
-            Debug.Log("akimichi_log : " + message);
+            this.canvasGroup.blocksRaycasts = false;
         }
     }
 }

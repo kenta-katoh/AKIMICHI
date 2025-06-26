@@ -1,16 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 using Photon.Realtime;
-using System;
-using TMPro;
 using Akimichi.Lobby;
-using Manager;
+using Akimichi;
 
 public class LobbyScene : MonoBehaviour
 {
-    private List<RoomInfo> cashRoomList = new List<RoomInfo>();
+    private SortedDictionary<int, RoomInfo> cashRoomDic = new SortedDictionary<int, RoomInfo>();
 
     [SerializeField]
     private List<RoomContents> roomInfo = new List<RoomContents>();
@@ -21,6 +17,8 @@ public class LobbyScene : MonoBehaviour
     [SerializeField]
     private Transform disableParent = null;
 
+    private bool isInput = false;
+
     private enum State
     {
         None,
@@ -30,10 +28,12 @@ public class LobbyScene : MonoBehaviour
 
     private void Awake()
     {
+        TransitionManager.Instance().AddScene(SceneConst.Lobby);
+        NetworkManager.Instance().LeaveRoom();
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 
         {
-            SceneManager.Instance().ChangeScene("MatchingScene");
+            TransitionManager.Instance().Transition(SceneConst.Matching);
         });
         NetworkManager.Instance().SetCallbackOnConnect(() => 
         { 
@@ -41,47 +41,110 @@ public class LobbyScene : MonoBehaviour
         }); 
         NetworkManager.Instance().Connect();
         this.state = State.None;
+
+        foreach(var room in this.roomInfo)
+        {
+            room.onInput = JoinRoom;
+        }
     }
 
     private void Start()
     {
+        TransitionManager.Instance().Open(() => {  });
         NetworkManager.Instance().SetSysncScene(false);
-        foreach (RoomContents room in roomInfo)
+        foreach (RoomContents room in this.roomInfo)
         {
-            room.transform.parent = this.disableParent;
+            room.transform.SetParent(this.disableParent);
         }
-        this.cashRoomList.Clear();
+        this.cashRoomDic.Clear();
     }
 
     public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        this.cashRoomList.Clear();
-        foreach(RoomInfo room in roomList)
+        this.isInput = true;
+        foreach (RoomInfo room in roomList)
         {
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
             {
-                continue;
+                RemoveRoomList(room);
             }
-            this.cashRoomList.Add(room);
+            else
+            {
+                AddRoomList(room);
+            }
         }
         UpdateRoomList();
+    }
+
+    private void AddRoomList(RoomInfo room)
+    {
+        bool result = false;
+        foreach(var item in this.cashRoomDic)
+        {
+            if(item.Value.Name == room.Name)
+            {
+                result = true;
+                break;
+            }
+        }
+
+        if (!result)
+        {
+            int index = 0;
+            foreach (string name in LobbySceneConst.RoomNameList)
+            {
+                if (room.Name == name)
+                {
+                    break;
+                }
+                index++;
+            }
+            this.cashRoomDic.Add(index, room);
+        }
+    }
+
+    private void RemoveRoomList(RoomInfo room)
+    {
+        bool result = false;
+        foreach (var item in this.cashRoomDic)
+        {
+            if (item.Value.Name == room.Name)
+            {
+                result = true;
+                break;
+            }
+        }
+
+        if (result)
+        {
+            int index = 0;
+            foreach (string name in LobbySceneConst.RoomNameList)
+            {
+                if (room.Name == name)
+                {
+                    break;
+                }
+                index++;
+            }
+            this.cashRoomDic.Remove(index);
+        }
     }
 
     private void UpdateRoomList()
     {
         foreach (RoomContents room in this.roomInfo)
         {
-            room.transform.parent = this.disableParent;
+            room.transform.SetParent(this.disableParent);
             room.ClearData();
         }
 
         int index = 0;
-        foreach (RoomInfo room in this.cashRoomList)
+        foreach (var room in this.cashRoomDic)
         {
             if (index < this.roomInfo.Count)
             {
-                this.roomInfo[index].transform.parent = this.listParent;
-                this.roomInfo[index].SetRoomData(room);
+                this.roomInfo[index].transform.SetParent(this.listParent);
+                this.roomInfo[index].SetRoomData(room.Value);
             }
             index++;
         }
@@ -92,6 +155,7 @@ public class LobbyScene : MonoBehaviour
     /// </summary>
     public void CreateRoom()
     {
+        if (!this.isInput) return;
         if (this.state == State.None)
         {
             this.state = State.CreateRoom;
@@ -99,15 +163,15 @@ public class LobbyScene : MonoBehaviour
             foreach(string name in LobbySceneConst.RoomNameList)
             {
                 bool isUse = false;
-                foreach (RoomInfo room in this.cashRoomList)
+                foreach (var room in this.cashRoomDic)
                 {
-                    if(name == room.Name)
+                    if(name == room.Value.Name)
                     {
                         isUse = true; 
                         break;
                     }
                 }
-
+            
                 if(!isUse)
                 {
                     roomName = name;
@@ -115,10 +179,22 @@ public class LobbyScene : MonoBehaviour
                 }
             }
 
-            if(!string.IsNullOrEmpty(roomName))
+            if (!string.IsNullOrEmpty(roomName))
             {
                 NetworkManager.Instance().CreateRoom(roomName);
             }
         }
+    }
+
+    public void BackHome()
+    {
+        if(!this.isInput) return;
+        TransitionManager.Instance().Transition(SceneConst.Home);
+    }
+
+    public void JoinRoom(string name)
+    {
+        if(!this.isInput) return;
+        NetworkManager.Instance().JoinRoom(name);
     }
 }
