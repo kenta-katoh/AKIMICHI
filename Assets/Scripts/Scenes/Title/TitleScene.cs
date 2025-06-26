@@ -16,6 +16,8 @@ namespace Akimichi
             {
                 DontDestroyOnLoad(this.transitionObject);
             }
+
+            Application.targetFrameRate = 60;
         }
 
         public void ChangeScene()
