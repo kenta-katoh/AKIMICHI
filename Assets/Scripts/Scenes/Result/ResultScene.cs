@@ -40,6 +40,9 @@ namespace Akimichi
         [SerializeField]
         private GameObject winEffect = null;
 
+        [SerializeField]
+        private GameObject transition = null;
+
         private void Awake()
         {
             TransitionManager.Instance().AddScene(SceneConst.Result);
@@ -100,6 +103,7 @@ namespace Akimichi
                         break;
                 }
             }
+            this.transition.SetActive(false);
         }
 
         private void Start()
@@ -108,7 +112,19 @@ namespace Akimichi
             this.resultAnime.PlayAnime("End", true, "End", () =>
             {
                 this.winEffect.SetActive(true);
+                this.transition.SetActive(true);
+                ResultDataManager.Instance().Dispose();
             });
+        }
+
+        public void OnLobby()
+        {
+            TransitionManager.Instance().Transition(SceneConst.Lobby);
+        }
+
+        public void OnHome()
+        {
+            TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }
 }
