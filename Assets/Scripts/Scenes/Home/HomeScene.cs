@@ -29,6 +29,7 @@ namespace Akimichi
 
         public void ChangeTutorial()
         {
+            TransitionManager.Instance().Transition(SceneConst.Tutorial);
         }
     }
 }
