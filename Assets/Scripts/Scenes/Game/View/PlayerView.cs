@@ -19,6 +19,9 @@ namespace Akimichi.Game
         [SerializeField]
         private AnimeController changeAnime = null;
 
+        [SerializeField]
+        private AnimeController moveAnime = null;
+
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -62,6 +65,22 @@ namespace Akimichi.Game
             {
                 this.statusAnime.SetBool("Up", false);
             });
+        }
+
+        /// <summary>
+        /// 移動開始
+        /// </summary>
+        public void StartMove()
+        {
+            this.moveAnime.SetBool("IsMove", true);
+        }
+
+        /// <summary>
+        /// 移動終了
+        /// </summary>
+        public void StopMove()
+        {
+            this.moveAnime.SetBool("IsMove", false);
         }
     }
 }
