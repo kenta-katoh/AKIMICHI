@@ -42,6 +42,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         this.inputIcon.SetActive(true);
         this.inputField.text = "どすこい";
         this.roomName.text = PhotonNetwork.CurrentRoom.Name;
+        NetworkManager.Instance().SetName(inputField.text);
     }
 
     private void Start()
@@ -136,13 +137,17 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
                     item.Ready(index);
                 }
 
-                if(NetworkManager.Instance().IsMasterClient())
+                if (!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
+                if (this.readyPlayer.Count == GameConst.MaximumPlayers(true))
                 {
-                    if(!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
-                    if(this.readyPlayer.Count == GameConst.MaximumPlayers(true))
+                    if (NetworkManager.Instance().IsMasterClient())
                     {
                         // 全員そろったので遷移
                         TransitionManager.Instance().SysncTransition(SceneConst.Game);
+                    }
+                    else
+                    {
+                        TransitionManager.Instance().Close();
                     }
                 }
                 break;
