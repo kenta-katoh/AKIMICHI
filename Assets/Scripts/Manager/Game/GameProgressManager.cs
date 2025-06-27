@@ -50,6 +50,9 @@ namespace Akimichi.Game
         [SerializeField]
         private AnimeController finishAnime = null;
 
+        [SerializeField]
+        private PlayerLoupeView loupe = null;
+
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private EventBrain eventBrain = null;
@@ -69,6 +72,7 @@ namespace Akimichi.Game
 
             PlayerManagerData playerManagerData = new PlayerManagerData();
             playerManagerData.StatusView = this.playerStatusView;
+            playerManagerData.PlayerLoupeView = this.loupe;
             PlayerManager.Instance().DataTransfer(playerManagerData);
 
             EventManagerData eventManagerData = new EventManagerData();
@@ -386,6 +390,7 @@ namespace Akimichi.Game
         private void Update()
         {
             GameStateManager.Instance().ManagedUpdate();
+            PlayerManager.Instance().ManagedUpdate();
         }
 
         private void OnEnable()

@@ -61,6 +61,28 @@ namespace Akimichi
         }
 
         /// <summary>
+        /// 閉じるだけ
+        /// </summary>
+        /// <param name="action"></param>
+        public void Close(Action action = null)
+        {
+            this.onClose = null;
+            this.onClose = action;
+            if (this.transitionObject != null)
+            {
+                this.transitionObject.Close(() =>
+                {
+                    this.onClose?.Invoke();
+                    NetworkManager.Instance().DeleteCallBack();
+                });
+            }
+            else
+            {
+                this.onClose?.Invoke();
+            }
+        }
+
+        /// <summary>
         /// 同期遷移
         /// </summary>
         /// <param name="name"></param>

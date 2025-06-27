@@ -16,12 +16,15 @@ namespace Akimichi.Game
         private Dictionary<GameConst.PlayerIndex, PlayerLogic> playerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
         private PlayerStatusView playerStatusView = null;
         private bool isfatigue = false;
+        private Dictionary<GameConst.PlayerIndex, PlayerLogic> otherPlayerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
+        private PlayerLoupeView playerLoupeView = null;
 
         public override void DataTransfer(ManagerData data)
         {
             base.DataTransfer(data);
             PlayerManagerData managerData = (PlayerManagerData)data;
             this.playerStatusView = managerData.StatusView;
+            this.playerLoupeView = managerData.PlayerLoupeView;
         }
 
         public override void Dispose()
@@ -36,12 +39,26 @@ namespace Akimichi.Game
             this.playerDic.Clear();
             this.playerStatusView = null;
             this.isfatigue = false;
+            this.otherPlayerDic.Clear();
+            this.playerLoupeView = null;
         }
 
         public override void Initialize()
         {
             base.Initialize();
             this.PlayerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
+        }
+
+        public override void ManagedUpdate()
+        {
+            base.ManagedUpdate();
+            foreach(var item in this.otherPlayerDic)
+            {
+                Vector3 vec = item.Value.GetTransform().localPosition - this.playerLogic.GetTransform().localPosition;
+                float dir = Mathf.Sqrt((vec.x * vec.x) + (vec.y * vec.y));
+                float radian = Mathf.Atan2(vec.y, vec.x) * Mathf.Rad2Deg;
+                this.playerLoupeView.UpdateLoupe(item.Key, dir, radian);
+            }
         }
 
         /// <summary>
@@ -77,6 +94,11 @@ namespace Akimichi.Game
             if(!this.playerDic.ContainsKey(index))
             {
                 this.playerDic.Add(index, logic);
+            }
+
+            if (!this.otherPlayerDic.ContainsKey(index) && index != this.PlayerIndex)
+            {
+                this.otherPlayerDic.Add(index, logic);
             }
         }
 

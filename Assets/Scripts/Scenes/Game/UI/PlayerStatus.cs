@@ -54,8 +54,9 @@ namespace Akimichi.Game
         /// 体重強制変化(演出なし)
         /// </summary>
         /// <param name="value"></param>
-        public void ForceSetWeight(int value)
+        public void ForceSetWeight(GameConst.PlayerIndex index, int value)
         {
+            this.playerIndex = index;
             this.playerData.Weight = value;
             this.weight.text = this.playerData.Weight.ToString() + "kg";
         }

@@ -18,7 +18,7 @@ public class PlaySceneButton : EditorWindow
         window.Show();
     }
 
-    static string[] listScenes = { SceneConst.Title, SceneConst.Home, SceneConst.Result };
+    static string[] listScenes = { SceneConst.Title, SceneConst.Home, SceneConst.Tutorial, SceneConst.Result };
 
     private void OnGUI()
     {

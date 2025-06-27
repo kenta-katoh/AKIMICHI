@@ -40,6 +40,9 @@ namespace Akimichi
         [SerializeField]
         private GameObject winEffect = null;
 
+        [SerializeField]
+        private GameObject transition = null;
+
         private void Awake()
         {
             TransitionManager.Instance().AddScene(SceneConst.Result);
@@ -61,10 +64,9 @@ namespace Akimichi
                 PlayerData data = ResultDataManager.Instance().GetPlayerData(playerIndex);
                 result.Add(playerIndex, data.Weight);
             }
-            result.OrderBy(c => c.Value);
 
             int index = 0;
-            foreach(var item in result.Keys)
+            foreach(var item in result.OrderByDescending((c) => c.Value))
             {
                 Image image = null;
                 switch(index)
@@ -84,8 +86,8 @@ namespace Akimichi
                 }
                 index++;
 
-                PlayerData data = ResultDataManager.Instance().GetPlayerData(item);
-                switch(item)
+                PlayerData data = ResultDataManager.Instance().GetPlayerData(item.Key);
+                switch(item.Key)
                 {
                     case GameConst.PlayerIndex.First:
                         image.sprite = this.player1stList[data.GetLevel()];
@@ -101,6 +103,7 @@ namespace Akimichi
                         break;
                 }
             }
+            this.transition.SetActive(false);
         }
 
         private void Start()
@@ -109,7 +112,19 @@ namespace Akimichi
             this.resultAnime.PlayAnime("End", true, "End", () =>
             {
                 this.winEffect.SetActive(true);
+                this.transition.SetActive(true);
+                ResultDataManager.Instance().Dispose();
             });
+        }
+
+        public void OnLobby()
+        {
+            TransitionManager.Instance().Transition(SceneConst.Lobby);
+        }
+
+        public void OnHome()
+        {
+            TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }
 }

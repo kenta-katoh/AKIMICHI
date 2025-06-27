@@ -23,7 +23,7 @@ namespace Akimichi.Game
             CounterClockWise,       // 反時計回り
         }
 
-        public static readonly float MoveTime = 1.0f;   // マス間の移動時間
+        public static readonly float MoveTime = 0.5f;   // マス間の移動時間
         public static readonly int InitWeight = 50;     // 初期体重
     }
 }

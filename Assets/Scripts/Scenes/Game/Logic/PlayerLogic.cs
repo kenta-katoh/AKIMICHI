@@ -7,8 +7,6 @@ namespace Akimichi.Game
     public class PlayerLogic : LogicBase
     {
         private PlayerView playerView = null;
-        private Vector3 startRotation = new Vector3(0.0f, 0.0f, 15.0f);
-        private Vector3 loopRotation = new Vector3(0.0f, 0.0f, -15.0f);
 
         public PlayerLogic(ViewBase view) : base(view)
         {
@@ -28,15 +26,7 @@ namespace Akimichi.Game
                 PlayerManager.Instance().MoveBehavior();
 
             });
-
-            this.view.transform.DOLocalRotate(this.startRotation, 0.25f).
-                SetEase(Ease.Linear).
-                OnComplete(() => 
-            {
-                this.view.transform.DOLocalRotate(this.loopRotation, 0.5f).
-                SetEase(Ease.Linear).
-                SetLoops(-1, LoopType.Yoyo);
-            });
+            this.playerView.StartMove();
         }
 
         /// <summary>
@@ -47,7 +37,7 @@ namespace Akimichi.Game
         {
             this.view.transform.DOKill();
             SetPosInstantSync(target.localPosition);
-            this.view.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+            this.playerView.StopMove();
         }
 
         /// <summary>

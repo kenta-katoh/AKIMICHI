@@ -22,10 +22,10 @@ namespace Akimichi.Game
 
         private void Awake()
         {
-            this.player1st.ForceSetWeight(PlayerConst.InitWeight);
-            this.player2nd.ForceSetWeight(PlayerConst.InitWeight);
-            this.player3rd.ForceSetWeight(PlayerConst.InitWeight);
-            this.player4th.ForceSetWeight(PlayerConst.InitWeight);
+            this.player1st.ForceSetWeight(GameConst.PlayerIndex.First, PlayerConst.InitWeight);
+            this.player2nd.ForceSetWeight(GameConst.PlayerIndex.Second, PlayerConst.InitWeight);
+            this.player3rd.ForceSetWeight(GameConst.PlayerIndex.Third, PlayerConst.InitWeight);
+            this.player4th.ForceSetWeight(GameConst.PlayerIndex.Fourth, PlayerConst.InitWeight);
         }
 
         /// <summary>
