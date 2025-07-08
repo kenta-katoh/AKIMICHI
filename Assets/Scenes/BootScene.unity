@@ -169,6 +169,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionObject: {fileID: 649286136}
   photonManager: {fileID: 381698748}
+  sprites1st:
+  - {fileID: 21300000, guid: c4d600c1b4af9b54e9ab735ebc7e9e58, type: 3}
+  - {fileID: 21300000, guid: 01d4bb4a1e496c34b9c2f67d272d23bd, type: 3}
+  - {fileID: 21300000, guid: c08335f4ed92ec04a9351ed2171f6687, type: 3}
+  - {fileID: 21300000, guid: 79427c6eb79956843b5c2b87cd2064d2, type: 3}
+  - {fileID: 21300000, guid: 27374fff43bc55046af88d91d8f2398b, type: 3}
+  sprites2nd:
+  - {fileID: 21300000, guid: 8db8b4ab926be7f429de52f51a7bc217, type: 3}
+  - {fileID: 21300000, guid: 020733a0cfbad234aa693adf3de24138, type: 3}
+  - {fileID: 21300000, guid: c0923c92ad9dd694194515c0c34c941c, type: 3}
+  - {fileID: 21300000, guid: 331804a4e0df6454897bcce300e489ac, type: 3}
+  - {fileID: 21300000, guid: 2c03689175d558247be36eed59e7d4be, type: 3}
+  sprites3rd:
+  - {fileID: 21300000, guid: a24a81c0bc6aa6d4d82a9f5efe072fb8, type: 3}
+  - {fileID: 21300000, guid: 951b37b87c41f6f4494d71adfb359bf5, type: 3}
+  - {fileID: 21300000, guid: a27d5a9a41a586346a8f4198ced96f16, type: 3}
+  - {fileID: 21300000, guid: c470aa49166d6d84cb13daf369a18547, type: 3}
+  - {fileID: 21300000, guid: a6f99e934e069ce4c8adc712063ca99d, type: 3}
+  sprites4th:
+  - {fileID: 21300000, guid: 91bbf2ff34ebacf49b594867953d2ee5, type: 3}
+  - {fileID: 21300000, guid: 8b87a1d57310d0c4fa8bdbcaea1e86fa, type: 3}
+  - {fileID: 21300000, guid: 6a8c9ba348f60c04db7af0867001ec9d, type: 3}
+  - {fileID: 21300000, guid: dddc7ea68d06c8a45b3bc4101f47ed80, type: 3}
+  - {fileID: 21300000, guid: 86d218b6713e676408436640b4959abc, type: 3}
 --- !u!1001 &381698747
 PrefabInstance:
   m_ObjectHideFlags: 0

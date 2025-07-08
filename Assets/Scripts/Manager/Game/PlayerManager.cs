@@ -399,7 +399,7 @@ namespace Akimichi.Game
         {
             if(this.playerDic.ContainsKey(index))
             {
-                this.playerDic[index].ChangeView(level);
+                this.playerDic[index].ChangeView(index, level);
             }
         }
 

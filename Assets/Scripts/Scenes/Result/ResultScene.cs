@@ -14,25 +14,13 @@ namespace Akimichi
         private Image player1stImage = null;
 
         [SerializeField]
-        private List<Sprite> player1stList = new List<Sprite>();
-
-        [SerializeField]
         private Image player2ndImage = null;
-
-        [SerializeField]
-        private List<Sprite> player2ndList = new List<Sprite>();
 
         [SerializeField]
         private Image player3rdImage = null;
 
         [SerializeField]
-        private List<Sprite> player3rdList = new List<Sprite>();
-
-        [SerializeField]
         private Image player4thImage = null;
-
-        [SerializeField]
-        private List<Sprite> player4thList = new List<Sprite>();
 
         [SerializeField]
         private AnimeController resultAnime = null;
@@ -86,21 +74,7 @@ namespace Akimichi
                 index++;
 
                 PlayerData data = ResultDataManager.Instance().GetPlayerData(item.Key);
-                switch(item.Key)
-                {
-                    case GameConst.PlayerIndex.First:
-                        image.sprite = this.player1stList[data.GetLevel()];
-                        break;
-                    case GameConst.PlayerIndex.Second:
-                        image.sprite = this.player2ndList[data.GetLevel()];
-                        break;
-                    case GameConst.PlayerIndex.Third:
-                        image.sprite = this.player3rdList[data.GetLevel()];
-                        break;
-                    case GameConst.PlayerIndex.Fourth:
-                        image.sprite = this.player4thList[data.GetLevel()];
-                        break;
-                }
+                image.sprite = PlayerSpriteManager.Instance().GetSprite(item.Key, data.GetLevel());
             }
             this.transition.SetActive(false);
         }

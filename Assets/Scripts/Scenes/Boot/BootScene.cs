@@ -13,6 +13,18 @@ namespace Akimichi
         [SerializeField]
         private AkimichiPhotonManager photonManager = null;
 
+        [SerializeField]
+        private List<Sprite> sprites1st = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> sprites2nd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> sprites3rd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> sprites4th = new List<Sprite>();
+
         private void Awake()
         {
             Application.targetFrameRate = 60;
@@ -21,6 +33,11 @@ namespace Akimichi
             TransitionManager.Instance().SetObject(this.transitionObject);
             DontDestroyOnLoad(this.transitionObject);
             DontDestroyOnLoad(this.photonManager);
+
+            PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.First, this.sprites1st);
+            PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Second, this.sprites2nd);
+            PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Third, this.sprites3rd);
+            PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Fourth, this.sprites4th);
         }
 
         private void Start()
