@@ -35,7 +35,6 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Awake()
     {
-        TransitionManager.Instance().AddScene(SceneConst.Matching);
         NetworkManager.Instance().SetCallbackOnPlayerEnteredRoom(OnPlayerEnteredRoom);
         NetworkManager.Instance().SetCallbackOnPlayerLeftRoom(OnPlayerLeftRoom);
         this.isReady = false;

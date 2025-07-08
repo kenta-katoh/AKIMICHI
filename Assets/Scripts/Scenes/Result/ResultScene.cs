@@ -45,7 +45,6 @@ namespace Akimichi
 
         private void Awake()
         {
-            TransitionManager.Instance().AddScene(SceneConst.Result);
             NetworkManager.Instance().DeleteCallBack();
             NetworkManager.Instance().LeaveRoom();
             NetworkManager.Instance().Disconnect();

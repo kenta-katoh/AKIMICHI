@@ -62,7 +62,6 @@ namespace Akimichi.Game
 
         private void Awake()
         {
-            TransitionManager.Instance().AddScene(SceneConst.Game);
             NetworkManager.Instance().SetServerTime();
             GameStateManagerData stateManagerData = new GameStateManagerData();
             stateManagerData.ProgressManager = this;

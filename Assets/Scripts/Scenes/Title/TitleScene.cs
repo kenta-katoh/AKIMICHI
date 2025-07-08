@@ -4,20 +4,9 @@ namespace Akimichi
 {
     public class TitleScene : MonoBehaviour
     {
-        [SerializeField]
-        private TransitionObject transitionObject = null;
-
-        private void Awake()
+        private void Start()
         {
-            TransitionManager.Instance().Initialize();
-            TransitionManager.Instance().SetObject(this.transitionObject);
-            TransitionManager.Instance().AddScene(SceneConst.Title);
-            if (TransitionManager.Instance().IsFirstTransedScene(SceneConst.Title))
-            {
-                DontDestroyOnLoad(this.transitionObject);
-            }
-
-            Application.targetFrameRate = 60;
+            TransitionManager.Instance().Open();
         }
 
         public void ChangeScene()

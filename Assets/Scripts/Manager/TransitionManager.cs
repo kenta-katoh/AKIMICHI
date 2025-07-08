@@ -11,12 +11,10 @@ namespace Akimichi
         private string sceneName = "";
         private Action onClose = null;
         private Action onOpen = null;
-        private Dictionary<string, int> transedSceneDic = new Dictionary<string, int>();
 
         public override void Initialize()
         {
             base.Initialize();
-            this.transedSceneDic.Clear();
         }
 
         /// <summary>
@@ -129,39 +127,6 @@ namespace Akimichi
                 this.onClose?.Invoke();
                 NetworkManager.Instance().DeleteCallBack();
                 SceneManager.LoadScene(this.sceneName);
-            }
-        }
-
-        /// <summary>
-        /// 遷移カウント追加
-        /// </summary>
-        /// <param name="sceneName"></param>
-        public void AddScene(string sceneName)
-        {
-            if(this.transedSceneDic.ContainsKey(sceneName))
-            {
-                this.transedSceneDic[sceneName]++;
-            }
-            else
-            {
-                this.transedSceneDic.Add(sceneName, 1);
-            }
-        }
-
-        /// <summary>
-        /// 初回遷移か
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <returns></returns>
-        public bool IsFirstTransedScene(string sceneName)
-        {
-            if(!this.transedSceneDic.ContainsKey(sceneName))
-            {
-                return true;
-            }
-            else
-            {
-                return this.transedSceneDic[sceneName] == 1;
             }
         }
     }

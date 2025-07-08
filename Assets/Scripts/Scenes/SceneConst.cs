@@ -3,6 +3,7 @@ namespace Akimichi
 {
     public class SceneConst
     {
+        public static readonly string Boot = "BootScene";
         public static readonly string Title = "TitleScene";
         public static readonly string Home = "HomeScene";
         public static readonly string Tutorial = "TutorialScene";
