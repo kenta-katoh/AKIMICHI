@@ -1206,6 +1206,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 1708551635}
   playerRoot: {fileID: 2051922771}
   bootCameraAnime: {fileID: 382533373}
+  startAnime: {fileID: 1989047962}
   playerPrefabs:
   - {fileID: 3895266673691116738, guid: 597e15df9f68218488269e12dfa2022d, type: 3}
   - {fileID: 4238987259351253227, guid: 95a7553a574e3854790c05923c54d320, type: 3}

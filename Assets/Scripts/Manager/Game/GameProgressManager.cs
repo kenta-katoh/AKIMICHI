@@ -24,6 +24,9 @@ namespace Akimichi.Game
         private AnimeController bootCameraAnime = null;
 
         [SerializeField]
+        private AnimeController startAnime = null;
+
+        [SerializeField]
         private List<GameObject> playerPrefabs = null;
 
         [SerializeField]
@@ -368,7 +371,11 @@ namespace Akimichi.Game
                     this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
                     this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
                         this.bootCameraAnime.enabled = false;
-                        GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
+                        this.startAnime.PlayAnime("Start", true, "Start", () =>
+                        {
+                            this.startAnime.gameObject.SetActive(false);
+                            GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
+                        });
                     });
                     break;
                 case GameConst.GameProgressState.InGame:
