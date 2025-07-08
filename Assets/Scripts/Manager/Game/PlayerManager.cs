@@ -285,6 +285,7 @@ namespace Akimichi.Game
                 this.PracticeState = EventConst.Practice.DuringPractice;
                 this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                 SetPlayerState(PlayerConst.State.Event);
+                DiceManager.Instance().Visible(false);
             }
         }
 
@@ -335,6 +336,8 @@ namespace Akimichi.Game
                 var send = DataObjectManager.Instance().Get();
                 send.Datas[0] = (int)this.PlayerIndex;
                 NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, send);
+
+                DiceManager.Instance().Visible(true);
             }
         }
 

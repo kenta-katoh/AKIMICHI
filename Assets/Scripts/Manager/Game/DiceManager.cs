@@ -79,5 +79,14 @@ namespace Akimichi.Game
                 this.diceView.gameObject.SetActive(false);
             }
         }
+
+        /// <summary>
+        /// on off
+        /// </summary>
+        /// <param name="visible"></param>
+        public void Visible(bool visible)
+        {
+            this.diceView.gameObject.SetActive(visible);
+        }
     }
 }
