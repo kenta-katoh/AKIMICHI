@@ -22,6 +22,7 @@ namespace Akimichi.Game
         {
             base.OnAwake();
             this.dice.text = "0";
+            this.gameObject.SetActive(false);
         }
 
         public void MoveLeft()
@@ -46,6 +47,7 @@ namespace Akimichi.Game
                 this.isRoll = true;
                 this.rollTime = this.diceRollTime;
                 this.isForceStop = false;
+                this.gameObject.SetActive(true);
             }
         }
 
@@ -80,6 +82,15 @@ namespace Akimichi.Game
         public void ForceStop()
         {
             this.isForceStop = true;
+        }
+
+        /// <summary>
+        /// 表示更新
+        /// </summary>
+        /// <param name="value"></param>
+        public void UpdateView(int value)
+        {
+            this.dice.text = value.ToString();
         }
     }
 }

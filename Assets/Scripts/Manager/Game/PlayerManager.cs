@@ -124,9 +124,10 @@ namespace Akimichi.Game
         public void MoveBehavior()
         {
             SetPlayerState(PlayerConst.State.MoveBehavior);
-            
+            DiceManager.Instance().UpdateView();
+
             // イベント関連の判定
-            if(this.PracticeState != EventConst.Practice.Waiting)
+            if (this.PracticeState != EventConst.Practice.Waiting)
             {
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())

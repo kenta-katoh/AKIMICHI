@@ -63,5 +63,21 @@ namespace Akimichi.Game
         {
             this.diceView.ForceStop();
         }
+
+        /// <summary>
+        /// 表示更新
+        /// </summary>
+        public void UpdateView()
+        {
+            if(this.DiceValue > 0)
+            {
+                this.diceView.gameObject.SetActive(true);
+                this.diceView.UpdateView(this.DiceValue);
+            }
+            else
+            {
+                this.diceView.gameObject.SetActive(false);
+            }
+        }
     }
 }
