@@ -8,7 +8,13 @@ namespace Akimichi.Game
     {
         public string Name { get; set; } = "";
         public int Weight { get; set; } = PlayerConst.InitWeight;
-        
+        public int DiceCount { get; set; } = 0;
+        public int PlusCount {  get; set; } = 0;
+        public int MinusCount {  get; set; } = 0;
+        public int EventCount { get; set; } = 0;
+        public int MoveValue { get; set; } = 0;
+        public int PracticeCount { get; set; } = 0;
+
         /// <summary>
         /// 現在のレベル取得
         /// </summary>

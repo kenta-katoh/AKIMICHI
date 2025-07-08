@@ -24,6 +24,9 @@ namespace Akimichi.Game
         private AnimeController bootCameraAnime = null;
 
         [SerializeField]
+        private AnimeController startAnime = null;
+
+        [SerializeField]
         private List<GameObject> playerPrefabs = null;
 
         [SerializeField]
@@ -59,7 +62,6 @@ namespace Akimichi.Game
 
         private void Awake()
         {
-            TransitionManager.Instance().AddScene(SceneConst.Game);
             NetworkManager.Instance().SetServerTime();
             GameStateManagerData stateManagerData = new GameStateManagerData();
             stateManagerData.ProgressManager = this;
@@ -334,6 +336,24 @@ namespace Akimichi.Game
                 case EventConst.Event.ReleaseFatigue:
                     PlayerManager.Instance().ReleaseFatigue((GameConst.PlayerIndex)data[0]);
                     break;
+                // リザルトデータ関連
+                case EventConst.Event.ResultData:
+                    switch ((EventConst.ResultData)data[1])
+                    {
+                        case EventConst.ResultData.DiceCount:
+                            ResultDataManager.Instance().AddDiceCount((GameConst.PlayerIndex)data[0]);
+                            break;
+                        case EventConst.ResultData.MoveValue:
+                            ResultDataManager.Instance().AddMoveValue((GameConst.PlayerIndex)data[0], (int)data[2]);
+                            break;
+                        case EventConst.ResultData.SpaceCount:
+                            ResultDataManager.Instance().AddMapSpace((GameConst.PlayerIndex)data[0], (GameConst.MapSpaceType)data[2]);
+                            break;
+                        case EventConst.ResultData.PracticeCount:
+                            ResultDataManager.Instance().AddPracticeCount((GameConst.PlayerIndex)data[0]);
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -368,7 +388,11 @@ namespace Akimichi.Game
                     this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
                     this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
                         this.bootCameraAnime.enabled = false;
-                        GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
+                        this.startAnime.PlayAnime("Start", true, "Start", () =>
+                        {
+                            this.startAnime.gameObject.SetActive(false);
+                            GameStateManager.Instance().SendState(GameConst.GameProgressState.BootCamera);
+                        });
                     });
                     break;
                 case GameConst.GameProgressState.InGame:

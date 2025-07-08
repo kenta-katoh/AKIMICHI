@@ -28,7 +28,6 @@ public class LobbyScene : MonoBehaviour
 
     private void Awake()
     {
-        TransitionManager.Instance().AddScene(SceneConst.Lobby);
         NetworkManager.Instance().LeaveRoom();
         NetworkManager.Instance().SetCallbackOnRoomListUpdate(OnRoomListUpdate);
         NetworkManager.Instance().SetCallbackOnJoinedRoom(() => 

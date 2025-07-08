@@ -57,5 +57,66 @@ namespace Akimichi.Game
             }
             return this.resultDic[index];
         }
+
+        /// <summary>
+        /// ダイス振り
+        /// </summary>
+        /// <param name="index"></param>
+        public void AddDiceCount(GameConst.PlayerIndex index)
+        {
+            if(this.resultDic.ContainsKey(index))
+            {
+                this.resultDic[index].DiceCount++;
+            }
+        }
+
+        /// <summary>
+        /// マス目数
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="type"></param>
+        public void AddMapSpace(GameConst.PlayerIndex index, GameConst.MapSpaceType type)
+        {
+            if (this.resultDic.ContainsKey(index))
+            {
+                switch(type)
+                {
+                    case GameConst.MapSpaceType.Plus:
+                        this.resultDic[index].PlusCount++;
+                        break;
+                    case GameConst.MapSpaceType.Minus:
+                        this.resultDic[index].MinusCount++;
+                        break;
+                    case GameConst.MapSpaceType.Event:
+                        this.resultDic[index].EventCount++;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 移動量
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public void AddMoveValue(GameConst.PlayerIndex index, int value)
+        {
+            if (this.resultDic.ContainsKey(index))
+            {
+                this.resultDic[index].MoveValue += value;
+            }
+        }
+
+        /// <summary>
+        ///  稽古数
+        /// </summary>
+        /// <param name="index"></param>
+        public void AddPracticeCount(GameConst.PlayerIndex index)
+        {
+            if (this.resultDic.ContainsKey(index))
+            {
+                this.resultDic[index].PracticeCount++;
+            }
+        }
     }
 }

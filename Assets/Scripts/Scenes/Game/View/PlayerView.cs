@@ -11,9 +11,6 @@ namespace Akimichi.Game
         private SpriteRenderer spriteRenderer;
 
         [SerializeField]
-        private List<Sprite> sprites = new List<Sprite>();
-
-        [SerializeField]
         private AnimeController statusAnime = null;
 
         [SerializeField]
@@ -26,23 +23,19 @@ namespace Akimichi.Game
         {
             base.OnAwake();
             this.logic = new PlayerLogic(this);
-            this.spriteRenderer.sprite = this.sprites[0];
         }
 
         /// <summary>
         /// 見た目更新
         /// </summary>
         /// <param name="level"></param>
-        public void ChangeView(int level)
+        public void ChangeView(GameConst.PlayerIndex index, int level)
         {
-            if(level < this.sprites.Count)
+            this.spriteRenderer.sprite = PlayerSpriteManager.Instance().GetSprite(index, level);
+            this.changeAnime.PlayAnime("Change", true, "Change", () =>
             {
-                this.spriteRenderer.sprite = this.sprites[level];
-                this.changeAnime.PlayAnime("Change", true, "Change", () =>
-                {
-                    this.changeAnime.SetBool("Change", false);
-                });
-            }
+                this.changeAnime.SetBool("Change", false);
+            });
         }
 
         /// <summary>

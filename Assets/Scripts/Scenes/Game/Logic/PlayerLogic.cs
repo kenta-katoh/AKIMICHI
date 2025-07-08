@@ -53,9 +53,9 @@ namespace Akimichi.Game
         /// 見た目更新
         /// </summary>
         /// <param name="level"></param>
-        public void ChangeView(int level)
+        public void ChangeView(GameConst.PlayerIndex index, int level)
         {
-            this.playerView.ChangeView(level);
+            this.playerView.ChangeView(index, level);
         }
 
         /// <summary>
