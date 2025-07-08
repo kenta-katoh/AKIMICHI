@@ -86,7 +86,6 @@ namespace Akimichi
             {
                 this.winEffect.SetActive(true);
                 this.transition.SetActive(true);
-                ResultDataManager.Instance().Dispose();
             });
         }
 

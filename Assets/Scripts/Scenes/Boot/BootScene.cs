@@ -27,7 +27,9 @@ namespace Akimichi
 
         private void Awake()
         {
+#if !UNITY_EDITOR
             Application.targetFrameRate = 60;
+#endif
 
             TransitionManager.Instance().Initialize();
             TransitionManager.Instance().SetObject(this.transitionObject);
