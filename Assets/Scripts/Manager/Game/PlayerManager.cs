@@ -161,6 +161,12 @@ namespace Akimichi.Game
                             break;
                     }
 
+                    var send3 = DataObjectManager.Instance().Get();
+                    send3.Datas[0] = (int)this.PlayerIndex;
+                    send3.Datas[1] = (int)EventConst.ResultData.SpaceCount;
+                    send3.Datas[2] = (int)this.currentMapSpace.MapSpaceType;
+                    NetworkManager.Instance().SendEvent(EventConst.Event.ResultData, send3);
+
                     this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                     SetPlayerState(PlayerConst.State.WaitingInput);
                 }
@@ -286,6 +292,11 @@ namespace Akimichi.Game
                 this.playerLogic.StopMove(this.currentMapSpace.GetTransform());
                 SetPlayerState(PlayerConst.State.Event);
                 DiceManager.Instance().Visible(false);
+
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = (int)this.PlayerIndex;
+                send.Datas[1] = (int)EventConst.ResultData.PracticeCount;
+                NetworkManager.Instance().SendEvent(EventConst.Event.ResultData, send);
             }
         }
 

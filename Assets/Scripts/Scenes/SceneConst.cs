@@ -10,5 +10,6 @@ namespace Akimichi
         public static readonly string Matching = "MatchingScene";
         public static readonly string Game = "GameScene";
         public static readonly string Result = "ResultScene";
+        public static readonly string ResultData = "ResultDataScene";
     }
 }

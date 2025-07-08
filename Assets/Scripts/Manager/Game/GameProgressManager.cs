@@ -337,6 +337,24 @@ namespace Akimichi.Game
                 case EventConst.Event.ReleaseFatigue:
                     PlayerManager.Instance().ReleaseFatigue((GameConst.PlayerIndex)data[0]);
                     break;
+                // リザルトデータ関連
+                case EventConst.Event.ResultData:
+                    switch ((EventConst.ResultData)data[1])
+                    {
+                        case EventConst.ResultData.DiceCount:
+                            ResultDataManager.Instance().AddDiceCount((GameConst.PlayerIndex)data[0]);
+                            break;
+                        case EventConst.ResultData.MoveValue:
+                            ResultDataManager.Instance().AddMoveValue((GameConst.PlayerIndex)data[0], (int)data[2]);
+                            break;
+                        case EventConst.ResultData.SpaceCount:
+                            ResultDataManager.Instance().AddMapSpace((GameConst.PlayerIndex)data[0], (GameConst.MapSpaceType)data[2]);
+                            break;
+                        case EventConst.ResultData.PracticeCount:
+                            ResultDataManager.Instance().AddPracticeCount((GameConst.PlayerIndex)data[0]);
+                            break;
+                    }
+                    break;
             }
         }
 

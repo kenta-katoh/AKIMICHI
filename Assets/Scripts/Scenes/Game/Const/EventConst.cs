@@ -25,6 +25,7 @@ namespace Akimichi.Game
             SetName,                // 名前設定
             AddWeight,              // 体重増加
             SubtractWeight,         // 体重減少
+            ResultData,             // リザルトに関するデータ送信
 
             CreatePlayerObject,
             StartingPositionDistribution,
@@ -78,6 +79,14 @@ namespace Akimichi.Game
             Main,
             Yes,
             No,
+        }
+
+        public enum ResultData
+        {
+            DiceCount,
+            SpaceCount, 
+            MoveValue,
+            PracticeCount,
         }
 
         public static readonly string MessageLastChar = "F";    // メッセージの末尾を示す文字

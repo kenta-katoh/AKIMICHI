@@ -117,14 +117,9 @@ namespace Akimichi
             });
         }
 
-        public void OnLobby()
+        public void OnResultData()
         {
-            TransitionManager.Instance().Transition(SceneConst.Lobby);
-        }
-
-        public void OnHome()
-        {
-            TransitionManager.Instance().Transition(SceneConst.Home);
+            TransitionManager.Instance().Transition(SceneConst.ResultData);
         }
     }
 }
