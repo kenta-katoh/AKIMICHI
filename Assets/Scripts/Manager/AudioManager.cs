@@ -1,4 +1,6 @@
 
+using static Akimichi.SoundConst;
+
 namespace Akimichi
 {
     public class AudioManager : ManagerBase<AudioManager>
@@ -20,14 +22,14 @@ namespace Akimichi
         /// BGM再生
         /// </summary>
         /// <param name="bgm"></param>
-        public void PlayBGM(SoundConst.BGM bgm)
+        public void PlayBGM(SoundConst.BGM bgm, bool isReturn = false, bool isLoop = true)
         {
             if(this.soundController != null)
             {
                 if(this.currentBgm != bgm)
                 {
                     this.currentBgm = bgm;
-                    this.soundController.PlayBGM(this.currentBgm);
+                    this.soundController.PlayBGM(this.currentBgm, isReturn, isLoop);
                 }
             }
         }
@@ -41,6 +43,53 @@ namespace Akimichi
             if(this.soundController != null)
             {
                 this.soundController.PlaySE(se);
+            }
+        }
+
+        /// <summary>
+        /// マッチング
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.MATCHING se)
+        {
+            if (this.soundController != null)
+            {
+                this.soundController.PlaySE(se);
+            }
+        }
+
+        /// <summary>
+        /// インゲーム
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.GAME se)
+        {
+            if (this.soundController != null)
+            {
+                this.soundController.PlaySE(se);
+            }
+        }
+
+        /// <summary>
+        /// リザルト
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.RESULT se)
+        {
+            if (this.soundController != null)
+            {
+                this.soundController.PlaySE(se);
+            }
+        }
+
+        /// <summary>
+        /// SEをフェードで消す
+        /// </summary>
+        public void FadeSE()
+        {
+            if (this.soundController != null)
+            {
+                this.soundController.FadeSE();
             }
         }
     }

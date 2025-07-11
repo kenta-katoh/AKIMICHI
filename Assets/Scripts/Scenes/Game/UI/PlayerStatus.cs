@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
 
 namespace Akimichi.Game
 {
@@ -72,6 +73,7 @@ namespace Akimichi.Game
             this.playerData.Weight += value;
             if(currentLevel != this.playerData.GetLevel())
             {
+                if(this.playerIndex == PlayerManager.Instance().PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.Change);
                 PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
             }
 

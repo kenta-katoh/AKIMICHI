@@ -135,6 +135,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         switch (_event)
         {
             case EventConst.Event.ReadyMatch:
+                AudioManager.Instance().PlaySE(SoundConst.MATCHING.Ready);
                 GameConst.PlayerIndex index = (GameConst.PlayerIndex)data[0];
                 foreach (var item in this.playerList)
                 {
@@ -144,6 +145,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
                 if (!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
                 if (this.readyPlayer.Count == GameConst.MaximumPlayers(true))
                 {
+                    AudioManager.Instance().PlaySE(SoundConst.MATCHING.TransGame);
                     if (NetworkManager.Instance().IsMasterClient())
                     {
                         // 全員そろったので遷移

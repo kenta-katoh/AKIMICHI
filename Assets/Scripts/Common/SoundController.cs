@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +38,9 @@ namespace Akimichi
         private float frame = 0.0f;
         private float currentVolume = 0.0f;
 
+        private bool isReturn = false;
+        private float timeSample = 0.0f;
+
         private void Awake()
         {
             this.currentVolume = this.bgmAudioSource.volume;
@@ -46,9 +50,10 @@ namespace Akimichi
         /// BGM再生
         /// </summary>
         /// <param name="bgm"></param>
-        public void PlayBGM(SoundConst.BGM bgm)
+        public void PlayBGM(SoundConst.BGM bgm, bool isReturn, bool isLoop)
         {
-            if(this.bgmAudioSource.clip == null)
+            this.bgmAudioSource.loop = isLoop;
+            if (this.bgmAudioSource.clip == null)
             {
                 this.isScheduled = false;
                 this.bgmAudioSource.clip = this.bgmClips[((int)bgm) - 1];
@@ -60,6 +65,8 @@ namespace Akimichi
                 this.isScheduled = true;
                 this.scheduledClip = this.bgmClips[((int)bgm) - 1];
                 this.frame = 0.5f;
+                this.isReturn = isReturn;
+                this.timeSample = this.bgmAudioSource.time;
             }
         }
 
@@ -74,7 +81,8 @@ namespace Akimichi
                     this.bgmAudioSource.Stop();
                     this.bgmAudioSource.volume = this.currentVolume;
                     this.bgmAudioSource.clip = this.scheduledClip;
-                    this.bgmAudioSource.time = 0.0f;
+                    if (this.isReturn) this.bgmAudioSource.time = this.timeSample;
+                    else this.bgmAudioSource.time = 0.0f;
                     this.bgmAudioSource.Play();
 
                     this.isScheduled = false;
@@ -116,6 +124,18 @@ namespace Akimichi
         public void PlaySE(SoundConst.RESULT se)
         {
             this.seAudioSource.PlayOneShot(this.resultClips[(int)se]);
+        }
+
+        /// <summary>
+        /// SEをフェードで消す
+        /// </summary>
+        public void FadeSE()
+        {
+            this.seAudioSource.DOFade(0.0f, 0.5f).OnComplete(() =>
+            {
+                this.seAudioSource.Stop();
+                this.seAudioSource.volume = 1.0f;
+            });
         }
     }
 }

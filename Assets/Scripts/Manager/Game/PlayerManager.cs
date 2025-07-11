@@ -132,12 +132,14 @@ namespace Akimichi.Game
                 // まだダイス目が残っているかの判断
                 if (DiceManager.Instance().IsDiceRest())
                 {
+                    AudioManager.Instance().PlaySE(SoundConst.GAME.Move);
                     StartMove();
                 }
                 else
                 {
+                    AudioManager.Instance().PlaySE(SoundConst.GAME.MoveStop);
                     // 止まったマス目の思考
-                    switch(this.currentMapSpace.MapSpaceType)
+                    switch (this.currentMapSpace.MapSpaceType)
                     {
                         case GameConst.MapSpaceType.Plus:
                             this.isfatigue = false; // 疲労回復
@@ -173,6 +175,7 @@ namespace Akimichi.Game
             }
             else if(this.PracticeState == EventConst.Practice.Waiting)
             {
+                AudioManager.Instance().PlaySE(SoundConst.GAME.Move);
                 // viewが追いついたので稽古可能状態に遷移
                 this.PracticeState = EventConst.Practice.ReadyToGo;
                 SendEventPossible();
@@ -369,6 +372,7 @@ namespace Akimichi.Game
         /// <param name="value"></param>
         public void AddWeight(GameConst.PlayerIndex index, int value)
         {
+            if(index == this.PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.WeightUp);
             this.playerStatusView.AddWeight(index, value);
             if (this.playerDic.ContainsKey(index))
             {
@@ -383,6 +387,7 @@ namespace Akimichi.Game
         /// <param name="value"></param>
         public void SubtractWeight(GameConst.PlayerIndex index, int value)
         {
+            if (index == this.PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.WeightDown);
             this.playerStatusView.SubtractWeight(index, value);
             if (this.playerDic.ContainsKey(index))
             {

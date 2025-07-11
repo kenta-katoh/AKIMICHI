@@ -54,6 +54,8 @@ namespace Akimichi.Game
                 this.isFontLoad = true;
                 this.waitFrame = EventConst.FontWaitFrame;
             });
+
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Event);
         }
 
         private void Update()
@@ -66,6 +68,7 @@ namespace Akimichi.Game
                     // 末尾文字を判定
                     if (font != EventConst.MessageLastChar)
                     {
+                        AudioManager.Instance().PlaySE(SoundConst.GAME.Text);
                         this.message.text += font;
                         this.fonts.RemoveAt(0);
                         this.waitFrame = EventConst.FontWaitFrame;
@@ -123,6 +126,7 @@ namespace Akimichi.Game
                                 {
                                     this.isFontLoad = false;
                                     this.image.enabled = false;
+                                    AudioManager.Instance().PlayBGM(SoundConst.BGM.Game, true);
                                 });
                             }
                         }
@@ -142,6 +146,7 @@ namespace Akimichi.Game
                                 this.image.enabled = false;
                                 this.eventData.OnFinished();
                                 this.eventData = null;
+                                AudioManager.Instance().PlayBGM(SoundConst.BGM.Game, true);
                             });
                         }
                         break;
@@ -160,6 +165,7 @@ namespace Akimichi.Game
                                 this.image.enabled = false;
                                 this.eventData.OnFinished();
                                 this.eventData = null;
+                                AudioManager.Instance().PlayBGM(SoundConst.BGM.Game, true);
                             });
                         }
                         break;

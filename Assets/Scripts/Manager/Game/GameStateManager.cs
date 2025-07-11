@@ -15,6 +15,7 @@ namespace Akimichi.Game
         private TextMeshProUGUI timer = null;
         private bool isLast = false;
         private bool isFinish = false;
+        private string currentTime = "";
 
         public override void DataTransfer(ManagerData data)
         {
@@ -164,6 +165,22 @@ namespace Akimichi.Game
                     this.isFinish = true;
                     this.progressManager.FinishGame();
                     SendState(GameConst.GameProgressState.FinishGame);
+                }
+
+                if(this.timer.text != this.currentTime)
+                {
+                    this.currentTime = this.timer.text;
+                    if((int)t.TotalMinutes == 0)
+                    {
+                        switch(t.Seconds)
+                        {
+                            case 1:
+                            case 2:
+                            case 3:
+                                AudioManager.Instance().PlaySE(SoundConst.GAME.Count1);
+                                break;
+                        }
+                    }
                 }
             }
         }

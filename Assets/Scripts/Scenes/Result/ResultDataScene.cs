@@ -45,17 +45,21 @@ namespace Akimichi
                 }
             }
             ResultDataManager.Instance().Dispose();
+
+            AudioManager.Instance().PlaySE(SoundConst.RESULT.Data);
         }
 
         public void TransLobby()
         {
             AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
+            AudioManager.Instance().FadeSE();
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
 
         public void TransHome()
         {
             AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
+            AudioManager.Instance().FadeSE();
             TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }
