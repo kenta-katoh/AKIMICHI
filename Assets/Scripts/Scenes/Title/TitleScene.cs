@@ -4,6 +4,11 @@ namespace Akimichi
 {
     public class TitleScene : MonoBehaviour
     {
+        private void Awake()
+        {
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
+        }
+
         private void Start()
         {
             TransitionManager.Instance().Open();
