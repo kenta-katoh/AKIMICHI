@@ -45,6 +45,8 @@ public class LobbyScene : MonoBehaviour
         {
             room.onInput = JoinRoom;
         }
+
+        AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
     }
 
     private void Start()

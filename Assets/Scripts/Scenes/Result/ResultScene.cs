@@ -77,6 +77,8 @@ namespace Akimichi
                 image.sprite = PlayerSpriteManager.Instance().GetSprite(item.Key, data.GetLevel());
             }
             this.transition.SetActive(false);
+
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Result);
         }
 
         private void Start()

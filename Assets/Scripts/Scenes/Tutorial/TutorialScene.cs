@@ -26,6 +26,7 @@ namespace Akimichi
             {
                 item.SetButtonAction(OnClick);
             }
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
         }
 
         private void Start()

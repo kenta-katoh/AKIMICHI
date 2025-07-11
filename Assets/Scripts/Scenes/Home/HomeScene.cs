@@ -9,6 +9,7 @@ namespace Akimichi
         private void Awake()
         {
             NetworkManager.Instance().Disconnect();
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
         }
 
         private void Start()

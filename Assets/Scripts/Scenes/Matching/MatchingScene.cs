@@ -42,6 +42,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         this.inputField.text = "どすこい";
         this.roomName.text = PhotonNetwork.CurrentRoom.Name;
         NetworkManager.Instance().SetName(inputField.text);
+
+        AudioManager.Instance().PlayBGM(SoundConst.BGM.Matching);
     }
 
     private void Start()

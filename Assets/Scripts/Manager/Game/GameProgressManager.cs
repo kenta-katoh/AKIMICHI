@@ -99,6 +99,8 @@ namespace Akimichi.Game
 
             this.canvasGroup.blocksRaycasts = true;
             this.finishAnime.gameObject.SetActive(false);
+
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Game);
         }
 
         private void Start()
