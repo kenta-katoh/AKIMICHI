@@ -19,11 +19,13 @@ namespace Akimichi
 
         public void ChangeLobby()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
 
         public void ChangeTutorial()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Tutorial);
         }
     }

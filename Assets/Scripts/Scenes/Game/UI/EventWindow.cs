@@ -103,7 +103,8 @@ namespace Akimichi.Game
             if (this.isInputWait)
             {
                 this.isInputWait = false;
-                switch(this.currentMessageType)
+                AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
+                switch (this.currentMessageType)
                 {
                     case EventConst.EventMessageType.Main:
                         if (!this.eventData.IsMainMessageLast)
@@ -169,6 +170,7 @@ namespace Akimichi.Game
         public void YesInput()
         {
             this.eventData.YesAction();
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.animeController.PlayAnime("IsSelect", false, "Result", () => 
             {
                 this.currentMessageType = EventConst.EventMessageType.Yes;
@@ -179,6 +181,7 @@ namespace Akimichi.Game
         public void NoInput()
         {
             this.eventData.NoAction();
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.animeController.PlayAnime("IsSelect", false, "Result", () =>
             {
                 this.currentMessageType = EventConst.EventMessageType.No;

@@ -40,6 +40,7 @@ namespace Akimichi.Game
             bool isSuccess = DiceManager.Instance().DiceRoll();
             if(isSuccess)
             {
+                AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
                 PlayerManager.Instance().DiceRoll();
 
                 // ダイス成功時に進行方向設定

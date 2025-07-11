@@ -39,14 +39,14 @@ namespace Akimichi
             if(this.bgmAudioSource.clip == null)
             {
                 this.isScheduled = false;
-                this.bgmAudioSource.clip = this.bgmClips[((int)bgm) + 1];
+                this.bgmAudioSource.clip = this.bgmClips[((int)bgm) - 1];
                 this.bgmAudioSource.time = 0.0f;
                 this.bgmAudioSource.Play();
             }
             else
             {
                 this.isScheduled = true;
-                this.scheduledClip = this.bgmClips[((int)bgm) + 1];
+                this.scheduledClip = this.bgmClips[((int)bgm) - 1];
                 this.frame = 0.5f;
             }
         }

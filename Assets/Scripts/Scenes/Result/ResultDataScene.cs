@@ -49,11 +49,13 @@ namespace Akimichi
 
         public void TransLobby()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
 
         public void TransHome()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }

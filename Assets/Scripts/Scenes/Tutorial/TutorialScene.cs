@@ -36,12 +36,14 @@ namespace Akimichi
 
         public void OnClick(int index)
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.image.sprite = this.imageList[index];
             this.title.text = "遊び方" + (index + 1);
         }
 
         public void OnBack()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Back);
             TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }

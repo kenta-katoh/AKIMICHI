@@ -16,6 +16,7 @@ namespace Akimichi
 
         public void ChangeScene()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Home);
         }
     }

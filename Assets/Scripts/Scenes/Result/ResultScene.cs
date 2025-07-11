@@ -93,6 +93,7 @@ namespace Akimichi
 
         public void OnResultData()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.ResultData);
         }
     }

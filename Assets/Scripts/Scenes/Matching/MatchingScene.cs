@@ -60,6 +60,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (!this.isReady)
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Back);
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
     }
@@ -75,6 +76,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
             this.readyBtn.interactable = false;
             this.readyText.text = "待機中";
             SendReadyGame();
+
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
         }
     }
 
