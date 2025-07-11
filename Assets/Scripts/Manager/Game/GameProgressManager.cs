@@ -99,6 +99,8 @@ namespace Akimichi.Game
 
             this.canvasGroup.blocksRaycasts = true;
             this.finishAnime.gameObject.SetActive(false);
+
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Game);
         }
 
         private void Start()
@@ -249,6 +251,7 @@ namespace Akimichi.Game
                     break;
                 // 稽古エフェクト再生
                 case EventConst.Event.PracticeEffectStart:
+                    AudioManager.Instance().PlaySE(SoundConst.GAME.Practice);
                     MapSpaceLogicBase mapSpace = MapManager.Instance().GetMapSpace((int)data[1]);
                     if (this.eventBrain == null) EventManager.Instance().StartEventEffect(mapSpace, null);
                     else

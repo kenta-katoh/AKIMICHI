@@ -14,6 +14,9 @@ namespace Akimichi
         private AkimichiPhotonManager photonManager = null;
 
         [SerializeField]
+        private SoundController soundController = null;
+
+        [SerializeField]
         private List<Sprite> sprites1st = new List<Sprite>();
 
         [SerializeField]
@@ -33,8 +36,10 @@ namespace Akimichi
 
             TransitionManager.Instance().Initialize();
             TransitionManager.Instance().SetObject(this.transitionObject);
+            AudioManager.Instance().SetController(this.soundController);
             DontDestroyOnLoad(this.transitionObject);
             DontDestroyOnLoad(this.photonManager);
+            DontDestroyOnLoad(this.soundController);
 
             PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.First, this.sprites1st);
             PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Second, this.sprites2nd);

@@ -40,6 +40,7 @@ namespace Akimichi.Game
             bool isSuccess = DiceManager.Instance().DiceRoll();
             if(isSuccess)
             {
+                AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
                 PlayerManager.Instance().DiceRoll();
 
                 // ダイス成功時に進行方向設定
@@ -48,6 +49,8 @@ namespace Akimichi.Game
                 this.rollTime = this.diceRollTime;
                 this.isForceStop = false;
                 this.gameObject.SetActive(true);
+
+                AudioManager.Instance().PlaySE(SoundConst.GAME.DiceRoll);
             }
         }
 
@@ -63,6 +66,7 @@ namespace Akimichi.Game
                     {
                         this.dice.text = DiceManager.Instance().DiceValue.ToString();
                         this.isRoll = false;
+                        AudioManager.Instance().PlaySE(SoundConst.GAME.DiceDecide);
                         PlayerManager.Instance().StartMove();
                     }
                 }

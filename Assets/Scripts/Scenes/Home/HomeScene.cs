@@ -9,6 +9,7 @@ namespace Akimichi
         private void Awake()
         {
             NetworkManager.Instance().Disconnect();
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
         }
 
         private void Start()
@@ -18,11 +19,13 @@ namespace Akimichi
 
         public void ChangeLobby()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
 
         public void ChangeTutorial()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.Tutorial);
         }
     }

@@ -74,9 +74,12 @@ namespace Akimichi
                 index++;
 
                 PlayerData data = ResultDataManager.Instance().GetPlayerData(item.Key);
-                image.sprite = PlayerSpriteManager.Instance().GetSprite(item.Key, data.GetLevel());
+                Sprite sprite = PlayerSpriteManager.Instance().GetSprite(item.Key, data.GetLevel());
+                if(sprite != null) image.sprite = sprite;
             }
             this.transition.SetActive(false);
+
+            AudioManager.Instance().PlayBGM(SoundConst.BGM.Result);
         }
 
         private void Start()
@@ -91,6 +94,7 @@ namespace Akimichi
 
         public void OnResultData()
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             TransitionManager.Instance().Transition(SceneConst.ResultData);
         }
     }

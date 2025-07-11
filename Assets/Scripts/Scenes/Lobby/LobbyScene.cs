@@ -45,6 +45,8 @@ public class LobbyScene : MonoBehaviour
         {
             room.onInput = JoinRoom;
         }
+
+        AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
     }
 
     private void Start()
@@ -157,6 +159,7 @@ public class LobbyScene : MonoBehaviour
         if (!this.isInput) return;
         if (this.state == State.None)
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.state = State.CreateRoom;
             string roomName = string.Empty;
             foreach(string name in LobbySceneConst.RoomNameList)
@@ -188,12 +191,14 @@ public class LobbyScene : MonoBehaviour
     public void BackHome()
     {
         if(!this.isInput) return;
+        AudioManager.Instance().PlaySE(SoundConst.SE.Back);
         TransitionManager.Instance().Transition(SceneConst.Home);
     }
 
     public void JoinRoom(string name)
     {
         if(!this.isInput) return;
+        AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
         NetworkManager.Instance().JoinRoom(name);
     }
 }

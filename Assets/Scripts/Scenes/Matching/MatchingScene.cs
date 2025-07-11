@@ -42,6 +42,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         this.inputField.text = "どすこい";
         this.roomName.text = PhotonNetwork.CurrentRoom.Name;
         NetworkManager.Instance().SetName(inputField.text);
+
+        AudioManager.Instance().PlayBGM(SoundConst.BGM.Matching);
     }
 
     private void Start()
@@ -58,6 +60,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (!this.isReady)
         {
+            AudioManager.Instance().PlaySE(SoundConst.SE.Back);
             TransitionManager.Instance().Transition(SceneConst.Lobby);
         }
     }
@@ -73,6 +76,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
             this.readyBtn.interactable = false;
             this.readyText.text = "待機中";
             SendReadyGame();
+
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
         }
     }
 
@@ -130,6 +135,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         switch (_event)
         {
             case EventConst.Event.ReadyMatch:
+                AudioManager.Instance().PlaySE(SoundConst.MATCHING.Ready);
                 GameConst.PlayerIndex index = (GameConst.PlayerIndex)data[0];
                 foreach (var item in this.playerList)
                 {
@@ -139,6 +145,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
                 if (!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
                 if (this.readyPlayer.Count == GameConst.MaximumPlayers(true))
                 {
+                    AudioManager.Instance().PlaySE(SoundConst.MATCHING.TransGame);
                     if (NetworkManager.Instance().IsMasterClient())
                     {
                         // 全員そろったので遷移
