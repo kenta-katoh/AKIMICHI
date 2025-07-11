@@ -40,6 +40,8 @@ namespace Akimichi
                 this.animeController.SetBool("Close", false);
                 this.onClose?.Invoke();
             });
+
+            AudioManager.Instance().PlaySE(SoundConst.SE.Trans);
         }
 
         public void Open(Action action)
@@ -58,6 +60,8 @@ namespace Akimichi
                 this.image.SetActive(false);
                 this.onOpen?.Invoke();
             });
+
+            AudioManager.Instance().PlaySE(SoundConst.SE.Trans);
         }
     }
 }

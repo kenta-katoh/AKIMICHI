@@ -31,5 +31,17 @@ namespace Akimichi
                 }
             }
         }
+
+        /// <summary>
+        /// 共通
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.SE se)
+        {
+            if(this.soundController != null)
+            {
+                this.soundController.PlaySE(se);
+            }
+        }
     }
 }
