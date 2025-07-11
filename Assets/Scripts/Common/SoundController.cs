@@ -20,6 +20,18 @@ namespace Akimichi
         [SerializeField]
         private List<AudioClip> commonClips = null;
 
+        [Header("Matching")]
+        [SerializeField]
+        private List<AudioClip> matchingClips = null;
+
+        [Header("Game")]
+        [SerializeField]
+        private List<AudioClip> gameClips = null;
+
+        [Header("Result")]
+        [SerializeField]
+        private List<AudioClip> resultClips = null;
+
         private bool isScheduled = false;
         private AudioClip scheduledClip = null;
         private float frame = 0.0f;
@@ -77,6 +89,33 @@ namespace Akimichi
         public void PlaySE(SoundConst.SE se)
         {
             this.seAudioSource.PlayOneShot(this.commonClips[(int)se]);
+        }
+
+        /// <summary>
+        /// マッチング
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.MATCHING se)
+        {
+            this.seAudioSource.PlayOneShot(this.matchingClips[(int)se]);
+        }
+
+        /// <summary>
+        /// インゲーム
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.GAME se)
+        {
+            this.seAudioSource.PlayOneShot(this.gameClips[(int)se]);
+        }
+
+        /// <summary>
+        /// リザルト
+        /// </summary>
+        /// <param name="se"></param>
+        public void PlaySE(SoundConst.RESULT se)
+        {
+            this.seAudioSource.PlayOneShot(this.resultClips[(int)se]);
         }
     }
 }
