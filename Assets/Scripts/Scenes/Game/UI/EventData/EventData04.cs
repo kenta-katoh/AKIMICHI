@@ -10,8 +10,8 @@ namespace Akimichi.Game
 
         public EventData04()
         {
-            this.value = this.random.Next(1, 31);
-            this.result = Convert.ToBoolean(new Random().Next(0, 1));
+            this.value = this.random.Next(20, 51);
+            this.result = Convert.ToBoolean(new Random().Next(0, 2));
             this.IsSelectEvent = true;
             this.mainMessageList.Add("ラッキー！\n豪華な食事にありつけた。");
             this.mainMessageList.Add("料理を平らげますか？");
