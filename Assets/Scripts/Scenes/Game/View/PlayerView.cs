@@ -11,7 +11,10 @@ namespace Akimichi.Game
         private SpriteRenderer spriteRenderer;
 
         [SerializeField]
-        private AnimeController statusAnime = null;
+        private AnimeController upAnime = null;
+
+        [SerializeField]
+        private AnimeController downAnime = null;
 
         [SerializeField]
         private AnimeController changeAnime = null;
@@ -43,9 +46,9 @@ namespace Akimichi.Game
         /// </summary>
         public void SubtractEffect()
         {
-            this.statusAnime.PlayAnime("Down", true, "Down", () =>
+            this.downAnime.PlayAnime("Down", true, "Down", () =>
             {
-                this.statusAnime.SetBool("Down", false);
+                this.downAnime.SetBool("Down", false);
             });
         }
 
@@ -54,9 +57,9 @@ namespace Akimichi.Game
         /// </summary>
         public void AddEffect()
         {
-            this.statusAnime.PlayAnime("Up", true, "Up", () =>
+            this.upAnime.PlayAnime("Up", true, "Up", () =>
             {
-                this.statusAnime.SetBool("Up", false);
+                this.upAnime.SetBool("Up", false);
             });
         }
 

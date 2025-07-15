@@ -1,6 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using static Cinemachine.DocumentationSortingAttribute;
 
 namespace Akimichi.Game
 {
