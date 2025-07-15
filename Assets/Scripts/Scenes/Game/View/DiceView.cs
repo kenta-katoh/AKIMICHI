@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -7,16 +5,12 @@ namespace Akimichi.Game
 {
     public class DiceView : ViewBase
     {
-        [Header("ダイス回転時間(秒)")]
-        [SerializeField]
-        private float diceRollTime = 1.0f;
-
         [SerializeField]
         private TextMeshProUGUI dice = null;
-        private bool isRoll = false;
-        private float rollTime = 10.0f;
-        private System.Random rand = new System.Random();
-        private bool isForceStop = false;
+
+        [SerializeField]
+        private AnimeController animeController = null;
+        private string key = string.Empty;
 
         protected override void OnAwake()
         {
@@ -45,38 +39,19 @@ namespace Akimichi.Game
 
                 // ダイス成功時に進行方向設定
                 PlayerManager.Instance().SetDirection(dir);
-                this.isRoll = true;
-                this.rollTime = this.diceRollTime;
-                this.isForceStop = false;
-                this.gameObject.SetActive(true);
+
+                this.animeController.gameObject.SetActive(true);
+                this.key = "Result" + DiceManager.Instance().DiceValue;
+                this.animeController.PlayAnime(this.key, true, this.key, () => 
+                {
+                    this.gameObject.SetActive(true);
+                    this.animeController.SetBool(this.key, false);
+                    this.dice.text = DiceManager.Instance().DiceValue.ToString();
+                    AudioManager.Instance().PlaySE(SoundConst.GAME.DiceDecide);
+                    PlayerManager.Instance().StartMove();
+                });
 
                 AudioManager.Instance().PlaySE(SoundConst.GAME.DiceRoll);
-            }
-        }
-
-        private void Update()
-        {
-            if(this.isRoll)
-            {
-                if(!this.isForceStop)
-                {
-                    this.rollTime -= Time.deltaTime;
-                    this.dice.text = this.rand.Next(1, 7).ToString();
-                    if (this.rollTime < 0.0f)
-                    {
-                        this.dice.text = DiceManager.Instance().DiceValue.ToString();
-                        this.isRoll = false;
-                        AudioManager.Instance().PlaySE(SoundConst.GAME.DiceDecide);
-                        PlayerManager.Instance().StartMove();
-                    }
-                }
-                else
-                {
-                    // ロール中に強制停止
-                    PlayerManager.Instance().SetDirection(PlayerConst.Direction.None);
-                    this.isRoll = false;
-                    this.rollTime = this.diceRollTime;
-                }
             }
         }
 
@@ -85,7 +60,17 @@ namespace Akimichi.Game
         /// </summary>
         public void ForceStop()
         {
-            this.isForceStop = true;
+            PlayerManager.Instance().SetDirection(PlayerConst.Direction.None);
+            this.animeController.gameObject.SetActive(false);
+            this.animeController.DeleteAction();
+            this.animeController.SetBool("Result1", false);
+            this.animeController.SetBool("Result2", false);
+            this.animeController.SetBool("Result3", false);
+            this.animeController.SetBool("Result4", false);
+            this.animeController.SetBool("Result5", false);
+            this.animeController.SetBool("Result6", false);
+            this.animeController.ForcePlay("Idle");
+            this.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -95,6 +80,10 @@ namespace Akimichi.Game
         public void UpdateView(int value)
         {
             this.dice.text = value.ToString();
+        }
+
+        private void Update()
+        {
         }
     }
 }

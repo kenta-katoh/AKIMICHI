@@ -49,6 +49,33 @@ namespace Akimichi
             this.animator.SetBool(tag, flag);
         }
 
+        /// <summary>
+        /// int設定
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        public void SetValue(string tag, int value)
+        {
+            this.animator.SetInteger(tag, value);
+        }
+
+        /// <summary>
+        /// 強制再生
+        /// </summary>
+        /// <param name="name"></param>
+        public void ForcePlay(string name)
+        {
+            this.animator.Play(name, 0, 0);
+        }
+
+        /// <summary>
+        /// action削除
+        /// </summary>
+        public void DeleteAction()
+        {
+            this.onFinished = null;
+        }
+
         virtual protected void OnFinished() { }
     }
 }

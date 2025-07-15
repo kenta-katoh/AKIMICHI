@@ -57,7 +57,11 @@ namespace Akimichi.Game
             if(eventLogic != null)
             {
                 eventLogic.GetTransform().localPosition = space.GetTransform().localPosition;
-                eventLogic.AnimeController.PlayAnime("IsEvent", true, "EndEvent", action);
+                eventLogic.AnimeController.PlayAnime("IsEvent", true, "Practice", () =>
+                {
+                    eventLogic.AnimeController.SetBool("IsEvent", false);
+                    action?.Invoke();
+                });
             }
         }
 
