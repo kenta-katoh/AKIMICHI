@@ -60,7 +60,6 @@ namespace Akimichi.Game
         /// </summary>
         public void ForceStop()
         {
-            PlayerManager.Instance().SetDirection(PlayerConst.Direction.None);
             this.animeController.gameObject.SetActive(false);
             this.animeController.DeleteAction();
             this.animeController.SetBool("Result1", false);

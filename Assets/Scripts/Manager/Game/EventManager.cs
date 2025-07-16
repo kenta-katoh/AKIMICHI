@@ -66,6 +66,11 @@ namespace Akimichi.Game
                     action?.Invoke();
                 });
             }
+            else
+            {
+                // 進行不能になると困るので一応の回避仕込み
+                action?.Invoke();
+            }
         }
 
         /// <summary>
