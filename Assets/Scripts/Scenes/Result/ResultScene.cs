@@ -74,7 +74,7 @@ namespace Akimichi
                 index++;
 
                 PlayerData data = ResultDataManager.Instance().GetPlayerData(item.Key);
-                Sprite sprite = PlayerSpriteManager.Instance().GetSprite(item.Key, data.GetLevel());
+                Sprite sprite = PlayerSpriteManager.Instance().GetUISprite(item.Key, data.GetLevel());
                 if(sprite != null) image.sprite = sprite;
             }
             this.transition.SetActive(false);
