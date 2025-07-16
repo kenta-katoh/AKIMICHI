@@ -194,6 +194,30 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6a8c9ba348f60c04db7af0867001ec9d, type: 3}
   - {fileID: 21300000, guid: dddc7ea68d06c8a45b3bc4101f47ed80, type: 3}
   - {fileID: 21300000, guid: 86d218b6713e676408436640b4959abc, type: 3}
+  uiSprites1st:
+  - {fileID: 21300000, guid: e3c505828a86b414191015076e79e86e, type: 3}
+  - {fileID: 21300000, guid: fca979782a166e240a3b268e9550141f, type: 3}
+  - {fileID: 21300000, guid: 234f395d0e5d44d4e934a5a070442e82, type: 3}
+  - {fileID: 21300000, guid: a45d1826991c277408e8b5b7532e4852, type: 3}
+  - {fileID: 21300000, guid: ad4215e32c081884a88837f2e03c4d16, type: 3}
+  uiSprites2nd:
+  - {fileID: 21300000, guid: 5352c931f7ea3e44bba7d0402ef0f032, type: 3}
+  - {fileID: 21300000, guid: 074b96bc187c87148a8741f9af2c087e, type: 3}
+  - {fileID: 21300000, guid: a00a6505eaca6ff48aa08a3bfd398413, type: 3}
+  - {fileID: 21300000, guid: 2c85346eaa4595942a8ed30978af6564, type: 3}
+  - {fileID: 21300000, guid: d00791aeb9e5df54dabdd79f9bea6570, type: 3}
+  uiSprites3rd:
+  - {fileID: 21300000, guid: 856bf8b1da3b8a645bf6f43af230c578, type: 3}
+  - {fileID: 21300000, guid: 70e710190d4936943a7b1a8e6e78c405, type: 3}
+  - {fileID: 21300000, guid: c841842730ffb0c44ac407c627a377f2, type: 3}
+  - {fileID: 21300000, guid: b5b6aa8210e454840af56c43f76dbac0, type: 3}
+  - {fileID: 21300000, guid: 0f3c8f2a1a103bf469e8c928fe9b1c02, type: 3}
+  uiSprites4th:
+  - {fileID: 21300000, guid: 951a0e88662e54449b5b8d5a6322d3ee, type: 3}
+  - {fileID: 21300000, guid: 1ee5862d1b008f84da60d82582df8e47, type: 3}
+  - {fileID: 21300000, guid: 951214290f199244b9a7e6710f58d809, type: 3}
+  - {fileID: 21300000, guid: eb7f6f6baca95044aa31c5a593533c61, type: 3}
+  - {fileID: 21300000, guid: 6656993098e7dc1439e79de9429376fa, type: 3}
 --- !u!1001 &381698747
 PrefabInstance:
   m_ObjectHideFlags: 0

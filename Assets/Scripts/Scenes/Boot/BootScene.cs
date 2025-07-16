@@ -1,5 +1,3 @@
-using Akimichi;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +26,18 @@ namespace Akimichi
         [SerializeField]
         private List<Sprite> sprites4th = new List<Sprite>();
 
+        [SerializeField]
+        private List<Sprite> uiSprites1st = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> uiSprites2nd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> uiSprites3rd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> uiSprites4th = new List<Sprite>();
+
         private void Awake()
         {
 #if !UNITY_EDITOR
@@ -45,6 +55,11 @@ namespace Akimichi
             PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Second, this.sprites2nd);
             PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Third, this.sprites3rd);
             PlayerSpriteManager.Instance().SetSprite(Game.GameConst.PlayerIndex.Fourth, this.sprites4th);
+
+            PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.First, this.uiSprites1st);
+            PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Second, this.uiSprites2nd);
+            PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Third, this.uiSprites3rd);
+            PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Fourth, this.uiSprites4th);
         }
 
         private void Start()

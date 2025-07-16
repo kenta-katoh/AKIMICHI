@@ -11,9 +11,6 @@ namespace Akimichi.Game
     public class PlayerStatus : MonoBehaviour
     {
         [SerializeField]
-        private List<Sprite> iconImages = new List<Sprite>();
-
-        [SerializeField]
         private Image playerImage = null;
 
         [SerializeField]
@@ -49,6 +46,7 @@ namespace Akimichi.Game
             this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
+            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 0);
         }
 
         /// <summary>
@@ -92,6 +90,8 @@ namespace Akimichi.Game
             {
                 this.animeController.SetBool("Up", false);
             });
+
+            SetSprite();
         }
 
         /// <summary>
@@ -124,6 +124,17 @@ namespace Akimichi.Game
             {
                 this.animeController.SetBool("Down", false);
             });
+
+            SetSprite();
+        }
+
+        private void SetSprite()
+        {
+            Sprite sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
+            if (sprite != null)
+            {
+                this.playerImage.sprite = sprite;
+            }
         }
 
         /// <summary>
