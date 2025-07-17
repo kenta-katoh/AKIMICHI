@@ -441,5 +441,13 @@ namespace Akimichi.Game
         {
             this.playerStatusView.SendResultData();
         }
+
+        /// <summary>
+        /// ヒエラルキーを下位に移動
+        /// </summary>
+        public void SetAsLast()
+        {
+            this.playerLogic.SetAsLast();
+        }
     }
 }

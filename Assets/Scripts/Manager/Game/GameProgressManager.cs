@@ -56,12 +56,17 @@ namespace Akimichi.Game
         [SerializeField]
         private PlayerLoupeView loupe = null;
 
+        [SerializeField]
+        private GameObject errorBtn = null;
+
         private System.Random rand = new System.Random();
         List<GameConst.PlayerIndex> playerList = new List<GameConst.PlayerIndex>();
         private EventBrain eventBrain = null;
+        private bool isConnectError = false;
 
         private void Awake()
         {
+            ClearData();
             NetworkManager.Instance().SetServerTime();
             GameStateManagerData stateManagerData = new GameStateManagerData();
             stateManagerData.ProgressManager = this;
@@ -100,6 +105,10 @@ namespace Akimichi.Game
             this.canvasGroup.blocksRaycasts = true;
             this.finishAnime.gameObject.SetActive(false);
 
+            this.isConnectError = false;
+            this.errorBtn.SetActive(this.isConnectError);
+            NetworkManager.Instance().DeleteCallBack();
+            NetworkManager.Instance().SetCallbackOnPlayerLeftRoom(OnPlayerLeftRoom);
             AudioManager.Instance().PlayBGM(SoundConst.BGM.Game);
         }
 
@@ -373,6 +382,7 @@ namespace Akimichi.Game
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.CreatedPlayerObject);
                     break;
                 case GameConst.GameProgressState.StartPositionSetting:
+                    PlayerManager.Instance().SetAsLast();
                     // スタート位置のランダム生成
                     // ホストのみで行って配布
                     if(NetworkManager.Instance().IsMasterClient())
@@ -416,8 +426,11 @@ namespace Akimichi.Game
 
         private void Update()
         {
-            GameStateManager.Instance().ManagedUpdate();
-            PlayerManager.Instance().ManagedUpdate();
+            if (!this.isConnectError)
+            {
+                GameStateManager.Instance().ManagedUpdate();
+                PlayerManager.Instance().ManagedUpdate();
+            }
         }
 
         private void OnEnable()
@@ -552,6 +565,30 @@ namespace Akimichi.Game
         public void FinishGame()
         {
             this.canvasGroup.blocksRaycasts = false;
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            base.OnPlayerLeftRoom((Player)otherPlayer);
+            this.isConnectError = true;
+            this.errorBtn.SetActive(this.isConnectError);
+        }
+
+        public void LeftHome()
+        {
+            ClearData();
+            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
+            TransitionManager.Instance().Transition(SceneConst.Home);
+        }
+
+        private void ClearData()
+        {
+            DiceManager.Instance().Dispose();
+            EventManager.Instance().Dispose();
+            GameStateManager.Instance().Dispose();
+            MapManager.Instance().Dispose();
+            PlayerManager.Instance().Dispose();
+            ResultDataManager.Instance().Dispose();
         }
     }
 }

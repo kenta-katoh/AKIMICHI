@@ -1,6 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using static Cinemachine.DocumentationSortingAttribute;
 
 namespace Akimichi.Game
 {
@@ -72,6 +71,14 @@ namespace Akimichi.Game
         public void AddEffect()
         {
             this.playerView.AddEffect();
+        }
+
+        /// <summary>
+        /// ヒエラルキーを下位に移動
+        /// </summary>
+        public void SetAsLast()
+        {
+            this.playerView.transform.SetAsLastSibling();
         }
     }
 }

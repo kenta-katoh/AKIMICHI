@@ -30,7 +30,7 @@ namespace Akimichi
 
         public void SetData(GameConst.PlayerIndex index, PlayerData data)
         {
-            this.image.sprite = PlayerSpriteManager.Instance().GetSprite(index, data.GetLevel());
+            this.image.sprite = PlayerSpriteManager.Instance().GetUISprite(index, data.GetLevel());
             this.dice.text = data.DiceCount.ToString();
             this.plus.text = data.PlusCount.ToString();
             this.minus.text = data.MinusCount.ToString();

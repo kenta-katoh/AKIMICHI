@@ -11,9 +11,6 @@ namespace Akimichi.Game
     public class PlayerStatus : MonoBehaviour
     {
         [SerializeField]
-        private List<Sprite> iconImages = new List<Sprite>();
-
-        [SerializeField]
         private Image playerImage = null;
 
         [SerializeField]
@@ -49,6 +46,7 @@ namespace Akimichi.Game
             this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
+            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 0);
         }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace Akimichi.Game
         {
             this.playerIndex = index;
             this.playerData.Weight = value;
-            this.weight.text = this.playerData.Weight.ToString() + "kg";
+            this.weight.text = this.playerData.Weight.ToString();
         }
 
         /// <summary>
@@ -77,21 +75,25 @@ namespace Akimichi.Game
                 PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
             }
 
+            //this.weight.color = Color.blue;
             var seq = DOTween.Sequence();
             seq.Append(DOTween.To(() => this.currentWeight, (n) => this.currentWeight = n, this.playerData.Weight, 1)
-                .OnUpdate(() => this.weight.text = this.currentWeight.ToString() + "kg"));
+                .OnUpdate(() => this.weight.text = this.currentWeight.ToString()));
             seq.OnComplete(() =>
             {
                 seq.Kill();
                 seq = null;
                 this.currentWeight = this.playerData.Weight;
-                this.weight.text = this.currentWeight.ToString() + "kg";
+                //this.weight.color = Color.white;
+                this.weight.text = this.currentWeight.ToString();
             });
 
             this.animeController.PlayAnime("Up", true, "Up", () =>
             {
                 this.animeController.SetBool("Up", false);
             });
+
+            SetSprite();
         }
 
         /// <summary>
@@ -109,21 +111,34 @@ namespace Akimichi.Game
                 PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
             }
 
+            //this.weight.color = Color.red;
             var seq = DOTween.Sequence();
             seq.Append(DOTween.To(() => this.currentWeight, (n) => this.currentWeight = n, this.playerData.Weight, 1)
-                .OnUpdate(() => this.weight.text = this.currentWeight.ToString() + "kg"));
+                .OnUpdate(() => this.weight.text = this.currentWeight.ToString()));
             seq.OnComplete(() =>
             {
                 seq.Kill();
                 seq = null;
                 this.currentWeight = this.playerData.Weight;
-                this.weight.text = this.currentWeight.ToString() + "kg";
+                //this.weight.color = Color.white;
+                this.weight.text = this.currentWeight.ToString();
             });
 
             this.animeController.PlayAnime("Down", true, "Down", () =>
             {
                 this.animeController.SetBool("Down", false);
             });
+
+            SetSprite();
+        }
+
+        private void SetSprite()
+        {
+            Sprite sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
+            if (sprite != null)
+            {
+                this.playerImage.sprite = sprite;
+            }
         }
 
         /// <summary>
