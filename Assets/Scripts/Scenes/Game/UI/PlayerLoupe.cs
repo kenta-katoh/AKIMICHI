@@ -43,14 +43,14 @@ namespace Akimichi.Game
         public void UpdateLoupe(float length, float rot)
         {
             bool math = false;
-            math = 10.0f <= length && length <= 20.0f;
+            math = 10.0f <= length && length <= 17.0f;
             this.canvasGroup.alpha = Convert.ToInt32(math) * 0.75f;
             if (!math) return;
 
             float abs = Mathf.Abs(rot);
             float sign = Mathf.Sign(rot);
             var angleRAdian = rot / 180.0f * Mathf.PI;
-            this.loupeImage.localEulerAngles = new Vector3(0.0f, 0.0f, rot + 90.0f);
+            this.loupeImage.localEulerAngles = new Vector3(0.0f, 0.0f, rot);
             if (abs <= this.canvasRot)
             {
                 float y = (Mathf.Tan(angleRAdian) * this.canvasSize.x * this.canvasScale);
