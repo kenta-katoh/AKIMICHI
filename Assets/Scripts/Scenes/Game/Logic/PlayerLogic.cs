@@ -72,5 +72,13 @@ namespace Akimichi.Game
         {
             this.playerView.AddEffect();
         }
+
+        /// <summary>
+        /// ヒエラルキーを下位に移動
+        /// </summary>
+        public void SetAsLast()
+        {
+            this.playerView.transform.SetAsLastSibling();
+        }
     }
 }

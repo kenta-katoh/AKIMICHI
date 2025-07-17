@@ -21,12 +21,12 @@ namespace Akimichi.Game
 
         public void MoveLeft()
         {
-            DiceRoll(PlayerConst.Direction.ClockWise);
+            DiceRoll(PlayerConst.Direction.CounterClockWise);
         }
 
         public void MoveRight()
         {
-            DiceRoll(PlayerConst.Direction.CounterClockWise);
+            DiceRoll(PlayerConst.Direction.ClockWise);
         }
 
         private void DiceRoll(PlayerConst.Direction dir)

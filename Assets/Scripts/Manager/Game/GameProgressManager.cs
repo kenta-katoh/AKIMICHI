@@ -382,6 +382,7 @@ namespace Akimichi.Game
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.CreatedPlayerObject);
                     break;
                 case GameConst.GameProgressState.StartPositionSetting:
+                    PlayerManager.Instance().SetAsLast();
                     // スタート位置のランダム生成
                     // ホストのみで行って配布
                     if(NetworkManager.Instance().IsMasterClient())
