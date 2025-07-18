@@ -178,10 +178,10 @@ namespace Akimichi.Game
         /// <param name="flag"></param>
         public void VisibleWeight(bool flag)
         {
-            this.player1st.VisibleWeight(flag);
-            this.player2nd.VisibleWeight(flag);
-            this.player3rd.VisibleWeight(flag);
-            this.player4th.VisibleWeight(flag);
+            if (PlayerManager.Instance().PlayerIndex != GameConst.PlayerIndex.First) this.player1st.VisibleWeight(flag);
+            if (PlayerManager.Instance().PlayerIndex != GameConst.PlayerIndex.Second) this.player2nd.VisibleWeight(flag);
+            if (PlayerManager.Instance().PlayerIndex != GameConst.PlayerIndex.Third) this.player3rd.VisibleWeight(flag);
+            if (PlayerManager.Instance().PlayerIndex != GameConst.PlayerIndex.Fourth) this.player4th.VisibleWeight(flag);
         }
 
         /// <summary>
