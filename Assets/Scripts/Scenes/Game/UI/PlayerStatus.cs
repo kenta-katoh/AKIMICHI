@@ -28,6 +28,18 @@ namespace Akimichi.Game
         [SerializeField]
         private GameObject hideWeight = null;
 
+        [SerializeField]
+        private TextMeshProUGUI addTextBack = null;
+
+        [SerializeField]
+        private TextMeshProUGUI addTextFront = null;
+
+        [SerializeField]
+        private TextMeshProUGUI subtractTextBack = null;
+
+        [SerializeField]
+        private TextMeshProUGUI subtractTextFront = null;
+
         private GameConst.PlayerIndex playerIndex;
         private PlayerData playerData = new PlayerData();
         private int currentWeight = 0;
@@ -74,6 +86,8 @@ namespace Akimichi.Game
                 if(this.playerIndex == PlayerManager.Instance().PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.Change);
                 PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
             }
+            this.addTextBack.text = "+" + value;
+            this.addTextFront.text = "+" + value;
 
             //this.weight.color = Color.blue;
             var seq = DOTween.Sequence();
@@ -110,6 +124,8 @@ namespace Akimichi.Game
             {
                 PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
             }
+            this.subtractTextBack.text = "-" + value;
+            this.subtractTextFront.text = "-" + value;
 
             //this.weight.color = Color.red;
             var seq = DOTween.Sequence();
