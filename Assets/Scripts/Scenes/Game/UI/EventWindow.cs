@@ -24,6 +24,12 @@ namespace Akimichi.Game
         [SerializeField]
         private GameObject inputArrow = null;
 
+        [SerializeField]
+        private List<Sprite> eventImages = new List<Sprite>();
+
+        [SerializeField]
+        private Image eventImage = null;
+
         private EventDataBase eventData = null;
         private List<string> fonts = new List<string>();
         private bool isFontLoad = false;
@@ -35,8 +41,10 @@ namespace Akimichi.Game
         /// イベント開始
         /// </summary>
         /// <param name="eventData"></param>
-        public void StartEvent(EventDataBase data)
+        public void StartEvent(EventDataBase data, int index)
         {
+            if(index < this.eventImages.Count) this.eventImage.sprite = this.eventImages[index];
+
             this.isInputWait = false;
             this.inputArrow.SetActive(false);
             this.input.SetActive(false);

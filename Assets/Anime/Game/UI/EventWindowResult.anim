@@ -65,7 +65,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Contents/Image
+    path: Contents/Window
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -90,7 +90,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Contents/Window
+    path: Contents/ImageBase
   m_FloatCurves:
   - serializedVersion: 2
     curve:
@@ -149,7 +149,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 682201498
+      path: 1611094903
       attribute: 3
       script: {fileID: 0}
       typeID: 4
@@ -158,7 +158,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 1611094903
+      path: 81407234
       attribute: 3
       script: {fileID: 0}
       typeID: 4
@@ -334,7 +334,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Contents/Image
+    path: Contents/Window
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -364,7 +364,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Contents/Image
+    path: Contents/Window
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -394,7 +394,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Contents/Image
+    path: Contents/Window
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -424,7 +424,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Contents/Window
+    path: Contents/ImageBase
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -454,7 +454,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Contents/Window
+    path: Contents/ImageBase
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -484,7 +484,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Contents/Window
+    path: Contents/ImageBase
     classID: 224
     script: {fileID: 0}
     flags: 0
