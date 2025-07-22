@@ -25,12 +25,18 @@ namespace Akimichi
             foreach(var item in this.contents)
             {
                 item.SetButtonAction(OnClick);
+                item.VisibleSelect(false);
             }
             AudioManager.Instance().PlayBGM(SoundConst.BGM.Main);
         }
 
         private void Start()
         {
+            int index = 0;
+            this.image.sprite = this.imageList[index];
+            this.title.text = "遊び方" + (index + 1);
+            this.contents[index].VisibleSelect(true);
+
             TransitionManager.Instance().Open();
         }
 
@@ -39,6 +45,13 @@ namespace Akimichi
             AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.image.sprite = this.imageList[index];
             this.title.text = "遊び方" + (index + 1);
+
+            int value = 0;
+            foreach(var item in this.contents)
+            {
+                if(value != index) item.VisibleSelect(false);
+                value++;
+            }
         }
 
         public void OnBack()
