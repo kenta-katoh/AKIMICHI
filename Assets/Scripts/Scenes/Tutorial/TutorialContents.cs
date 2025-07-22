@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Akimichi
 {
@@ -13,6 +14,12 @@ namespace Akimichi
 
         [SerializeField]
         private TextMeshProUGUI text = null;
+
+        [SerializeField]
+        private Image imageBase = null;
+
+        [SerializeField]
+        private GameObject image = null;
 
         private Action<int> action = null;
 
@@ -33,6 +40,17 @@ namespace Akimichi
         public void OnClick()
         {
             this.action?.Invoke(this.Index);
+            VisibleSelect(true);
+        }
+
+        /// <summary>
+        /// 選択切り替え
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleSelect(bool flag)
+        {
+            this.imageBase.enabled = flag;
+            this.image.SetActive(flag);
         }
     }
 }

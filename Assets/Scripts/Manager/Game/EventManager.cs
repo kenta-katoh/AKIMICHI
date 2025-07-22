@@ -205,7 +205,7 @@ namespace Akimichi.Game
                     eventData = new EventData07();
                     break;
             }
-            this.eventWindow.StartEvent(eventData);
+            this.eventWindow.StartEvent(eventData, seed);
         }
     }
 }

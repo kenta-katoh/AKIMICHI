@@ -1,3 +1,4 @@
+using Akimichi;
 using Akimichi.Game;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -7,19 +8,10 @@ using UnityEngine.UI;
 public class MatchingPlayerContents : MonoBehaviour
 {
     [SerializeField]
-    private GameObject onPlayer = null;
-
-    [SerializeField]
-    private GameObject offPlayer = null;
+    private Image player = null;
 
     [SerializeField]
     private GameObject mySelf = null;
-
-    [SerializeField]
-    private Image backImage = null;
-
-    [SerializeField]
-    private List<Sprite> sprites = new List<Sprite>();
 
     [SerializeField]
     private GameObject readyIcon = null;
@@ -34,33 +26,13 @@ public class MatchingPlayerContents : MonoBehaviour
         this.playerIndex = index;
         this.IsNull = false;
         this.readyIcon.SetActive(false);
-
-        switch (this.playerIndex)
-        {
-            case GameConst.PlayerIndex.First:
-                this.backImage.sprite = this.sprites[0];
-                this.backImage.color = Color.red;
-                break;
-            case GameConst.PlayerIndex.Second:
-                this.backImage.sprite = this.sprites[1];
-                this.backImage.color = Color.blue;
-                break;
-            case GameConst.PlayerIndex.Third:
-                this.backImage.sprite = this.sprites[2];
-                this.backImage.color = Color.green;
-                break;
-            case GameConst.PlayerIndex.Fourth:
-                this.backImage.sprite = this.sprites[3];
-                this.backImage.color = Color.yellow;
-                break;
-        }
+        this.player.sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, 0);
     }
 
     public void ClearData()
     {
         ContentVisible(false);
         this.mySelf.SetActive(false);
-        this.backImage.color = Color.white;
         this.playerIndex = GameConst.PlayerIndex.First;
         this.IsNull = true;
         this.readyIcon.SetActive(false);
@@ -68,8 +40,8 @@ public class MatchingPlayerContents : MonoBehaviour
 
     private void ContentVisible(bool visible)
     {
-        this.onPlayer.SetActive(visible);
-        this.offPlayer.SetActive(!visible);
+        //this.onPlayer.SetActive(visible);
+        this.player.gameObject.SetActive(visible);
     }
 
     /// <summary>
