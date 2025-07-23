@@ -43,10 +43,17 @@ namespace Akimichi
         [SerializeField]
         private TMP_InputField diceValue = null;
 
+        [SerializeField]
+        private Toggle viewMode = null;
+
+        [SerializeField]
+        private CanvasGroup canvasGroup = null;
+
         private void Awake()
         {
             this.debugBtn.SetActive(false);
             this.debugWindow.SetActive(false);
+            this.canvasGroup.alpha = Convert.ToInt32(!this.viewMode.isOn);
         }
 
         /// <summary>
@@ -139,6 +146,11 @@ namespace Akimichi
                 }
             }
             return result;
+        }
+
+        public void ViewMode()
+        {
+            this.canvasGroup.alpha = Convert.ToInt32(!this.viewMode.isOn);
         }
 
         private void Update()
