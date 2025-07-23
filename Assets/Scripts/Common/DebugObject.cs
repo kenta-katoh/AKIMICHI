@@ -37,6 +37,12 @@ namespace Akimichi
         [SerializeField]
         private TMP_InputField eventValue = null;
 
+        [SerializeField]
+        private Toggle isDice = null;
+
+        [SerializeField]
+        private TMP_InputField diceValue = null;
+
         private void Awake()
         {
             this.debugBtn.SetActive(false);
@@ -114,6 +120,20 @@ namespace Akimichi
             {
                 int value = Convert.ToInt32(this.eventValue.text);
                 if(0 < value && value < 8)
+                {
+                    result = value;
+                }
+            }
+            return result;
+        }
+
+        public int OverwriteDice()
+        {
+            int result = -1;
+            if (this.isDice.isOn)
+            {
+                int value = Convert.ToInt32(this.diceValue.text);
+                if (0 < value && value < 7)
                 {
                     result = value;
                 }

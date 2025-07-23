@@ -133,5 +133,15 @@ namespace Akimichi
             }
             return result;
         }
+
+        public int OverwriteDice()
+        {
+            int result = -1;
+            if (this.debugObject != null && this.IsDebug)
+            {
+                result = this.debugObject.OverwriteDice();
+            }
+            return result;
+        }
     }
 }
