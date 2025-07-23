@@ -299,12 +299,12 @@ PrefabInstance:
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
@@ -678,12 +678,12 @@ PrefabInstance:
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
@@ -1635,7 +1635,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -250, y: 0}
   m_SizeDelta: {x: 1500, y: 200}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1544642558
@@ -2037,12 +2037,12 @@ PrefabInstance:
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
@@ -2355,12 +2355,12 @@ PrefabInstance:
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3141105145821984292, guid: 175e71f5e287d5743addb26547de8d77,
         type: 3}
