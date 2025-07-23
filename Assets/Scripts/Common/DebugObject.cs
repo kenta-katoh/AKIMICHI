@@ -10,6 +10,9 @@ namespace Akimichi
 {
     public class DebugObject : MonoBehaviour
     {
+        private bool isInput = true;
+        private float frame = 0.0f; 
+
         [SerializeField]
         private GameObject debugBtn = null;
 
@@ -20,7 +23,19 @@ namespace Akimichi
         private Toggle startPlayer = null;
 
         [SerializeField]
-        private TMP_InputField inputField = null;
+        private TMP_InputField gameTime = null;
+
+        [SerializeField]
+        private TMP_InputField addWeight = null;
+
+        [SerializeField]
+        private TMP_InputField subtractWeight = null;
+
+        [SerializeField]
+        private Toggle isEvent = null;
+
+        [SerializeField]
+        private TMP_InputField eventValue = null;
 
         private void Awake()
         {
@@ -61,9 +76,62 @@ namespace Akimichi
         /// <returns></returns>
         public int GameTime()
         {
-            int result = Convert.ToInt32(this.inputField.text);
+            int result = Convert.ToInt32(this.gameTime.text);
             if(result > GameConst.GameTime || result < 10) result = GameConst.GameTime;
             return result;
+        }
+
+        public void AddWeight()
+        {
+            int value = Convert.ToInt32(this.addWeight.text);
+            if (0 < value && value < 501 && this.isInput)
+            {
+                if(DebugManager.Instance().AddWeight(value))
+                {
+                    this.isInput = false;
+                    this.frame = 3.0f;
+                }
+            }
+        }
+
+        public void SubtractWeight()
+        {
+            int value = Convert.ToInt32(this.subtractWeight.text);
+            if (0 < value && value < 501 && this.isInput)
+            {
+                if (DebugManager.Instance().SubtractWeight(value))
+                {
+                    this.isInput = false;
+                    this.frame = 3.0f;
+                }
+            }
+        }
+
+        public int OverwriteEvent()
+        {
+            int result = -1;
+            if(this.isEvent.isOn)
+            {
+                int value = Convert.ToInt32(this.eventValue.text);
+                if(0 < value && value < 8)
+                {
+                    result = value;
+                }
+            }
+            return result;
+        }
+
+        private void Update()
+        {
+            if(!this.isInput)
+            {
+                this.frame -= Time.deltaTime;
+                if (this.frame < 0.0f)
+                {
+                    this.isInput = true;
+                    this.frame = 0.0f;
+                }
+            }
         }
     }
 }
