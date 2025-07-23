@@ -41,7 +41,18 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         this.inputIcon.SetActive(true);
         this.inputField.text = "どすこい";
         this.roomName.text = PhotonNetwork.CurrentRoom.Name;
-        NetworkManager.Instance().SetName(inputField.text);
+        NetworkManager.Instance().SetName(this.inputField.text);
+
+        // 作成ホストのみデバッグルーム設定ができる
+        if(NetworkManager.Instance().IsMasterClient())
+        {
+            NetworkManager.Instance().SetDebugRoom(DebugManager.Instance().IsDebug);
+            if(DebugManager.Instance().IsDebug)
+            {
+                NetworkManager.Instance().SetDebugRoomSetting(DebugManager.Instance().IsStartPlayer(),
+                                                              DebugManager.Instance().GameTime());
+            }
+        }
 
         AudioManager.Instance().PlayBGM(SoundConst.BGM.Matching);
     }
@@ -143,7 +154,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
 
                 if (!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
-                if (this.readyPlayer.Count == GameConst.MaximumPlayers(true))
+                if (this.readyPlayer.Count == GameConst.MaximumPlayers())
                 {
                     AudioManager.Instance().PlaySE(SoundConst.MATCHING.TransGame);
                     if (NetworkManager.Instance().IsMasterClient())

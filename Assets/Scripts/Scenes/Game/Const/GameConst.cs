@@ -4,10 +4,10 @@ namespace Akimichi.Game
 {
     public static class GameConst
     {
-        public static int MaximumPlayers(bool isUseDabug = false)
+        public static int MaximumPlayers()
         {
             int result = Enum.GetNames(typeof(PlayerIndex)).Length;
-            if (isUseDabug)
+            if (NetworkManager.Instance().GetStartPlayer())
             {
                 if (NetworkManager.Instance().GetRoomPlayerValue() < Enum.GetNames(typeof(PlayerIndex)).Length)
                 {
