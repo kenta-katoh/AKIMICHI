@@ -16,6 +16,7 @@ namespace Akimichi.Game
         private bool isLast = false;
         private bool isFinish = false;
         private string currentTime = "";
+        private int gameTime = GameConst.GameTime;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -49,7 +50,8 @@ namespace Akimichi.Game
                 this.stateDic.Add((GameConst.GameProgressState)state, list);
             }
 
-            var t = TimeSpan.FromSeconds(GameConst.GameTime);
+            this.gameTime = NetworkManager.Instance().GetGamTime();
+            var t = TimeSpan.FromSeconds(this.gameTime);
             this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
         }
 
@@ -101,7 +103,7 @@ namespace Akimichi.Game
             bool result = false;
             if(this.stateDic.ContainsKey(state))
             {
-                if(this.stateDic[state].Count == GameConst.MaximumPlayers(true))
+                if(this.stateDic[state].Count == GameConst.MaximumPlayers())
                 {
                     result = true;
                 }
@@ -150,7 +152,7 @@ namespace Akimichi.Game
             if(this.currentState == GameConst.GameProgressState.InGame)
             {
                 if (this.isFinish) return;
-                this.leftTime = GameConst.GameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
+                this.leftTime = this.gameTime - (int)(NetworkManager.Instance().GetPhotonTime() - this.delayTime - this.serverTime);
                 var t = TimeSpan.FromSeconds(this.leftTime);
                 this.timer.text = (int)t.TotalMinutes + ":" + t.Seconds.ToString("00");
 

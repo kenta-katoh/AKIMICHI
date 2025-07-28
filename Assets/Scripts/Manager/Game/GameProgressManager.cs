@@ -411,6 +411,7 @@ namespace Akimichi.Game
                 case GameConst.GameProgressState.InGame:
                     PlayerManager.Instance().EnterGame();
                     GameStateManager.Instance().SetServerTime();
+                    DebugManager.Instance().InGame(true);
                     break;
                 case GameConst.GameProgressState.FinishGame:
                     this.finishAnime.gameObject.SetActive(true);
@@ -420,6 +421,7 @@ namespace Akimichi.Game
                         PlayerManager.Instance().SendResultData();
                         TransitionManager.Instance().Transition(SceneConst.Result);
                     });
+                    DebugManager.Instance().InGame(false);
                     break;
             }
         }

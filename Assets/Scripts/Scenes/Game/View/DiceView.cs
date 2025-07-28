@@ -1,12 +1,17 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Akimichi.Game
 {
     public class DiceView : ViewBase
     {
         [SerializeField]
-        private TextMeshProUGUI dice = null;
+        private List<Sprite> sprites = new List<Sprite>();
+
+        [SerializeField]
+        private Image diceImage = null;
 
         [SerializeField]
         private AnimeController animeController = null;
@@ -15,7 +20,7 @@ namespace Akimichi.Game
         protected override void OnAwake()
         {
             base.OnAwake();
-            this.dice.text = "0";
+            this.diceImage.sprite = this.sprites[0];
             this.gameObject.SetActive(false);
         }
 
@@ -46,7 +51,7 @@ namespace Akimichi.Game
                 {
                     this.gameObject.SetActive(true);
                     this.animeController.SetBool(this.key, false);
-                    this.dice.text = DiceManager.Instance().DiceValue.ToString();
+                    this.diceImage.sprite = this.sprites[DiceManager.Instance().DiceValue - 1];
                     AudioManager.Instance().PlaySE(SoundConst.GAME.DiceDecide);
                     PlayerManager.Instance().StartMove();
                 });
@@ -78,7 +83,7 @@ namespace Akimichi.Game
         /// <param name="value"></param>
         public void UpdateView(int value)
         {
-            this.dice.text = value.ToString();
+            this.diceImage.sprite = this.sprites[value - 1];
         }
 
         private void Update()

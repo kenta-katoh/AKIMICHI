@@ -6,6 +6,7 @@ using UnityEngine;
 using Akimichi.Game;
 using ExitGames.Client.Photon;
 using Akimichi;
+using static Akimichi.Game.GameConst;
 
 public class NetworkManager : ManagerBase<NetworkManager>
 {
@@ -113,7 +114,7 @@ public class NetworkManager : ManagerBase<NetworkManager>
     public void CreateRoom(string name)
     {
         RoomOptions option = new RoomOptions();
-        option.MaxPlayers = GameConst.MaximumPlayers();
+        option.MaxPlayers = Enum.GetNames(typeof(PlayerIndex)).Length;
         option.IsVisible = true;
         option.IsOpen = true;
         option.PlayerTtl = 0;
@@ -300,6 +301,68 @@ public class NetworkManager : ManagerBase<NetworkManager>
     public double GetPhotonTime()
     {
         return PhotonNetwork.Time;
+    }
+
+    /// <summary>
+    /// デバッグ設定
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetDebugRoom(bool flag)
+    {
+        if (IsMasterClient())
+        {
+            var properties = new Hashtable();
+            properties.Add("DebugRoom", (double)Convert.ToInt32(flag));
+            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+        }
+    }
+
+    private bool IsDebugRoom()
+    {
+        return Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["DebugRoom"]);
+    }
+
+    /// <summary>
+    /// 少人数スタート設定
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetDebugRoomSetting(bool flag, int time)
+    {
+        if (IsMasterClient())
+        {
+            var properties = new Hashtable();
+            properties.Add("StartPlayer", (double)Convert.ToInt32(flag));
+            properties.Add("GameTime", (double)time);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+        }
+    }
+
+    /// <summary>
+    /// 少人数スタート取得
+    /// </summary>
+    /// <returns></returns>
+    public bool GetStartPlayer()
+    {
+        bool result = false;
+        if(IsDebugRoom())
+        {
+            result = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["StartPlayer"]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 制限時間取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetGamTime()
+    {
+        int result = GameConst.GameTime;
+        if (IsDebugRoom())
+        {
+            result = Convert.ToInt32(PhotonNetwork.CurrentRoom.CustomProperties["GameTime"]);
+        }
+        return result;
     }
 
     ///////////////////////////////////////////////////////////

@@ -31,6 +31,14 @@ namespace Akimichi.Game
                 PlayerManager.Instance().PracticeState == EventConst.Practice.None)
             {
                 this.DiceValue = this.rand.Next(1, 7);
+                if(DebugManager.Instance().IsDebug)
+                {
+                    int value = DebugManager.Instance().OverwriteDice();
+                    if(0 < value && value < 7)
+                    {
+                        this.DiceValue = value;
+                    }
+                }
 
                 var send = DataObjectManager.Instance().Get();
                 send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;

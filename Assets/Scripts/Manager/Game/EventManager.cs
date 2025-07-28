@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Akimichi.Game
@@ -181,6 +182,14 @@ namespace Akimichi.Game
         {
             EventDataBase eventData = null;
             int seed = this.eventSeed.Next(0, 7);
+            if(DebugManager.Instance().IsDebug)
+            {
+                int value = DebugManager.Instance().OverwriteEvent();
+                if(0 < value &&  value < 8)
+                {
+                    seed = value - 1;
+                }
+            }
             switch(seed)
             {
                 case 0:

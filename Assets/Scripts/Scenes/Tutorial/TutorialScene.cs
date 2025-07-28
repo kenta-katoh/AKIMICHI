@@ -45,6 +45,7 @@ namespace Akimichi
             AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.image.sprite = this.imageList[index];
             this.title.text = "遊び方" + (index + 1);
+            DebugManager.Instance().ResistDebugCode(index + 1);
 
             int value = 0;
             foreach(var item in this.contents)
