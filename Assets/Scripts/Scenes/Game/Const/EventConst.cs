@@ -22,6 +22,8 @@ namespace Akimichi.Game
             HoldFatigue,            // 疲労開始
             ReleaseFatigue,            // 疲労終了
 
+            StartMove,              // 移動開始
+            EndMove,                // 移動開始
             SetName,                // 名前設定
             AddWeight,              // 体重増加
             SubtractWeight,         // 体重減少

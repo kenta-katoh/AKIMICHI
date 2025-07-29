@@ -452,5 +452,29 @@ namespace Akimichi.Game
         {
             this.playerLogic.SetAsLast();
         }
+
+        /// <summary>
+        /// 他プレイヤー移動開始
+        /// </summary>
+        /// <param name="index"></param>
+        public void StartMoveAnime(GameConst.PlayerIndex index)
+        {
+            if(this.otherPlayerDic.ContainsKey(index))
+            {
+                this.otherPlayerDic[index].StartMove();
+            }
+        }
+
+        /// <summary>
+        /// 他プレイヤー移動終了
+        /// </summary>
+        /// <param name="index"></param>
+        public void StopMoveAnime(GameConst.PlayerIndex index)
+        {
+            if (this.otherPlayerDic.ContainsKey(index))
+            {
+                this.otherPlayerDic[index].StopMove();
+            }
+        }
     }
 }

@@ -207,6 +207,18 @@ namespace Akimichi.Game
                         }
                     }
                     break;
+                case EventConst.Event.StartMove:
+                    if(PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)data[0])
+                    {
+                        PlayerManager.Instance().StartMoveAnime((GameConst.PlayerIndex)data[0]);
+                    }
+                    break;
+                case EventConst.Event.EndMove:
+                    if (PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)data[0])
+                    {
+                        PlayerManager.Instance().StopMoveAnime((GameConst.PlayerIndex)data[0]);
+                    }
+                    break;
                 
                 /////////////////////////////
                 // マップイベント関連
@@ -381,7 +393,6 @@ namespace Akimichi.Game
                     GameStateManager.Instance().SendState(GameConst.GameProgressState.CreatedPlayerObject);
                     break;
                 case GameConst.GameProgressState.StartPositionSetting:
-                    PlayerManager.Instance().SetAsLast();
                     // スタート位置のランダム生成
                     // ホストのみで行って配布
                     if(NetworkManager.Instance().IsMasterClient())
@@ -396,6 +407,7 @@ namespace Akimichi.Game
                     }
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
+                    PlayerManager.Instance().SetAsLast();
                     TransitionManager.Instance().Open();
                     // カメラ起動
                     this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
