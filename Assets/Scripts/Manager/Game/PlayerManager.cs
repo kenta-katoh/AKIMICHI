@@ -310,18 +310,21 @@ namespace Akimichi.Game
         {
             int weight = this.playerStatusView.GetWeight(this.PlayerIndex);
             int result = 0;
-            if(!this.isfatigue)
+            EventConst.Event sendEevent = EventConst.Event.None;
+            if (!this.isfatigue)
             {
                 result = (int)(weight * 0.1f);
+                sendEevent = EventConst.Event.AddWeight;
             }
             else
             {
                 result = (int)(weight * 0.15f);
+                sendEevent = EventConst.Event.SubtractWeight;
             }
             var send = DataObjectManager.Instance().Get();
             send.Datas[0] = (int)this.PlayerIndex;
             send.Datas[1] = result;
-            NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send);
+            NetworkManager.Instance().SendEvent(sendEevent, send);
         }
 
         /// <summary>
