@@ -126,7 +126,6 @@ namespace Akimichi.Game
             data.Datas[1] = PlayerManager.Instance().GetName();
             NetworkManager.Instance().SendEvent(EventConst.Event.SetName, data);
 
-            TransitionManager.Instance().Open();
             GameStateManager.Instance().SendState(GameConst.GameProgressState.Initialize);
         }
 
@@ -397,6 +396,7 @@ namespace Akimichi.Game
                     }
                     break;
                 case GameConst.GameProgressState.InitializedFinish:
+                    TransitionManager.Instance().Open();
                     // カメラ起動
                     this.virtualCamera.Follow = PlayerManager.Instance().GetPlayerTransform();
                     this.bootCameraAnime.PlayAnime("BootCamera", true, "BootCamera", () => {
