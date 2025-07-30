@@ -28,7 +28,7 @@ namespace Akimichi.Game
             this.playerView.StartMove();
 
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.StartMove, send);
         }
 
@@ -51,7 +51,7 @@ namespace Akimichi.Game
             this.playerView.StopMove();
 
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.EndMove, send);
         }
 

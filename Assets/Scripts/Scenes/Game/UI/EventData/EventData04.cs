@@ -32,7 +32,7 @@ namespace Akimichi.Game
             base.OnFinished();
             if (this.resultType != EventConst.EventMessageType.Yes) return;
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
             send.Datas[1] = this.value;
             if (this.result)
             {

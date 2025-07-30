@@ -97,7 +97,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         if(this.isReady)
         {
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (int)this.playerIndex;
+            send.Datas[0] = (byte)this.playerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.ReadyMatch, send);
         }
     }

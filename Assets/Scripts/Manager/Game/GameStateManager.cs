@@ -62,8 +62,8 @@ namespace Akimichi.Game
         public void SendState(GameConst.GameProgressState state)
         {
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (int)state;
-            send.Datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[0] = (byte)state;
+            send.Datas[1] = (byte)PlayerManager.Instance().PlayerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.FinishState, send);
         }
 

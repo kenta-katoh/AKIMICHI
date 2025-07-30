@@ -98,7 +98,7 @@ namespace Akimichi
             if (this.isInGame)
             {
                 var send = DataObjectManager.Instance().Get();
-                send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+                send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
                 send.Datas[1] = weight;
                 NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
                 return true;
@@ -116,7 +116,7 @@ namespace Akimichi
             if (this.isInGame)
             {
                 var send = DataObjectManager.Instance().Get();
-                send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
+                send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
                 send.Datas[1] = weight;
                 NetworkManager.Instance().SendEvent(EventConst.Event.SubtractWeight, send);
                 return true;

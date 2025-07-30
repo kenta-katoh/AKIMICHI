@@ -41,14 +41,14 @@ namespace Akimichi.Game
                 }
 
                 var send = DataObjectManager.Instance().Get();
-                send.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-                send.Datas[1] = (int)EventConst.ResultData.DiceCount;
+                send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+                send.Datas[1] = (byte)EventConst.ResultData.DiceCount;
                 NetworkManager.Instance().SendEvent(EventConst.Event.ResultData, send);
 
                 var send1 = DataObjectManager.Instance().Get();
-                send1.Datas[0] = (int)PlayerManager.Instance().PlayerIndex;
-                send1.Datas[1] = (int)EventConst.ResultData.MoveValue;
-                send1.Datas[2] = this.DiceValue;
+                send1.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+                send1.Datas[1] = (byte)EventConst.ResultData.MoveValue;
+                send1.Datas[2] = (byte)this.DiceValue;
                 NetworkManager.Instance().SendEvent(EventConst.Event.ResultData, send1);
                 return true;
             }
