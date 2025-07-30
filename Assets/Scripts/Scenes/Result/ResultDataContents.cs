@@ -11,6 +11,9 @@ namespace Akimichi
         private Image image = null;
 
         [SerializeField]
+        private TextMeshProUGUI weight = null;
+
+        [SerializeField]
         private TextMeshProUGUI dice = null;
 
         [SerializeField]
@@ -31,6 +34,7 @@ namespace Akimichi
         public void SetData(GameConst.PlayerIndex index, PlayerData data)
         {
             this.image.sprite = PlayerSpriteManager.Instance().GetUISprite(index, data.GetLevel());
+            this.weight.text = data.Weight.ToString();
             this.dice.text = data.DiceCount.ToString();
             this.plus.text = data.PlusCount.ToString();
             this.minus.text = data.MinusCount.ToString();
