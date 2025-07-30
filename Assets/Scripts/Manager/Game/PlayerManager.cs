@@ -18,6 +18,8 @@ namespace Akimichi.Game
         private bool isfatigue = false;
         private Dictionary<GameConst.PlayerIndex, PlayerLogic> otherPlayerDic = new Dictionary<GameConst.PlayerIndex, PlayerLogic>();
         private PlayerLoupeView playerLoupeView = null;
+        private bool isEndMonitoring = false;
+        private float endMonitoringFrame = 0.0f;
 
         public override void DataTransfer(ManagerData data)
         {
@@ -41,6 +43,8 @@ namespace Akimichi.Game
             this.isfatigue = false;
             this.otherPlayerDic.Clear();
             this.playerLoupeView = null;
+            this.isEndMonitoring = false;
+            this.endMonitoringFrame = 0.0f;
         }
 
         public override void Initialize()
@@ -58,6 +62,19 @@ namespace Akimichi.Game
                 float dir = Mathf.Sqrt((vec.x * vec.x) + (vec.y * vec.y));
                 float radian = Mathf.Atan2(vec.y, vec.x) * Mathf.Rad2Deg;
                 this.playerLoupeView.UpdateLoupe(item.Key, dir, radian);
+            }
+
+            // 稽古解放の通信が落ちた場合に時間で自立して復帰できるように
+            if(this.isEndMonitoring)
+            {
+                this.endMonitoringFrame -= Time.deltaTime;
+                Debug.LogError((int)this.endMonitoringFrame);
+                if(this.endMonitoringFrame < 0.0f)
+                {
+                    this.isEndMonitoring = false;
+                    this.endMonitoringFrame = 0.0f;
+                    ReleasePractice();
+                }
             }
         }
 
@@ -300,6 +317,10 @@ namespace Akimichi.Game
                 send.Datas[0] = (byte)this.PlayerIndex;
                 send.Datas[1] = (byte)EventConst.ResultData.PracticeCount;
                 NetworkManager.Instance().SendEvent(EventConst.Event.ResultData, send);
+
+                // 終了監視を開始
+                this.isEndMonitoring = true;
+                this.endMonitoringFrame = 30.0f;
             }
         }
 
@@ -344,6 +365,7 @@ namespace Akimichi.Game
                         SetPlayerState(PlayerConst.State.WaitingInput);
                         break;
                     case PlayerConst.State.MoveBehavior:
+                    case PlayerConst.State.Event:
                         MoveBehavior();
                         break;
                 }
@@ -354,6 +376,8 @@ namespace Akimichi.Game
                 send.Datas[0] = (byte)this.PlayerIndex;
                 NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, send);
 
+                this.isEndMonitoring = false;
+                this.endMonitoringFrame = 0.0f;
                 DiceManager.Instance().Visible(true);
             }
         }
