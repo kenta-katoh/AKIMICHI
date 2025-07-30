@@ -147,7 +147,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             case EventConst.Event.ReadyMatch:
                 AudioManager.Instance().PlaySE(SoundConst.MATCHING.Ready);
-                GameConst.PlayerIndex index = (GameConst.PlayerIndex)data[0];
+                GameConst.PlayerIndex index = (GameConst.PlayerIndex)((byte)data[0]);
                 foreach (var item in this.playerList)
                 {
                     item.Ready(index);

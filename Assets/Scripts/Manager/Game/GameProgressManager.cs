@@ -138,23 +138,23 @@ namespace Akimichi.Game
             switch (_event)
             {
                 case EventConst.Event.FinishState:
-                    GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)data[0], 
-                                                                (GameConst.PlayerIndex)data[1]);
+                    GameStateManager.Instance().CompleteState(  (GameConst.GameProgressState)((byte)data[0]), 
+                                                                (GameConst.PlayerIndex)((byte)data[1]));
                     break;
                 case EventConst.Event.AffiliationMapSpace:
                     // マス所属はホスト思考
                     if (this.eventBrain != null)
                     {
-                        GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)data[1];
+                        GameConst.PlayerIndex playerIndex = (GameConst.PlayerIndex)((byte)data[1]);
                         this.playerList.Clear();
-                        this.playerList.AddRange(this.eventBrain.AffiliationMapSpace((int)data[0], playerIndex));
+                        this.playerList.AddRange(this.eventBrain.AffiliationMapSpace((byte)data[0], playerIndex));
                         bool isEvent = false;
                         int eventId = 0;
 
                         // 稽古をしていない他プレイヤーの抽出
                         this.playerList.Remove(playerIndex);
                         List<GameConst.PlayerIndex> practicePlayers = new List<GameConst.PlayerIndex>();
-                        var mapEvents = this.eventBrain.GetEventFromMapSpace((int)data[0]);
+                        var mapEvents = this.eventBrain.GetEventFromMapSpace((byte)data[0]);
                         foreach (var item in mapEvents)
                         {
                             if (item.EventType == EventConst.MapEventType.Practice &&
@@ -178,7 +178,7 @@ namespace Akimichi.Game
                             case 1:
                                 isEvent = true;
                                 this.playerList.Add(playerIndex);
-                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], this.playerList);
+                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (byte)data[0], this.playerList);
                                 // 該当プレイヤーを稽古待機状態へ変更
                                 playerStr = CreatePlayerList(this.playerList);
                                 break;
@@ -192,7 +192,7 @@ namespace Akimichi.Game
                                 practices.Add(this.playerList[index]);
 
                                 isEvent = true;
-                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (int)data[0], practices);
+                                eventId = this.eventBrain.CreateEvent(EventConst.MapEventType.Practice, (byte)data[0], practices);
                                 // 該当プレイヤーを稽古待機状態へ変更
                                 playerStr = CreatePlayerList(practices);
                                 break;
@@ -208,15 +208,15 @@ namespace Akimichi.Game
                     }
                     break;
                 case EventConst.Event.StartMove:
-                    if(PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)data[0])
+                    if(PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)((byte)data[0]))
                     {
-                        PlayerManager.Instance().StartMoveAnime((GameConst.PlayerIndex)data[0]);
+                        PlayerManager.Instance().StartMoveAnime((GameConst.PlayerIndex)((byte)data[0]));
                     }
                     break;
                 case EventConst.Event.EndMove:
-                    if (PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)data[0])
+                    if (PlayerManager.Instance().PlayerIndex != (GameConst.PlayerIndex)((byte)data[0]))
                     {
-                        PlayerManager.Instance().StopMoveAnime((GameConst.PlayerIndex)data[0]);
+                        PlayerManager.Instance().StopMoveAnime((GameConst.PlayerIndex)((byte)data[0]));
                     }
                     break;
                 
@@ -227,7 +227,7 @@ namespace Akimichi.Game
                 case EventConst.Event.WaitingPractice:
                     if(IsReception(data))
                     {
-                        EventManager.Instance().AddEventId((int)data[1]);
+                        EventManager.Instance().AddEventId((byte)data[1]);
                         PlayerManager.Instance().WaitingEvent();
                     }
                     break;
@@ -235,7 +235,7 @@ namespace Akimichi.Game
                 case EventConst.Event.PracticePossible:
                     if (this.eventBrain != null)
                     {
-                        MapEventBase mapEvent = this.eventBrain.EventStartCheck((int)data[1], (GameConst.PlayerIndex)data[0]);
+                        MapEventBase mapEvent = this.eventBrain.EventStartCheck((byte)data[1], (GameConst.PlayerIndex)((byte)data[0]));
                         // プレイヤーがそろったのでイベント発火
                         if (mapEvent != null)
                         {
@@ -252,7 +252,7 @@ namespace Akimichi.Game
                     // エフェクトの再生通知
                     if(this.eventBrain != null)
                     {
-                        int eventId = (int)data[1];
+                        int eventId = (byte)data[1];
                         MapEventBase mapEvent = this.eventBrain.GetEvent(eventId);
                         if(mapEvent != null)
                         {
@@ -272,12 +272,12 @@ namespace Akimichi.Game
                 // 稽古エフェクト再生
                 case EventConst.Event.PracticeEffectStart:
                     AudioManager.Instance().PlaySE(SoundConst.GAME.Practice);
-                    MapSpaceLogicBase mapSpace = MapManager.Instance().GetMapSpace((int)data[1]);
+                    MapSpaceLogicBase mapSpace = MapManager.Instance().GetMapSpace((byte)data[1]);
                     if (this.eventBrain == null) EventManager.Instance().StartEventEffect(mapSpace, null);
                     else
                     {
                         // 稽古ステータス計算
-                        MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[0]);
+                        MapEventBase mapEvent = this.eventBrain.GetEvent((byte)data[0]);
                         var send = DataObjectManager.Instance().Get();
                         send.Datas[0] = CreatePlayerList(mapEvent.Players);
                         NetworkManager.Instance().SendEvent(EventConst.Event.CalcPractice, send);
@@ -285,7 +285,7 @@ namespace Akimichi.Game
                         // ホストはイベントエフェクト終了の監視
                         EventManager.Instance().StartEventEffect(mapSpace, () =>
                         {
-                            MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[0]);
+                            MapEventBase mapEvent = this.eventBrain.GetEvent((byte)data[0]);
                             var send = DataObjectManager.Instance().Get();
                             send.Datas[0] = CreatePlayerList(mapEvent.Players);
                             send.Datas[1] = (byte)mapEvent.EventID;
@@ -304,13 +304,13 @@ namespace Akimichi.Game
                 case EventConst.Event.EndPractice:
                     if(this.eventBrain != null)
                     {
-                        MapEventBase mapEvent = this.eventBrain.GetEvent((int)data[1]);
+                        MapEventBase mapEvent = this.eventBrain.GetEvent((byte)data[1]);
                         this.eventBrain.ReleaseEvent(mapEvent);
                     }
 
                     if (IsReception(data))
                     {
-                        EventManager.Instance().ReleaseEvent((int)data[1]);
+                        EventManager.Instance().ReleaseEvent((byte)data[1]);
                         PlayerManager.Instance().ReleasePractice();
                     }
                     break;
@@ -324,7 +324,7 @@ namespace Akimichi.Game
                     List<int> list = new List<int>();
                     for(int i = 0; i < data.Length; ++i)
                     {
-                        if(data[i] != null) list.Add((int)data[i]);
+                        if(data[i] != null) list.Add((byte)data[i]);
                     }
                     MapManager.Instance().StartPositionShuffle(list);
 
@@ -341,15 +341,15 @@ namespace Akimichi.Game
                 // ステータス関連
                 // 名前設定
                 case EventConst.Event.SetName:
-                    PlayerManager.Instance().SetName((GameConst.PlayerIndex)data[0], (string)data[1]);
+                    PlayerManager.Instance().SetName((GameConst.PlayerIndex)((byte)data[0]), (string)data[1]);
                     break;
                 // 体重増加
                 case EventConst.Event.AddWeight:
-                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
+                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1]);
                     break;
                 // 体重減少
                 case EventConst.Event.SubtractWeight:
-                    PlayerManager.Instance().SubtractWeight((GameConst.PlayerIndex)data[0], (int)data[1]);
+                    PlayerManager.Instance().SubtractWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1]);
                     break;
                 // 疲労開始
                 case EventConst.Event.HoldFatigue:
@@ -357,23 +357,23 @@ namespace Akimichi.Game
                     break;
                 // 疲労終了
                 case EventConst.Event.ReleaseFatigue:
-                    PlayerManager.Instance().ReleaseFatigue((GameConst.PlayerIndex)data[0]);
+                    PlayerManager.Instance().ReleaseFatigue((GameConst.PlayerIndex)((byte)data[0]));
                     break;
                 // リザルトデータ関連
                 case EventConst.Event.ResultData:
-                    switch ((EventConst.ResultData)data[1])
+                    switch ((EventConst.ResultData)((byte)data[1]))
                     {
                         case EventConst.ResultData.DiceCount:
-                            ResultDataManager.Instance().AddDiceCount((GameConst.PlayerIndex)data[0]);
+                            ResultDataManager.Instance().AddDiceCount((GameConst.PlayerIndex)((byte)data[0]));
                             break;
                         case EventConst.ResultData.MoveValue:
-                            ResultDataManager.Instance().AddMoveValue((GameConst.PlayerIndex)data[0], (int)data[2]);
+                            ResultDataManager.Instance().AddMoveValue((GameConst.PlayerIndex)((byte)data[0]), (byte)data[2]);
                             break;
                         case EventConst.ResultData.SpaceCount:
-                            ResultDataManager.Instance().AddMapSpace((GameConst.PlayerIndex)data[0], (GameConst.MapSpaceType)data[2]);
+                            ResultDataManager.Instance().AddMapSpace((GameConst.PlayerIndex)((byte)data[0]), (GameConst.MapSpaceType)((byte)data[2]));
                             break;
                         case EventConst.ResultData.PracticeCount:
-                            ResultDataManager.Instance().AddPracticeCount((GameConst.PlayerIndex)data[0]);
+                            ResultDataManager.Instance().AddPracticeCount((GameConst.PlayerIndex)((byte)data[0]));
                             break;
                     }
                     break;
@@ -500,10 +500,10 @@ namespace Akimichi.Game
 
         private void CreatePlayerObject(object[] data)
         {
-            if ((GameConst.PlayerIndex)data[1] != PlayerManager.Instance().PlayerIndex)
+            if ((GameConst.PlayerIndex)((byte)data[1]) != PlayerManager.Instance().PlayerIndex)
             {
                 // 受信したtransformを設定
-                GameObject playerObj = this.playerPrefabs[(int)data[1]];
+                GameObject playerObj = this.playerPrefabs[(byte)data[1]];
                 var obj = Instantiate(playerObj, Vector3.zero, Quaternion.identity);
                 obj.transform.SetParent(this.playerRoot.transform);
                 obj.transform.localPosition = Vector3.zero;
@@ -511,7 +511,7 @@ namespace Akimichi.Game
                 PlayerView view = obj.GetComponent<PlayerView>();
                 if (view != null)
                 {
-                    PlayerManager.Instance().ResistPlayer((GameConst.PlayerIndex)data[1], (PlayerLogic)view.Logic);
+                    PlayerManager.Instance().ResistPlayer((GameConst.PlayerIndex)((byte)data[1]), (PlayerLogic)view.Logic);
                 }
 
                 // Photon
@@ -534,7 +534,7 @@ namespace Akimichi.Game
                 photonView.ViewID = (int)data[0];
             }
             GameStateManager.Instance().CompleteState(  GameConst.GameProgressState.CreatedPlayerObject,
-                                                        (GameConst.PlayerIndex)data[1]);
+                                                        (GameConst.PlayerIndex)((byte)data[1]));
         }
 
         // 送信プレイヤーの作成
