@@ -20,6 +20,15 @@ namespace Akimichi
         [SerializeField]
         private TextMeshProUGUI title = null;
 
+        private List<string> list = new List<string>() { "基本ルール", 
+                                                         "サイコロ",
+                                                         "マス",
+                                                         "体重",
+                                                         "ぶつかり稽古1",
+                                                         "ぶつかり稽古2",
+                                                         "近くのプレイヤー",
+                                                         "本場所"};
+
         private void Awake()
         {
             foreach(var item in this.contents)
@@ -34,7 +43,7 @@ namespace Akimichi
         {
             int index = 0;
             this.image.sprite = this.imageList[index];
-            this.title.text = "遊び方" + (index + 1);
+            this.title.text = this.list[index];
             this.contents[index].VisibleSelect(true);
 
             TransitionManager.Instance().Open();
@@ -44,7 +53,7 @@ namespace Akimichi
         {
             AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.image.sprite = this.imageList[index];
-            this.title.text = "遊び方" + (index + 1);
+            this.title.text = this.list[index];
             DebugManager.Instance().ResistDebugCode(index + 1);
 
             int value = 0;

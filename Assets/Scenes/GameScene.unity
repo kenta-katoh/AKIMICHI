@@ -1458,12 +1458,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: 21300000, guid: 4c666aa68e3c29e49adffe0e6b03f7f7, type: 3}
-  - {fileID: 21300000, guid: 99de6c8ec117af74987ceca0d3d6b472, type: 3}
-  - {fileID: 21300000, guid: fa9e5a5d98a3c804e8157fb298feb941, type: 3}
-  - {fileID: 21300000, guid: c4d600c1b4af9b54e9ab735ebc7e9e58, type: 3}
-  - {fileID: 21300000, guid: 2c03689175d558247be36eed59e7d4be, type: 3}
-  - {fileID: 21300000, guid: c470aa49166d6d84cb13daf369a18547, type: 3}
+  - {fileID: 21300000, guid: 5f3ec31781d76d54f808ef26451f2fc4, type: 3}
+  - {fileID: 21300000, guid: 9f8cb72a35d586e4c9697bc67b7e9911, type: 3}
+  - {fileID: 21300000, guid: c858cbcea6ea4af44a0499ee36fc5ea7, type: 3}
+  - {fileID: 21300000, guid: 6a931a05572f19746b49980f5d2c5aa0, type: 3}
+  - {fileID: 21300000, guid: 675dd21d1d5269c47866eba00813f2c4, type: 3}
+  - {fileID: 21300000, guid: 2af0c417fb83a714ba882e504acb80c3, type: 3}
   diceImage: {fileID: 257205214}
   animeController: {fileID: 2323719468787871865}
 --- !u!222 &1189351854

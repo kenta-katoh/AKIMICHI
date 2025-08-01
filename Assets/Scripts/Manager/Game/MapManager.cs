@@ -181,8 +181,8 @@ namespace Akimichi.Game
         public void SendAffiliation(int index)
         {
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = index;
-            send.Datas[1] = (int)PlayerManager.Instance().PlayerIndex;
+            send.Datas[0] = (byte)index;
+            send.Datas[1] = (byte)PlayerManager.Instance().PlayerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.AffiliationMapSpace, send);
         }
     }

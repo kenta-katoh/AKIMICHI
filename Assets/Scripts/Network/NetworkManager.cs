@@ -259,6 +259,7 @@ public class NetworkManager : ManagerBase<NetworkManager>
     /// </summary>
     public void SendEvent(EventConst.Event _event, SendObjectData data)
     {
+        if(_event == EventConst.Event.None) return;
         PhotonNetwork.RaiseEvent(EventConst.ConvertEvent(_event), data.Datas, eventOptions, sendOptions);
         data.IsUse = false;
     }

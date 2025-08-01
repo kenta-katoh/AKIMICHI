@@ -26,6 +26,18 @@ namespace Akimichi.Game
 
             });
             this.playerView.StartMove();
+
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.StartMove, send);
+        }
+
+        /// <summary>
+        /// 移動開始
+        /// </summary>
+        public void StartMove()
+        {
+            this.playerView.StartMove();
         }
 
         /// <summary>
@@ -36,6 +48,18 @@ namespace Akimichi.Game
         {
             this.view.transform.DOKill();
             SetPosInstantSync(target.localPosition);
+            this.playerView.StopMove();
+
+            var send = DataObjectManager.Instance().Get();
+            send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+            NetworkManager.Instance().SendEvent(EventConst.Event.EndMove, send);
+        }
+
+        /// <summary>
+        /// 移動停止
+        /// </summary>
+        public void StopMove()
+        {
             this.playerView.StopMove();
         }
 
