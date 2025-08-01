@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5168272779550291411}
   - component: {fileID: 3487733737319975428}
   - component: {fileID: 1279511186626166812}
+  - component: {fileID: 2570803116185310283}
   m_Layer: 5
   m_Name: DiceAnime
   m_TagString: Untagged
@@ -111,3 +112,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3487733737319975428}
+--- !u!114 &2570803116185310283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4175047611962935708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc30587efb09ad47a2f121c6353fdfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
