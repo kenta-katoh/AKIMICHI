@@ -22,10 +22,18 @@ namespace Akimichi
         private GameObject image = null;
 
         private Action<int> action = null;
+        private List<string> list = new List<string>() { "基本ルール",
+                                                         "サイコロ",
+                                                         "マス",
+                                                         "体重",
+                                                         "ぶつかり稽古1",
+                                                         "ぶつかり稽古2",
+                                                         "近くのプレイヤー",
+                                                         "本場所"};
 
         private void Awake()
         {
-            this.text.text = "遊び方" + (this.Index + 1).ToString();
+            this.text.text = this.list[this.Index];
         }
 
         /// <summary>
