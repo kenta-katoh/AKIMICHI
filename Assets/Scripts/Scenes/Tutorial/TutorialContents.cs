@@ -18,9 +18,6 @@ namespace Akimichi
         [SerializeField]
         private Image imageBase = null;
 
-        [SerializeField]
-        private GameObject image = null;
-
         private Action<int> action = null;
         private List<string> list = new List<string>() { "基本ルール",
                                                          "サイコロ",
@@ -58,7 +55,6 @@ namespace Akimichi
         public void VisibleSelect(bool flag)
         {
             this.imageBase.enabled = flag;
-            this.image.SetActive(flag);
         }
     }
 }
