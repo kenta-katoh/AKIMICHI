@@ -68,7 +68,6 @@ namespace Akimichi.Game
             if(this.isEndMonitoring)
             {
                 this.endMonitoringFrame -= Time.deltaTime;
-                Debug.LogError((int)this.endMonitoringFrame);
                 if(this.endMonitoringFrame < 0.0f)
                 {
                     this.isEndMonitoring = false;

@@ -353,7 +353,7 @@ namespace Akimichi.Game
                     break;
                 // 疲労開始
                 case EventConst.Event.HoldFatigue:
-                    PlayerManager.Instance().HoldFatigue((GameConst.PlayerIndex)data[0]);
+                    PlayerManager.Instance().HoldFatigue((GameConst.PlayerIndex)((byte)data[0]));
                     break;
                 // 疲労終了
                 case EventConst.Event.ReleaseFatigue:
