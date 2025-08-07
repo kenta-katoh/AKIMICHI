@@ -30,8 +30,6 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private TextMeshProUGUI readyText = null;
 
     private bool isReady = false;
-    private GameConst.PlayerIndex playerIndex = GameConst.PlayerIndex.First;
-    private List<GameConst.PlayerIndex> readyPlayer = new List<GameConst.PlayerIndex>();
 
     private void Awake()
     {
@@ -62,6 +60,7 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         TransitionManager.Instance().Open();
         NetworkManager.Instance().SetSysncScene(true);
         UpdateRoomData();
+        UpdateReadyCheck();
     }
 
     /// <summary>
@@ -96,8 +95,9 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if(this.isReady)
         {
+            NetworkManager.Instance().SetRoomReady(NetworkManager.Instance().GetUserID());
+
             var send = DataObjectManager.Instance().Get();
-            send.Datas[0] = (byte)this.playerIndex;
             NetworkManager.Instance().SendEvent(EventConst.Event.ReadyMatch, send);
         }
     }
@@ -106,18 +106,19 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         base.OnPlayerEnteredRoom(newPlayer);
         UpdateRoomData();
+        UpdateReadyCheck();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom((Player)otherPlayer);
+        NetworkManager.Instance().RemoveRoomReady(NetworkManager.Instance().GetUserID());
         UpdateRoomData();
+        UpdateReadyCheck();
     }
 
     private void UpdateRoomData()
     {
-        this.readyPlayer.Clear();
-        this.playerIndex = NetworkManager.Instance().GetPlayerIndex(NetworkManager.Instance().GetUserID());
         foreach (var player in this.playerList)
         {
             player.ClearData();
@@ -130,7 +131,27 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
             this.playerList[index].SetPlayerData((GameConst.PlayerIndex)index, item.Value);
             index++;
         }
-        SendReadyGame();
+    }
+
+    private bool UpdateReadyCheck()
+    {
+        bool result = false;
+
+        var list = NetworkManager.Instance().GetReadyPlayer();
+        int cnt = 0;
+        foreach(var player in list)
+        {
+            foreach (var item in this.playerList)
+            {
+                if(item.Ready(player))
+                {
+                    cnt++;
+                }
+            }
+        }
+
+        if(cnt == GameConst.MaximumPlayers()) result = true;
+        return result;
     }
 
     public void ChangeName(string name)
@@ -147,14 +168,8 @@ public class MatchingScene : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             case EventConst.Event.ReadyMatch:
                 AudioManager.Instance().PlaySE(SoundConst.MATCHING.Ready);
-                GameConst.PlayerIndex index = (GameConst.PlayerIndex)((byte)data[0]);
-                foreach (var item in this.playerList)
-                {
-                    item.Ready(index);
-                }
 
-                if (!this.readyPlayer.Contains(index)) this.readyPlayer.Add(index);
-                if (this.readyPlayer.Count == GameConst.MaximumPlayers())
+                if (UpdateReadyCheck())
                 {
                     AudioManager.Instance().PlaySE(SoundConst.MATCHING.TransGame);
                     if (NetworkManager.Instance().IsMasterClient())

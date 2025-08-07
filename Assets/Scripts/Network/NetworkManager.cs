@@ -366,6 +366,71 @@ public class NetworkManager : ManagerBase<NetworkManager>
         return result;
     }
 
+    /// <summary>
+    /// 準備完了
+    /// </summary>
+    /// <param name="userID"></param>
+    public void SetRoomReady(string userID)
+    {
+        string players = (string)PhotonNetwork.CurrentRoom.CustomProperties["ReadyPlayer"];
+        players += (userID + ",");
+
+        var properties = new Hashtable();
+        properties.Add("ReadyPlayer", players);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userID"></param>
+    public void RemoveRoomReady(string userID)
+    {
+        string result = "";
+        string players = (string)PhotonNetwork.CurrentRoom.CustomProperties["ReadyPlayer"];
+        if (string.IsNullOrEmpty(players)) return;
+
+        string[] arr = players.Split(',');
+        for (int i = 0; i < arr.Length; ++i)
+        {
+            if (!string.IsNullOrEmpty(arr[i]))
+            {
+                if (arr[i] != userID)
+                {
+                    result += (arr[i] + ",");
+                }
+            }
+        }
+        var properties = new Hashtable();
+        properties.Add("ReadyPlayer", players);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+    }
+
+    /// <summary>
+    /// 準備完了プレイヤー取得
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetReadyPlayer()
+    {
+        List<string> result = new List<string>();
+
+        string players = (string)PhotonNetwork.CurrentRoom.CustomProperties["ReadyPlayer"];
+        if (string.IsNullOrEmpty(players)) return result;
+
+        string[] arr = players.Split(',');
+        for (int i = 0; i < arr.Length; ++i)
+        {
+            if (!string.IsNullOrEmpty(arr[i]))
+            {
+                if (!result.Contains(arr[i]))
+                {
+                    result.Add(arr[i]);
+                }
+            }
+        }
+        return result;
+    }
+
     ///////////////////////////////////////////////////////////
     /// コールバック
     ///////////////////////////////////////////////////////////
