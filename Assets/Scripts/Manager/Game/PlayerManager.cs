@@ -377,7 +377,6 @@ namespace Akimichi.Game
 
                 this.isEndMonitoring = false;
                 this.endMonitoringFrame = 0.0f;
-                DiceManager.Instance().Visible(true);
             }
         }
 
