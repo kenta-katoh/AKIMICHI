@@ -345,7 +345,7 @@ namespace Akimichi.Game
                     break;
                 // 体重増加
                 case EventConst.Event.AddWeight:
-                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1]);
+                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1], Convert.ToBoolean((byte)data[2]));
                     break;
                 // 体重減少
                 case EventConst.Event.SubtractWeight:

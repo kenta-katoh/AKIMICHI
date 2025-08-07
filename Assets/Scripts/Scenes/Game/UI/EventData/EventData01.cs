@@ -22,6 +22,7 @@ namespace Akimichi.Game
             var send = DataObjectManager.Instance().Get();
             send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
             send.Datas[1] = this.value;
+            send.Datas[2] = (byte)0;
             NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
         }
     }

@@ -159,13 +159,11 @@ namespace Akimichi.Game
                     {
                         case GameConst.MapSpaceType.Plus:
                             this.isfatigue = false; // 疲労回復
-                            var send2 = DataObjectManager.Instance().Get();
-                            send2.Datas[0] = (byte)this.PlayerIndex;
-                            NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, send2);
 
                             var send = DataObjectManager.Instance().Get();
                             send.Datas[0] = (byte)this.PlayerIndex;
                             send.Datas[1] = EventManager.Instance().GetPlusValue();
+                            send.Datas[2] = (byte)1;
                             NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
                             break;
                         case GameConst.MapSpaceType.Minus:
@@ -344,6 +342,7 @@ namespace Akimichi.Game
             var send = DataObjectManager.Instance().Get();
             send.Datas[0] = (byte)this.PlayerIndex;
             send.Datas[1] = result;
+            if (sendEevent == EventConst.Event.AddWeight) send.Datas[2] = (byte)0;
             NetworkManager.Instance().SendEvent(sendEevent, send);
         }
 
@@ -395,13 +394,21 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void AddWeight(GameConst.PlayerIndex index, int value)
+        public void AddWeight(GameConst.PlayerIndex index, int value, bool release)
         {
             if(index == this.PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.WeightUp);
             this.playerStatusView.AddWeight(index, value);
             if (this.playerDic.ContainsKey(index))
             {
                 this.playerDic[index].AddEffect();
+            }
+
+            if(release)
+            {
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = (byte)index;
+                NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, send);
+                //this.playerStatusView.ReleaseFatigue(index);
             }
         }
 
