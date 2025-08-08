@@ -98,12 +98,12 @@ PrefabInstance:
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
@@ -246,12 +246,12 @@ PrefabInstance:
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
@@ -394,12 +394,12 @@ PrefabInstance:
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
@@ -542,12 +542,12 @@ PrefabInstance:
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1148524507517390992, guid: 8f346feb7a1b59d43b607d5030fd6cd3,
         type: 3}

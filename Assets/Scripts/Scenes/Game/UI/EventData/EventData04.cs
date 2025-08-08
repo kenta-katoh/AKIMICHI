@@ -36,6 +36,7 @@ namespace Akimichi.Game
             send.Datas[1] = this.value;
             if (this.result)
             {
+                send.Datas[2] = (byte)0;
                 NetworkManager.Instance().SendEvent(EventConst.Event.AddWeight, send);
             }
             else

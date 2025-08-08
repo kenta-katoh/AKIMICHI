@@ -345,7 +345,7 @@ namespace Akimichi.Game
                     break;
                 // 体重増加
                 case EventConst.Event.AddWeight:
-                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1]);
+                    PlayerManager.Instance().AddWeight((GameConst.PlayerIndex)((byte)data[0]), (int)data[1], Convert.ToBoolean((byte)data[2]));
                     break;
                 // 体重減少
                 case EventConst.Event.SubtractWeight:
@@ -353,7 +353,7 @@ namespace Akimichi.Game
                     break;
                 // 疲労開始
                 case EventConst.Event.HoldFatigue:
-                    PlayerManager.Instance().HoldFatigue((GameConst.PlayerIndex)data[0]);
+                    PlayerManager.Instance().HoldFatigue((GameConst.PlayerIndex)((byte)data[0]));
                     break;
                 // 疲労終了
                 case EventConst.Event.ReleaseFatigue:

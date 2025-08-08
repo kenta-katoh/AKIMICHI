@@ -16,6 +16,7 @@ public class MatchingPlayerContents : MonoBehaviour
     [SerializeField]
     private GameObject readyIcon = null;
 
+    private string userID = string.Empty;
     private GameConst.PlayerIndex playerIndex = GameConst.PlayerIndex.First;
     public bool IsNull { get; private set; } = true;
 
@@ -23,6 +24,7 @@ public class MatchingPlayerContents : MonoBehaviour
     {
         ContentVisible(true);
         this.mySelf.SetActive(NetworkManager.Instance().IsMyself(player.UserId));
+        this.userID = player.UserId;
         this.playerIndex = index;
         this.IsNull = false;
         this.readyIcon.SetActive(false);
@@ -33,6 +35,7 @@ public class MatchingPlayerContents : MonoBehaviour
     {
         ContentVisible(false);
         this.mySelf.SetActive(false);
+        this.userID = string.Empty;
         this.playerIndex = GameConst.PlayerIndex.First;
         this.IsNull = true;
         this.readyIcon.SetActive(false);
@@ -40,7 +43,6 @@ public class MatchingPlayerContents : MonoBehaviour
 
     private void ContentVisible(bool visible)
     {
-        //this.onPlayer.SetActive(visible);
         this.player.gameObject.SetActive(visible);
     }
 
@@ -48,11 +50,13 @@ public class MatchingPlayerContents : MonoBehaviour
     /// 準備完了のアイコン
     /// </summary>
     /// <param name="index"></param>
-    public void Ready(GameConst.PlayerIndex index)
+    public bool Ready(string id)
     {
-        if(!this.IsNull && this.playerIndex == index)
+        if(!this.IsNull && this.userID == id)
         {
             this.readyIcon?.SetActive(true);
+            return true;
         }
+        return false;
     }
 }

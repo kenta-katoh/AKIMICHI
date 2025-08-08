@@ -105,6 +105,7 @@ namespace Akimichi.Game
         /// <param name="visible"></param>
         public void Visible(bool visible)
         {
+            if (visible && this.DiceValue < 1) return;
             this.diceView.gameObject.SetActive(visible);
         }
     }

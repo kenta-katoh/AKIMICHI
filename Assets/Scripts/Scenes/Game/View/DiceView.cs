@@ -52,11 +52,8 @@ namespace Akimichi.Game
                     this.gameObject.SetActive(true);
                     this.animeController.SetBool(this.key, false);
                     this.diceImage.sprite = this.sprites[DiceManager.Instance().DiceValue - 1];
-                    //AudioManager.Instance().PlaySE(SoundConst.GAME.DiceDecide);
                     PlayerManager.Instance().StartMove();
                 });
-
-                //AudioManager.Instance().PlaySE(SoundConst.GAME.DiceRoll);
             }
         }
 
