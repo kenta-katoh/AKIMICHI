@@ -18,6 +18,15 @@ namespace Akimichi
         [SerializeField]
         private Image imageBase = null;
 
+        [SerializeField]
+        private Sprite defaultImage = null;
+
+        [SerializeField]
+        private Sprite onImage = null;
+
+        [SerializeField]
+        private Button button = null;
+
         private Action<int> action = null;
         private List<string> list = new List<string>() { "基本ルール",
                                                          "サイコロ",
@@ -31,6 +40,11 @@ namespace Akimichi
         private void Awake()
         {
             this.text.text = this.list[this.Index];
+        }
+
+        public void Initialized()
+        {
+            this.button.onClick?.Invoke();
         }
 
         /// <summary>
@@ -54,7 +68,10 @@ namespace Akimichi
         /// <param name="flag"></param>
         public void VisibleSelect(bool flag)
         {
-            this.imageBase.enabled = flag;
+            Sprite sprite = null;
+            if (flag) sprite = this.onImage;
+            else sprite = this.defaultImage;
+            this.imageBase.sprite = sprite;
         }
     }
 }
