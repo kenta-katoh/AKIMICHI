@@ -44,7 +44,7 @@ namespace Akimichi
             int index = 0;
             this.image.sprite = this.imageList[index];
             this.title.text = this.list[index];
-            this.contents[index].VisibleSelect(true);
+            this.contents[index].Initialized();
 
             TransitionManager.Instance().Open();
         }
