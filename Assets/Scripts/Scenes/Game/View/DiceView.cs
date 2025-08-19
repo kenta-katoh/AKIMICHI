@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +14,9 @@ namespace Akimichi.Game
 
         [SerializeField]
         private AnimeController animeController = null;
+
+        [SerializeField]
+        private Image rollImage = null;
         private string key = string.Empty;
 
         protected override void OnAwake()
@@ -45,7 +47,7 @@ namespace Akimichi.Game
                 // ダイス成功時に進行方向設定
                 PlayerManager.Instance().SetDirection(dir);
 
-                this.animeController.gameObject.SetActive(true);
+                this.rollImage.enabled = true;
                 this.key = "Result" + DiceManager.Instance().DiceValue;
                 this.animeController.PlayAnime(this.key, true, this.key, () => 
                 {
@@ -62,7 +64,7 @@ namespace Akimichi.Game
         /// </summary>
         public void ForceStop()
         {
-            this.animeController.gameObject.SetActive(false);
+            this.rollImage.enabled = false;
             this.animeController.DeleteAction();
             this.animeController.SetBool("Result1", false);
             this.animeController.SetBool("Result2", false);

@@ -66,6 +66,7 @@ namespace Akimichi
         public void ForcePlay(string name)
         {
             this.animator.Play(name, 0, 0);
+            this.IsPlaying = false;
         }
 
         /// <summary>
