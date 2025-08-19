@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +14,9 @@ namespace Akimichi.Game
 
         [SerializeField]
         private AnimeController animeController = null;
+
+        [SerializeField]
+        private Image rollImage = null;
         private string key = string.Empty;
 
         protected override void OnAwake()
@@ -40,20 +42,23 @@ namespace Akimichi.Game
             if(isSuccess)
             {
                 AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
-                PlayerManager.Instance().DiceRoll();
 
-                // ダイス成功時に進行方向設定
-                PlayerManager.Instance().SetDirection(dir);
-
-                this.animeController.gameObject.SetActive(true);
                 this.key = "Result" + DiceManager.Instance().DiceValue;
-                this.animeController.PlayAnime(this.key, true, this.key, () => 
+                bool anime = this.animeController.PlayAnime(this.key, true, this.key, () => 
                 {
                     this.gameObject.SetActive(true);
                     this.animeController.SetBool(this.key, false);
                     this.diceImage.sprite = this.sprites[DiceManager.Instance().DiceValue - 1];
                     PlayerManager.Instance().StartMove();
                 });
+
+                if(anime)
+                {
+                    // ダイス成功時に進行方向設定
+                    PlayerManager.Instance().SetDirection(dir);
+                    PlayerManager.Instance().DiceRoll();
+                    this.rollImage.enabled = true;
+                }
             }
         }
 
@@ -62,7 +67,7 @@ namespace Akimichi.Game
         /// </summary>
         public void ForceStop()
         {
-            this.animeController.gameObject.SetActive(false);
+            this.rollImage.enabled = false;
             this.animeController.DeleteAction();
             this.animeController.SetBool("Result1", false);
             this.animeController.SetBool("Result2", false);

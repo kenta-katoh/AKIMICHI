@@ -29,6 +29,8 @@ namespace Akimichi
                                                          "近くのプレイヤー",
                                                          "本場所"};
 
+        private bool isInit = false;
+
         private void Awake()
         {
             foreach(var item in this.contents)
@@ -46,12 +48,12 @@ namespace Akimichi
             this.title.text = this.list[index];
             this.contents[index].Initialized();
 
-            TransitionManager.Instance().Open();
+            TransitionManager.Instance().Open(() => { this.isInit = true; });
         }
 
         public void OnClick(int index)
         {
-            AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
+            if(this.isInit) AudioManager.Instance().PlaySE(SoundConst.SE.Decide);
             this.image.sprite = this.imageList[index];
             this.title.text = this.list[index];
             DebugManager.Instance().ResistDebugCode(index + 1);

@@ -12,16 +12,19 @@ namespace Akimichi
         private int animeHash = -1;
         public bool IsPlaying { get; private set; } = false;
 
-        public void PlayAnime(string boolTag, bool flag, string transTag, Action finish)
+        public bool PlayAnime(string boolTag, bool flag, string transTag, Action finish)
         {
+            bool result = false;
             if (this.animator != null && !this.IsPlaying)
             {
+                result = true;
                 this.animeHash = Animator.StringToHash(transTag);
                 this.animator.SetBool(boolTag, flag);
                 this.IsPlaying = true;
                 this.onFinished = null;
                 this.onFinished = finish;
             }
+            return result;
         }
 
         private void Update()
@@ -66,6 +69,7 @@ namespace Akimichi
         public void ForcePlay(string name)
         {
             this.animator.Play(name, 0, 0);
+            this.IsPlaying = false;
         }
 
         /// <summary>
