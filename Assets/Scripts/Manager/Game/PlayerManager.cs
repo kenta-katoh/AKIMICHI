@@ -433,11 +433,11 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <param name="level"></param>
-        public void ChangePlayerView(GameConst.PlayerIndex index, int level)
+        public void ChangePlayerView(GameConst.PlayerIndex index, int level, bool isFatigue)
         {
             if(this.playerDic.ContainsKey(index))
             {
-                this.playerDic[index].ChangeView(index, level);
+                this.playerDic[index].ChangeView(index, level, isFatigue);
             }
         }
 

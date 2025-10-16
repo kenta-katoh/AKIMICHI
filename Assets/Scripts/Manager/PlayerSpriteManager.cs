@@ -10,6 +10,7 @@ namespace Akimichi
         private Dictionary<GameConst.PlayerIndex, List<Sprite>> playerSpriteDic = new Dictionary<GameConst.PlayerIndex, List<Sprite>>();
         private Dictionary<GameConst.PlayerIndex, List<Sprite>> playerUISpriteDic = new Dictionary<GameConst.PlayerIndex, List<Sprite>>();
         private Dictionary<GameConst.PlayerIndex, List<Sprite>> playerFatigueSpriteDic = new Dictionary<GameConst.PlayerIndex, List<Sprite>>();
+        private Dictionary<GameConst.PlayerIndex, List<Sprite>> playerFatigueUISpriteDic = new Dictionary<GameConst.PlayerIndex, List<Sprite>>();
 
         public void SetSprite(GameConst.PlayerIndex index, List<Sprite> list)
         {
@@ -41,6 +42,16 @@ namespace Akimichi
             }
         }
 
+        public void SetFatigueUISprite(GameConst.PlayerIndex index, List<Sprite> list)
+        {
+            if (!this.playerFatigueUISpriteDic.ContainsKey(index))
+            {
+                List<Sprite> sprites = new List<Sprite>();
+                sprites.AddRange(list);
+                this.playerFatigueUISpriteDic.Add(index, sprites);
+            }
+        }
+
         public Sprite GetSprite(GameConst.PlayerIndex index, int level)
         {
             Sprite result = null;
@@ -67,6 +78,16 @@ namespace Akimichi
             if (this.playerFatigueSpriteDic.ContainsKey(index) && level < this.playerFatigueSpriteDic[index].Count)
             {
                 result = this.playerFatigueSpriteDic[index][level];
+            }
+            return result;
+        }
+
+        public Sprite GetFatigueUISprite(GameConst.PlayerIndex index, int level)
+        {
+            Sprite result = null;
+            if (this.playerFatigueUISpriteDic.ContainsKey(index) && level < this.playerFatigueUISpriteDic[index].Count)
+            {
+                result = this.playerFatigueUISpriteDic[index][level];
             }
             return result;
         }

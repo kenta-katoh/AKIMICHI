@@ -86,7 +86,7 @@ namespace Akimichi.Game
             if(currentLevel != this.playerData.GetLevel())
             {
                 if(this.playerIndex == PlayerManager.Instance().PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.Change);
-                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel(), this.isFatigue);
             }
             this.addTextBack.text = "+" + value;
             this.addTextFront.text = "+" + value;
@@ -124,7 +124,7 @@ namespace Akimichi.Game
             if(this.playerData.Weight < 1) this.playerData.Weight = 1;
             if (currentLevel != this.playerData.GetLevel())
             {
-                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel(), this.isFatigue);
             }
             this.subtractTextBack.text = "-" + value;
             this.subtractTextFront.text = "-" + value;
@@ -152,7 +152,9 @@ namespace Akimichi.Game
 
         private void SetSprite()
         {
-            Sprite sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
+            Sprite sprite = null;
+            if(this.isFatigue) sprite = PlayerSpriteManager.Instance().GetFatigueUISprite(this.playerIndex, this.playerData.GetLevel());
+            else sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
             if (sprite != null)
             {
                 this.playerImage.sprite = sprite;
@@ -167,6 +169,7 @@ namespace Akimichi.Game
         {
             this.fatigueIcon.SetActive(flag);
             this.isFatigue = flag;
+            SetSprite();
         }
 
         /// <summary>
