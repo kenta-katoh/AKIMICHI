@@ -43,10 +43,12 @@ namespace Akimichi.Game
         private GameConst.PlayerIndex playerIndex;
         private PlayerData playerData = new PlayerData();
         private int currentWeight = 0;
+        private bool isFatigue = false;
 
         private void Awake()
         {
             VisibleWeight(true);
+            this.isFatigue = false;
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace Akimichi.Game
             this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
-            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 1);
+            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, PlayerConst.InitLevel);
         }
 
         /// <summary>
@@ -164,6 +166,7 @@ namespace Akimichi.Game
         public void VisibleFatigue(bool flag)
         {
             this.fatigueIcon.SetActive(flag);
+            this.isFatigue = flag;
         }
 
         /// <summary>

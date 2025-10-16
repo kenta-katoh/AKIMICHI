@@ -1539,7 +1539,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6982982389277517438}
         m_TargetAssemblyTypeName: Akimichi.DebugObject, Assembly-CSharp
-        m_MethodName: AddWeight
+        m_MethodName: SwitchFatigue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

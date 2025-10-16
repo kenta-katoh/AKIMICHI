@@ -28,7 +28,7 @@ public class MatchingPlayerContents : MonoBehaviour
         this.playerIndex = index;
         this.IsNull = false;
         this.readyIcon.SetActive(false);
-        this.player.sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, 1);
+        this.player.sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, PlayerConst.InitLevel);
     }
 
     public void ClearData()
