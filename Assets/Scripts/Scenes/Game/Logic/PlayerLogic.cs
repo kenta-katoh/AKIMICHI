@@ -6,6 +6,7 @@ namespace Akimichi.Game
     public class PlayerLogic : LogicBase
     {
         private PlayerView playerView = null;
+        private int level = PlayerConst.InitLevel;
 
         public PlayerLogic(ViewBase view) : base(view)
         {
@@ -76,9 +77,19 @@ namespace Akimichi.Game
         /// 見た目更新
         /// </summary>
         /// <param name="level"></param>
-        public void ChangeView(GameConst.PlayerIndex index, int level)
+        public void ChangeView(GameConst.PlayerIndex index, int level, bool isFatigue)
         {
-            this.playerView.ChangeView(index, level);
+            this.level = level;
+            this.playerView.ChangeView(index, level, isFatigue);
+        }
+
+        /// <summary>
+        /// 疲労状態の切り替え
+        /// </summary>
+        /// <param name="flag"></param>
+        public void VisibleFatigue(GameConst.PlayerIndex index, bool flag)
+        {
+            this.playerView.SwitchView(index, this.level, flag);
         }
 
         /// <summary>

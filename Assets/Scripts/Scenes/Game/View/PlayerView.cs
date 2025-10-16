@@ -31,10 +31,24 @@ namespace Akimichi.Game
         /// <summary>
         /// 見た目更新
         /// </summary>
+        /// <param name="index"></param>
         /// <param name="level"></param>
-        public void ChangeView(GameConst.PlayerIndex index, int level)
+        /// <param name="isFatigue"></param>
+        public void SwitchView(GameConst.PlayerIndex index, int level, bool isFatigue)
         {
-            this.spriteRenderer.sprite = PlayerSpriteManager.Instance().GetSprite(index, level);
+            Sprite sprite = null;
+            if (isFatigue) sprite = PlayerSpriteManager.Instance().GetFatigueSprite(index, level);
+            else sprite = PlayerSpriteManager.Instance().GetSprite(index, level);
+            if (sprite != null) this.spriteRenderer.sprite = sprite;
+        }
+
+        /// <summary>
+        /// 見た目変化
+        /// </summary>
+        /// <param name="level"></param>
+        public void ChangeView(GameConst.PlayerIndex index, int level, bool isFatigue)
+        {
+            SwitchView(index, level, isFatigue);
             this.changeAnime.PlayAnime("Change", true, "Change", () =>
             {
                 this.changeAnime.SetBool("Change", false);

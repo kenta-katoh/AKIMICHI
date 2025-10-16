@@ -41,6 +41,30 @@ namespace Akimichi
         [SerializeField]
         private List<Sprite> uiSprites4th = new List<Sprite>();
 
+        [SerializeField]
+        private List<Sprite> fatigueSprites1st = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueSprites2nd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueSprites3rd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueSprites4th = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueUISprites1st = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueUISprites2nd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueUISprites3rd = new List<Sprite>();
+
+        [SerializeField]
+        private List<Sprite> fatigueUISprites4th = new List<Sprite>();
+
         private void Awake()
         {
 #if !UNITY_EDITOR
@@ -65,6 +89,16 @@ namespace Akimichi
             PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Second, this.uiSprites2nd);
             PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Third, this.uiSprites3rd);
             PlayerSpriteManager.Instance().SetUISprite(Game.GameConst.PlayerIndex.Fourth, this.uiSprites4th);
+
+            PlayerSpriteManager.Instance().SetFatigueSprite(Game.GameConst.PlayerIndex.First, this.fatigueSprites1st);
+            PlayerSpriteManager.Instance().SetFatigueSprite(Game.GameConst.PlayerIndex.Second, this.fatigueSprites2nd);
+            PlayerSpriteManager.Instance().SetFatigueSprite(Game.GameConst.PlayerIndex.Third, this.fatigueSprites3rd);
+            PlayerSpriteManager.Instance().SetFatigueSprite(Game.GameConst.PlayerIndex.Fourth, this.fatigueSprites4th);
+
+            PlayerSpriteManager.Instance().SetFatigueUISprite(Game.GameConst.PlayerIndex.First, this.fatigueUISprites1st);
+            PlayerSpriteManager.Instance().SetFatigueUISprite(Game.GameConst.PlayerIndex.Second, this.fatigueUISprites2nd);
+            PlayerSpriteManager.Instance().SetFatigueUISprite(Game.GameConst.PlayerIndex.Third, this.fatigueUISprites3rd);
+            PlayerSpriteManager.Instance().SetFatigueUISprite(Game.GameConst.PlayerIndex.Fourth, this.fatigueUISprites4th);
         }
 
         private void Start()

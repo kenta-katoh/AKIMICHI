@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 namespace Akimichi.Game
 {
@@ -432,11 +433,11 @@ namespace Akimichi.Game
         /// </summary>
         /// <param name="index"></param>
         /// <param name="level"></param>
-        public void ChangePlayerView(GameConst.PlayerIndex index, int level)
+        public void ChangePlayerView(GameConst.PlayerIndex index, int level, bool isFatigue)
         {
             if(this.playerDic.ContainsKey(index))
             {
-                this.playerDic[index].ChangeView(index, level);
+                this.playerDic[index].ChangeView(index, level, isFatigue);
             }
         }
 
@@ -447,6 +448,11 @@ namespace Akimichi.Game
         public void HoldFatigue(GameConst.PlayerIndex index)
         {
             this.playerStatusView.HoldFatigue(index);
+            // 見た目も疲労状態に変更
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].VisibleFatigue(index, true);
+            }
         }
 
         /// <summary>
@@ -456,6 +462,11 @@ namespace Akimichi.Game
         public void ReleaseFatigue(GameConst.PlayerIndex index)
         {
             this.playerStatusView.ReleaseFatigue(index);
+            // 見た目も疲労状態に変更
+            if (this.playerDic.ContainsKey(index))
+            {
+                this.playerDic[index].VisibleFatigue(index, false);
+            }
         }
 
         /// <summary>

@@ -43,10 +43,12 @@ namespace Akimichi.Game
         private GameConst.PlayerIndex playerIndex;
         private PlayerData playerData = new PlayerData();
         private int currentWeight = 0;
+        private bool isFatigue = false;
 
         private void Awake()
         {
             VisibleWeight(true);
+            this.isFatigue = false;
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace Akimichi.Game
             this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
-            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 0);
+            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, PlayerConst.InitLevel);
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Akimichi.Game
             if(currentLevel != this.playerData.GetLevel())
             {
                 if(this.playerIndex == PlayerManager.Instance().PlayerIndex) AudioManager.Instance().PlaySE(SoundConst.GAME.Change);
-                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel(), this.isFatigue);
             }
             this.addTextBack.text = "+" + value;
             this.addTextFront.text = "+" + value;
@@ -122,7 +124,7 @@ namespace Akimichi.Game
             if(this.playerData.Weight < 1) this.playerData.Weight = 1;
             if (currentLevel != this.playerData.GetLevel())
             {
-                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel());
+                PlayerManager.Instance().ChangePlayerView(this.playerIndex, this.playerData.GetLevel(), this.isFatigue);
             }
             this.subtractTextBack.text = "-" + value;
             this.subtractTextFront.text = "-" + value;
@@ -150,7 +152,9 @@ namespace Akimichi.Game
 
         private void SetSprite()
         {
-            Sprite sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
+            Sprite sprite = null;
+            if(this.isFatigue) sprite = PlayerSpriteManager.Instance().GetFatigueUISprite(this.playerIndex, this.playerData.GetLevel());
+            else sprite = PlayerSpriteManager.Instance().GetUISprite(this.playerIndex, this.playerData.GetLevel());
             if (sprite != null)
             {
                 this.playerImage.sprite = sprite;
@@ -164,6 +168,8 @@ namespace Akimichi.Game
         public void VisibleFatigue(bool flag)
         {
             this.fatigueIcon.SetActive(flag);
+            this.isFatigue = flag;
+            SetSprite();
         }
 
         /// <summary>
