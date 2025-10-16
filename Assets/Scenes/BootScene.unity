@@ -235,6 +235,38 @@ MonoBehaviour:
   - {fileID: 21300000, guid: eb7f6f6baca95044aa31c5a593533c61, type: 3}
   - {fileID: 21300000, guid: 6656993098e7dc1439e79de9429376fa, type: 3}
   - {fileID: 21300000, guid: 5ddb9b91e707ab44bbce03634b046cd0, type: 3}
+  fatigueSprites1st:
+  - {fileID: 21300000, guid: b58e8849ceec45a4bb9ca5ba528cbb98, type: 3}
+  - {fileID: 21300000, guid: 91c5d82a85878cf42b85efa1a84dcb33, type: 3}
+  - {fileID: 21300000, guid: 04c35c9ac2576e840af4c43e5e110679, type: 3}
+  - {fileID: 21300000, guid: 8f03aadeca2192441be4853faafc7fe0, type: 3}
+  - {fileID: 21300000, guid: 71a0180ad197f2545b2dd1bdf44864a1, type: 3}
+  - {fileID: 21300000, guid: 41eee45bbea89cf479d05b934de9b4f8, type: 3}
+  - {fileID: 21300000, guid: f17df930027066747b265bed8937afb0, type: 3}
+  fatigueSprites2nd:
+  - {fileID: 21300000, guid: 2dd239bd613440b4cbfa8c8b5146e2e3, type: 3}
+  - {fileID: 21300000, guid: d6f3aa05518a28e4db1c61c3fd785b4c, type: 3}
+  - {fileID: 21300000, guid: b4f55185c7d1c2949a62f7b75537111e, type: 3}
+  - {fileID: 21300000, guid: a141af07eb25dac4c921dcd9ec62d4d5, type: 3}
+  - {fileID: 21300000, guid: dee191348d7b33947a942f766f2ba5d5, type: 3}
+  - {fileID: 21300000, guid: cb9ebb5b76e68df4cbddec73ac8a8798, type: 3}
+  - {fileID: 21300000, guid: 7a896a277870d61418af21d737f1aaa3, type: 3}
+  fatigueSprites3rd:
+  - {fileID: 21300000, guid: 0cc63ddddf3fde146a11ad3b3d35307d, type: 3}
+  - {fileID: 21300000, guid: c0152cbd55bca3941b54a51388366eb3, type: 3}
+  - {fileID: 21300000, guid: 8dc6e93adb6fd1b4e997999ed45946c7, type: 3}
+  - {fileID: 21300000, guid: eadeb8d9ba00daf4dada0df15cfa64db, type: 3}
+  - {fileID: 21300000, guid: 8b69761aef5422c4183a60a63434b3de, type: 3}
+  - {fileID: 21300000, guid: 05ac2511ddea6824ab2f820f7aeb38ec, type: 3}
+  - {fileID: 21300000, guid: d233f3381663e0145a6a3c8e1b244974, type: 3}
+  fatigueSprites4th:
+  - {fileID: 21300000, guid: cec5ab78463c06947858a9e81bed26c3, type: 3}
+  - {fileID: 21300000, guid: 68b477101c4b9484585bf839ab11e8e5, type: 3}
+  - {fileID: 21300000, guid: 298ee277f21be704899846a69b51e284, type: 3}
+  - {fileID: 21300000, guid: 26c5583cc15fc5645b676e14c0336da0, type: 3}
+  - {fileID: 21300000, guid: e4e485b584b66e548820fff2ce67427a, type: 3}
+  - {fileID: 21300000, guid: 8a400e9edfe46e547851b17574976fc9, type: 3}
+  - {fileID: 21300000, guid: f196bbdd4dbcfeb4096014e9f81ebe75, type: 3}
 --- !u!1001 &381698747
 PrefabInstance:
   m_ObjectHideFlags: 0
