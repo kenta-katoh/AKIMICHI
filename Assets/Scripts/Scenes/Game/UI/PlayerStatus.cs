@@ -58,7 +58,7 @@ namespace Akimichi.Game
             this.playerIndex = index;
             this.playerData.Name = name;
             this.playerName.text = this.playerData.Name;
-            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 0);
+            this.playerImage.sprite = PlayerSpriteManager.Instance().GetUISprite(index, 1);
         }
 
         /// <summary>
