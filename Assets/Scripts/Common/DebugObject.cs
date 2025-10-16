@@ -44,6 +44,9 @@ namespace Akimichi
         private TMP_InputField diceValue = null;
 
         [SerializeField]
+        private TMP_InputField switchFatigue = null;
+
+        [SerializeField]
         private Toggle viewMode = null;
 
         [SerializeField]
@@ -146,6 +149,20 @@ namespace Akimichi
                 }
             }
             return result;
+        }
+
+        public void SwitchFatigue()
+        {
+            int value = Convert.ToInt32(this.switchFatigue.text);
+            if (value == 0 || value == 1)
+            {
+                bool flag = Convert.ToBoolean(value);
+                if (DebugManager.Instance().SwitchFatigue(flag))
+                {
+                    this.isInput = false;
+                    this.frame = 3.0f;
+                }
+            }
         }
 
         public void ViewMode()

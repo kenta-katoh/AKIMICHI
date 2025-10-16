@@ -144,5 +144,22 @@ namespace Akimichi
             }
             return result;
         }
+
+        /// <summary>
+        /// 疲労状態の切り替え
+        /// </summary>
+        public bool SwitchFatigue(bool flag)
+        {
+            if (this.debugObject == null) return false;
+            if (this.isInGame)
+            {
+                var send = DataObjectManager.Instance().Get();
+                send.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+                if(flag) NetworkManager.Instance().SendEvent(EventConst.Event.HoldFatigue, send);
+                else NetworkManager.Instance().SendEvent(EventConst.Event.ReleaseFatigue, send);
+                return true;
+            }
+            return false;
+        }
     }
 }
