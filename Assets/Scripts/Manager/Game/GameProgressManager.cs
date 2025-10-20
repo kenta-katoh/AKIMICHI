@@ -123,6 +123,10 @@ namespace Akimichi.Game
 
             var data = DataObjectManager.Instance().Get();
             data.Datas[0] = (byte)PlayerManager.Instance().PlayerIndex;
+            string name = PlayerManager.Instance().GetName();
+            name = name.Replace(" ", "");
+            name = name.Replace("　", "");
+            if (name == string.Empty) NetworkManager.Instance().SetName("どすこい");
             data.Datas[1] = PlayerManager.Instance().GetName();
             NetworkManager.Instance().SendEvent(EventConst.Event.SetName, data);
 
